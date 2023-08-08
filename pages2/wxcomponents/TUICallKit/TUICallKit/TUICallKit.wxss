@@ -1,0 +1,24 @@
+.TRTCCaling-container {
+	width: 100vw;
+	height: 100vh;
+	overflow: hidden;
+	margin: 0;
+}
+.hidden {
+	display: none;
+}
+.TUICalling {
+	position: fixed;
+	width: 100vw;
+	height: 100vh;
+	z-index: 10;
+	background: #ffffff;
+}
+.show {
+	top: 0;
+	left: 0;
+}
+
+.groupConnected{
+	background-color: #2c292923;
+}

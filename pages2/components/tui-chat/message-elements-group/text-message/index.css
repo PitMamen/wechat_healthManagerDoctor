@@ -1,0 +1,50 @@
+.text-message {
+	display: inline-flex;
+	max-width: 500rpx;
+	line-height: 52rpx;
+	padding: 12rpx 24rpx;
+	background: #FFFFFF;
+	border: 1px solid #D9D9D9;
+	border-radius: 2px 10px 10px 10px;
+}
+
+.my-text {
+	max-width: 500rpx;
+	padding: 0;
+	border-radius: 10px 2px 10px 10px;
+	background: #DCEBFD;
+}
+
+.message-body-span {
+	position: relative;
+	outline: none;
+	font-size: 28rpx;
+	color: #1A1A1A;
+}
+.my-text .message-body-span {
+	width: 100%;
+	max-width: 100%;
+	color: #1A1A1A;
+}
+
+.message-body-span-text {
+	width: 100%;
+	display: inline;
+	word-wrap: break-word;
+	word-break: break-all;
+}
+.message-body-span-text >>> .u-tooltip__wrapper__text {
+	color: #1A1A1A;
+}
+
+.message-body-span-image {
+	display: inline-block;
+	width: 32rpx;
+	height: 32rpx;
+	margin: 0 4rpx;
+}
+
+.emoji-icon {
+	width: 20px;
+	height: 20px;
+}

@@ -1,0 +1,350 @@
+{
+	"easycom": {
+		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
+	},
+	"pages": [{
+			"path": "pages/login/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "登录"
+			}
+		},
+		{
+			"path": "pages/login/protocol",
+			"style": {
+				"navigationBarTitleText": "互联网医院用户协议"
+			}
+		},
+		{
+			"path": "pages/work/workshop",
+			"style": {
+				"navigationBarTitleText": "工作室"
+			}
+		},
+		{
+			"path": "pages/mine/index",
+			"style": {
+				"navigationBarTitleText": "我的"
+			}
+		},
+		{
+			"path": "pages/follow/current-follow-list",
+			"style": {
+				"navigationBarTitleText": "随访"
+			}
+		}
+	],
+	"subpackages": [{
+			"root": "pagesFace",
+			"name": "pagesFace",
+			"pages": [{
+				"path": "pages/middle/middle",
+				"style": {
+					"navigationBarTitleText": "人脸识别认证"
+				}
+			}]
+		},
+		{
+			"root": "pages2",
+			"name": "pages2",
+			"pages": [{
+					"path": "pages/TUI-Chat-Group/chat",
+					"style": {
+						"navigationBarTitleText": "线上咨询"
+					}
+				},
+				{
+					"path": "pages/TUI-Chat-Group2/chat",
+					"style": {
+						"navigationBarTitleText": "线上咨询"
+					}
+				},
+				{
+					"path": "pages/TUI-Chat-History/chat",
+					"style": {}
+				},
+				{
+					"path": "pages/TUI-Group-History/chat",
+					"style": {
+						"navigationBarTitleText": "历史咨询"
+					}
+				},
+				{
+					"path": "pages/TUI-User-Center/webview/webview",
+					"style": {
+						"navigationBarTitleText": "预览"
+					}
+				},
+				{
+					"path": "pages/article/index",
+					"style": {
+						"navigationBarTitleText": "文章详情"
+					}
+				},
+				{
+					"path": "pages/group/card",
+					"style": {
+						"navigationBarTitleText": "问诊卡"
+					}
+				},
+				{
+					"path": "pages/group/note",
+					"style": {
+						"navigationBarTitleText": "发送文章"
+					}
+				},
+				{
+					"path": "pages/group/paper",
+					"style": {
+						"navigationBarTitleText": "发送问卷"
+					}
+				},
+				{
+					"path": "pages/group/note-info",
+					"style": {
+						"navigationBarTitleText": "文章详情"
+					}
+				},
+				{
+					"path": "pages/group/paper-info",
+					"style": {
+						"navigationBarTitleText": "问卷详情"
+					}
+				},
+				{
+					"path": "pages/login/update",
+					"style": {
+						"navigationBarTitleText": "修改密码"
+					}
+				},
+				{
+					"path": "pages/mine/info",
+					"style": {
+						"navigationBarTitleText": "个人信息"
+					}
+				},
+				{
+					"path": "pages/config/consult-text",
+					"style": {
+						"navigationBarTitleText": "图文咨询"
+					}
+				},
+				{
+					"path": "pages/config/consult-phone",
+					"style": {
+						"navigationBarTitleText": "电话咨询"
+					}
+				},
+				{
+					"path": "pages/config/consult-video",
+					"style": {
+						"navigationBarTitleText": "视频咨询"
+					}
+				},
+				{
+					"path": "pages/config/duty",
+					"style": {
+						"navigationBarTitleText": "问诊排班"
+					}
+				},
+				{
+					"path": "pages/ca/manage",
+					"style": {
+						"navigationBarTitleText": "证书管理"
+					}
+				},
+				{
+					"path": "pages/ca/certificate",
+					"style": {
+						"navigationBarTitleText": "证书详情"
+					}
+				},
+				{
+					"path": "pages/ca/pwd-reset",
+					"style": {
+						"navigationBarTitleText": "重置密码"
+					}
+				},
+				{
+					"path": "pages/mine/health-history-list",
+					"style": {
+						"navigationBarTitleText": "问诊记录"
+					}
+				},
+				{
+					"path": "pages/mine/history-list",
+					"style": {
+						"navigationBarTitleText": "问诊记录"
+					}
+				},
+				{
+					"path": "pages/follow/history-follow-list",
+					"style": {
+						"navigationBarTitleText": "随访记录"
+					}
+				},
+				{
+					"path": "pages/chufang2/cf-add",
+					"style": {
+						"navigationBarTitleText": "开具处方"
+					}
+				},
+				{
+					"path": "pages/chufang2/cf-list",
+					"style": {
+						"navigationBarTitleText": "处方记录"
+					}
+				},
+				{
+					"path": "pages/chufang2/cf-detail",
+					"style": {
+						"navigationBarTitleText": "处方详情"
+					}
+				},
+				{
+					"path": "pages/chufang2/yp-search",
+					"style": {
+						"navigationBarTitleText": "添加药品"
+					}
+				},
+				{
+					"path": "pages/follow/follow-detail",
+					"style": {
+						"navigationBarTitleText": "随访详情"
+					}
+				},
+				{
+					"path": "pages/follow/follow-phone",
+					"style": {
+						"navigationBarTitleText": "随访登记"
+					}
+				},
+				{
+					"path": "pages/ca/webview",
+					"style": {
+						"navigationBarTitleText": "",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/ca/pwd-set",
+					"style": {
+						"navigationBarTitleText": "设置密码"
+					}
+				},
+				{
+					"path": "pages/work/search",
+					"style": {
+						"navigationBarTitleText": "搜索"
+					}
+				},
+				{
+					"path": "pages/work/talk/detailPhone",
+					"style": {
+						"navigationBarTitleText": "电话咨询"
+					}
+				},
+				{
+					"path": "pages/work/talk/detailVideo",
+					"style": {
+						"navigationBarTitleText": "视频咨询"
+					}
+				},
+				{
+					"path": "pages/work/talk/chooseTime",
+					"style": {
+						"navigationBarTitleText": "设置拨打时间"
+					}
+				},
+				{
+					"path": "pages/work/talk/index",
+					"style": {
+						"enablePullDownRefresh": false,
+						"navigationBarTitleText": "健康咨询"
+					}
+				},
+				{
+					"path": "pages/todo/index",
+					"style": {
+						"enablePullDownRefresh": false,
+						"navigationBarTitleText": "互联网医院咨询"
+					}
+				},
+				{
+					"path": "pages/follow/ques-detail",
+					"style": {
+						"navigationBarTitleText": "问卷详情"
+					}
+				},
+				{
+					"path": "pages/record/exam",
+					"style": {
+						"navigationBarTitleText": "检验详情"
+					}
+				},
+				{
+					"path": "pages/record/check",
+					"style": {
+						"navigationBarTitleText": "检查详情"
+					}
+				},
+				{
+					"path": "pages/record/detail",
+					"style": {
+						"navigationBarTitleText": "记录详情"
+					}
+				}
+			]
+		}
+	],
+	"preloadRule": {
+		"pages/work/workshop": {
+			"network": "all",
+			"packages": ["pages2"]
+		}
+	},
+	"plugins": {},
+	"tabBar": {
+		// "borderStyle":"#F7F7FA",
+		"selectedColor": "#00A1FF",
+		"list": [{
+				// "pagePath": "pages/tab/tab1",
+				"pagePath": "pages/work/workshop",
+				"iconPath": "static/img/tab_home.png",
+				"selectedIconPath": "static/img/tab_home_checked.png",
+				"text": "工作室"
+			},
+			{
+				// "pagePath": "pages/tab/tab2",
+				"pagePath": "pages/follow/current-follow-list",
+				"iconPath": "static/img/tab_sf.png",
+				"selectedIconPath": "static/img/tab_sf_checked.png",
+				"text": "随访"
+			},
+			{
+				"pagePath": "pages/mine/index",
+				"text": "我的",
+				"iconPath": "/static/img/tab_me.png",
+				"selectedIconPath": "/static/img/tab_me_checked.png"
+			}
+		]
+	},
+	"sitemapLocation": "sitemap.json",
+	"style": "v2",
+	"globalStyle": {
+		"backgroundColor": "#F6F6F6",
+		"backgroundTextStyle": "light",
+		"navigationBarBackgroundColor": "#F6F6F6",
+		"navigationBarTitleText": "TUIKit",
+		"navigationBarTextStyle": "black"
+	},
+	"condition": { //模式配置，仅开发期间生效
+		"current": 0, //当前激活的模式(list 的索引项)
+		"list": [{
+			"name": "", //模式名称
+			"path": "", //启动页面，必选
+			"query": "" //启动参数，在页面的onLoad函数里面得到
+		}]
+	}
+
+}
