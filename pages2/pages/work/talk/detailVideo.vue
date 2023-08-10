@@ -455,14 +455,6 @@
 						4) {
 						this.showHistory = true
 					}
-
-					if (this.rightDetail.preNum > 0) {
-						this.canSendBag = false
-						this.btnName = '继续咨询'
-					} else {
-						this.canSendBag = true
-						this.btnName = '开具处方'
-					}
 				});
 			},
 
@@ -524,7 +516,6 @@
 						});
 						this.getRightDetail();
 					}
-
 				});
 			},
 
