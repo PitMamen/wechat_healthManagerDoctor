@@ -166,6 +166,12 @@
 					}
 				},
 				{
+					"path": "pages/mine/order",
+					"style": {
+						"navigationBarTitleText": "我的订单"
+					}
+				},
+				{
 					"path": "pages/mine/health-history-list",
 					"style": {
 						"navigationBarTitleText": "问诊记录"
@@ -239,6 +245,12 @@
 					}
 				},
 				{
+					"path": "pages/work/talk/detailImg",
+					"style": {
+						"navigationBarTitleText": "图文咨询"
+					}
+				},
+				{
 					"path": "pages/work/talk/detailPhone",
 					"style": {
 						"navigationBarTitleText": "电话咨询"
@@ -248,6 +260,12 @@
 					"path": "pages/work/talk/detailVideo",
 					"style": {
 						"navigationBarTitleText": "视频咨询"
+					}
+				},
+				{
+					"path": "pages/work/talk/detailFz",
+					"style": {
+						"navigationBarTitleText": "复诊续方"
 					}
 				},
 				{
