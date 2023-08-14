@@ -167,6 +167,10 @@ export default {
 				{
 					name: '常用语',
 					key: '1'
+				},
+				{
+					name: '推荐套餐',
+					key: '0'
 				}
 			],
 			messageData: {},
@@ -515,6 +519,7 @@ export default {
 		},
 
 		handleCommonFunctions(e) {
+			console.log('handleCommonFunctions',e.target.dataset)
 			switch (e.target.dataset.function.key) {
 				case '0':
 					// this.setData({
@@ -522,7 +527,8 @@ export default {
 					// });
 					uni.navigateTo({
 					
-						url: '/pages2/pages/record/index?userId='+this.conversation.userProfile.userID 
+						// url: '/pages2/pages/record/index?userId='+this.conversation.userProfile.userID 
+						url: '/pages2/pages/record/mypack'
 					
 					})
 					break;

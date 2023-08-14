@@ -202,6 +202,16 @@
 						content: `${taskItem.docName}医生在图文咨询中邀请您填写问卷《${payloadData.name}》，请您及时填写。`
 					};
 				}
+				//TODO 推送套餐需求
+				if (payloadData.type === 'CustomTaoCanMessage'){
+					reqParams = {
+						originalId: payloadData.id,
+						originalType: 1,
+						url: payloadData.url,
+						title: '医生邀请您购买套餐',
+						content: `医生给您推荐了一个服务套餐，请您 点击购买。`
+					};
+				}
 				uni.$u.http.post(`/medical-api/inquiriesAgency/add`, {
 					... reqParams,
 					... {

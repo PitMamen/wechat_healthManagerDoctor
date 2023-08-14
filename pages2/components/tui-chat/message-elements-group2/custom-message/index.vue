@@ -100,6 +100,24 @@
 				</view>
 			</view>
 		</view>
+		<!-- //TODO 推送套餐需求 -->
+		<view v-if="renderDom[0].type === 'CustomTaoCanMessage'" :class="'custom-message custom-message-wrap ' + (isMine ? 'my-custom' : '')">
+			<view class="wrap">
+				<view class="title">
+					<image src="/pages2/static/static/images/group/icon_buy.png"></image>{{ renderDom[0].title }}
+				</view>
+				<view class="content">
+					<view class="row nowrap">{{ renderDom[0].name }}</view>
+				</view>
+				<view style="padding: 0 24rpx 30rpx 24rpx;font-size: 28rpx;color: #999;"><text>医生给您推荐了一个服务套餐，请您 点击购买。</text></view>
+		<!-- 		<view class="content" style="margin-top: 0;">
+					<view class="row nowrap"><text>医生给您推荐了一个服务套餐，请您 点击购买。</text></view>
+				</view> -->
+				<view class="action" @tap="previewTaocan(renderDom[0].id)">
+					<view class="btn">点击查看</view>
+				</view>
+			</view>
+		</view>
 		<view v-if="renderDom[0].type === 'CustomWenJuanMessage'" :class="'custom-message custom-message-wrap ' + (isMine ? 'my-custom' : '')">
 			<view class="wrap">
 				<view class="title">
@@ -425,6 +443,19 @@ export default {
 				];
 				return renderDom;
 			}
+			//TODO 推送套餐需求
+			if (customData.type === 'CustomTaoCanMessage') {
+				const renderDom = [
+					{
+						type: 'CustomTaoCanMessage',
+						title: message.payload.description,
+						id: customData.id,
+						name: customData.name,
+						url: customData.url
+					}
+				];
+				return renderDom;
+			}
 			if (customData.type === 'CustomWenJuanMessage') {
 				const renderDom = [
 					{
@@ -581,6 +612,11 @@ export default {
 			uni.navigateTo({
 				url: `/pages2/pages/article/index?id=${id}`
 			});
+		},
+		previewTaocan(id) {//TODO 推送套餐需求 跳转套餐详情   医生端无套餐详情，暂不处理点击事件
+			// uni.navigateTo({
+			// 	url: `/pages2/pages/article/index?id=${id}`
+			// });
 		},
 		previewChufang(item) {
 			uni.navigateTo({

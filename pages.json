@@ -307,6 +307,12 @@
 					}
 				},
 				{
+					"path": "pages/record/mypack",
+					"style": {
+						"navigationBarTitleText": "推荐套餐"
+					}
+				},
+				{
 					"path": "pages/record/detail",
 					"style": {
 						"navigationBarTitleText": "记录详情"
