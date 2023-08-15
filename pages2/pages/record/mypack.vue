@@ -115,23 +115,26 @@
 				uni.showLoading({
 					title: '正在加载'
 				});
-				// uni.$u.http.get(`/health-api/health/doctor/qryQuestByKeyWord`, {
-				uni.$u.http.post(`/medical-api/commodity/getCommoditiesByClassify`, {
+				uni.$u.http.get(`/medical-api/commodity/getCommoditiesByUserId`, {
+					// uni.$u.http.post(`/medical-api/commodity/getCommoditiesByClassify`, {
 
-					pageNo: 1,
-					pageSize: 1000,
-					queryText: this.value,
-					// keyWord: this.value,
-					// doctorUserId : '2042',
-					// start: this.pageNo
+					params: {
+						commodityName: this.value,
+					}
+
+					// pageNo: 1,
+					// pageSize: 1000,
+					// queryText: this.value,
+
 
 				}).then(res => {
 					// res.data = res.data || {};
 					// res.data.list = res.data.list || [];
 					// res.data.total = res.data.total || 0;
 					// this.total = res.data.total;
-					res.data.records.shift();
-					this.list = res.data.records;
+					// res.data.records.shift();
+					// this.list = res.data.records;
+					this.list = res.data;
 					console.log('list', this.list)
 				}).finally(() => {
 					this.flag = false;
