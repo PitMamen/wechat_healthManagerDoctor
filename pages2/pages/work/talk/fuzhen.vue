@@ -18,8 +18,8 @@
 
 		<!-- <u-divider text=""></u-divider> -->
 
-		<!-- 图文咨询列表 -->
-		<view style="background-color: #F5F5F5;" v-if="serviceItemType=='101'">
+		<!-- 复诊续方列表 -->
+		<view style="background-color: #F5F5F5;" v-if="serviceItemType=='99'">
 			<view style="height: 1rpx;"></view>
 
 			<!-- <view class="view-list-video" @click="onClick(index)" v-for="(item, index) in listData" :key="index"> -->
@@ -27,7 +27,7 @@
 				:key="index">
 				<view class="view-video-list">
 					<view style="display: flex;flex-direction: row;align-items: center;">
-						<view style="flex:1;font-size: 30rpx;font-weight: bold;">图文咨询</view>
+						<view style="flex:1;font-size: 30rpx;font-weight: bold;">复诊续方</view>
 						<view v-if="item.status==2" style="color: #F32B0C;">{{item.statusText}}</view>
 						<view v-else-if="item.status==3" style="color: #ECAD14;">{{item.statusText}}</view>
 						<view v-else style="color: #999999;">{{item.statusText}}</view>
@@ -79,10 +79,6 @@
 						<!-- 空心按钮 -->
 						<view v-if="item.status ==4||item.status ==5"
 							style="color: #409EFF;background-color: white;border:1rpx solid  #409EFF ;border-radius: 30rpx;padding: 8rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
-							@click.stop="onClickVideo(item,index)">查看评价</view>
-						<!-- 空心按钮 -->
-						<view v-if="item.status ==4||item.status ==5"
-							style="color: #409EFF;background-color: white;border:1rpx solid  #409EFF ;border-radius: 30rpx;padding: 8rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
 							@click.stop="onClickVideo(item,index)">查看记录</view>
 					</view>
 				</view>
@@ -91,125 +87,9 @@
 			</view>
 		</view>
 
-		<!-- 电话咨询列表 -->
-		<view style="background-color: #F5F5F5;" v-if="serviceItemType=='102'">
-			<view style="height: 1rpx;"></view>
-
-			<!-- <view class="view-list-video" @click="onClick(index)" v-for="(item, index) in listData" :key="index"> -->
-			<view class="view-list-video" @click="onClickVideoItem(item,index)" v-for="(item, index) in listData"
-				:key="index">
-				<view class="view-video-list">
-					<view style="display: flex;flex-direction: row;align-items: center;">
-						<view style="flex:1;font-size: 30rpx;font-weight: bold;">电话咨询</view>
-						<view v-if="item.status==2" style="color: #F32B0C;">{{item.statusText}}</view>
-						<view v-else-if="item.status==3" style="color: #ECAD14;">{{item.statusText}}</view>
-						<view v-else style="color: #999999;">{{item.statusText}}</view>
-					</view>
-					<view
-						style="display: flex;flex-direction: row;align-items: center;color: #1A1A1A;padding: 20rpx 0;">
-						<view style="color: #999999;width: 150rpx;">患者信息：</view>
-						<view style="margin-left: 10px;">{{item.userInfo.userName}}</view>
-						<view class="v-line" style="margin-left: 15px;" />
-						<view style="margin-left: 15px;">{{item.userInfo.userAge}}</view>
-						<view class="v-line" style="margin-left: 15px;" />
-						<view style="margin-left: 15px;">{{item.userInfo.userSex}}</view>
-					</view>
-
-					<view
-						style="display: flex;flex-direction: row;align-items: center;color: #1A1A1A;padding: 20rpx 0;">
-						<view style="color: #999999;width: 150rpx;">病情描述：</view>
-						<view style="margin-left: 10px;width: 500rpx;">{{item.diseaseDesc}}</view>
-					</view>
-
-					<view
-						style="display: flex;flex-direction: row;align-items: center;color: #1A1A1A;padding: 20rpx 0;">
-						<view style="color: #999999;width: 150rpx;">预约时间：</view>
-						<view style="margin-left: 10px;width: 500rpx;">{{item.newTime}}</view>
-					</view>
-
-					<view style="display: flex;flex-direction: row;">
-						<view style="flex:1"></view>
-						<!-- 空心按钮 -->
-						<view v-if="item.status ==2"
-							style="color: #409EFF;background-color: white;border:1rpx solid  #409EFF ;border-radius: 30rpx;padding: 8rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
-							@click.stop="onClickVideo(item,index)">拒诊</view>
-						<view v-if="item.status ==2"
-							style="color: white;background-color: #409EFF;border-radius: 30rpx;padding: 8rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
-							@click.stop="onClickVideo(item,index)">接诊</view>
-
-						<!-- 空心按钮 -->
-						<view v-if="item.status ==3"
-							style="color: #409EFF;background-color: white;border:1rpx solid  #409EFF ;border-radius: 30rpx;padding: 8rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
-							@click.stop="onClickVideo(item,index)">结束问诊</view>
-						<view v-if="item.status ==3"
-							style="color: white;background-color: #409EFF;border-radius: 30rpx;padding: 8rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
-							@click.stop="onClickVideo(item,index)">开具处方</view>
-						<view v-if="item.status ==3"
-							style="color: white;background-color: #409EFF;border-radius: 30rpx;padding: 8rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
-							@click.stop="onClickVideo(item,index)">拨打电话</view>
-
-
-						<!-- 空心按钮 -->
-						<view v-if="item.status ==4||item.status ==5"
-							style="color: #409EFF;background-color: white;border:1rpx solid  #409EFF ;border-radius: 30rpx;padding: 8rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
-							@click.stop="onClickVideo(item,index)">查看评价</view>
-					</view>
-				</view>
-
-				<view style="width: 95vw;height: 1rpx;color: #f00;"></view>
-			</view>
-		</view>
-
-		<!-- 视频咨询列表 -->
-		<view style="background-color: #F5F5F5;" v-if="serviceItemType=='103'">
-			<view style="height: 1rpx;"></view>
-
-			<!-- <view class="view-list-video" @click="onClick(index)" v-for="(item, index) in listData" :key="index"> -->
-			<view class="view-list-video" @click="onClickVideoItem(item,index)" v-for="(item, index) in listData"
-				:key="index">
-				<view class="view-video-list">
-					<view style="display: flex;flex-direction: row;align-items: center;">
-						<view style="flex:1;font-size: 30rpx;font-weight: bold;">视频咨询</view>
-						<view v-if="item.status==2" style="color: #F32B0C;">{{item.statusText}}</view>
-						<view v-else-if="item.status==3" style="color: #ECAD14;">{{item.statusText}}</view>
-						<view v-else style="color: #999999;">{{item.statusText}}</view>
-					</view>
-					<view
-						style="display: flex;flex-direction: row;align-items: center;color: #1A1A1A;padding: 20rpx 0;">
-						<view style="color: #999999;width: 150rpx;">患者信息：</view>
-						<view style="margin-left: 10px;">{{item.userInfo.userName}}</view>
-						<view class="v-line" style="margin-left: 15px;" />
-						<view style="margin-left: 15px;">{{item.userInfo.userAge}}</view>
-						<view class="v-line" style="margin-left: 15px;" />
-						<view style="margin-left: 15px;">{{item.userInfo.userSex}}</view>
-					</view>
-
-					<view
-						style="display: flex;flex-direction: row;align-items: center;color: #1A1A1A;padding: 20rpx 0;">
-						<view style="color: #999999;width: 150rpx;">病情描述：</view>
-						<view style="margin-left: 10px;width: 500rpx;">{{item.diseaseDesc}}</view>
-					</view>
-
-					<view
-						style="display: flex;flex-direction: row;align-items: center;color: #1A1A1A;padding: 20rpx 0;">
-						<view style="color: #999999;width: 150rpx;">预约时间：</view>
-						<view style="margin-left: 10px;width: 500rpx;">{{item.newTime}}</view>
-					</view>
-
-					<view style="display: flex;flex-direction: row;">
-						<view style="flex:1"></view>
-						<view class=""
-							style="color: white;background-color: #409EFF;border-radius: 30rpx;padding: 8rpx 43rpx 11rpx 43rpx;"
-							@click.stop="onClickVideo(item,index)">{{item.statusBtn}}</view>
-					</view>
-				</view>
-
-				<view style="width: 95vw;height: 1rpx;color: #f00;"></view>
-			</view>
-		</view>
-
-		<!-- 		<view class="view-list" @click="onClick(index)" v-else v-for="(item, index) in listData" :key="index">
+		<view class="view-list" @click="onClick(index)" v-else v-for="(item, index) in listData" :key="index">
 			<view class="view-info-list">
+				<!-- <image mode="aspectFit" style="width: 80rpx;height: 80rpx;" :src="item.headUrl"></image> -->
 				<image mode="aspectFit" style="width: 90rpx;height: 90rpx;margin-bottom: 25rpx;"
 					src="/pages2/static/static/images/header.png">
 				</image>
@@ -222,17 +102,22 @@
 								{{item.userInfo.userSex}}&nbsp;&nbsp;{{item.userInfo.userAge}}岁
 							</view>
 						</view>
+
+						<!-- <view style="font-size: 24rpx;color: #999999">2023-01</view> -->
 					</view>
 					<view
 						style="font-size: 28rpx;color: #999999;margin-top: 5rpx;overflow: hidden; text-overflow: ellipsis; white-space: nowrap">
+						<!-- 申请时间：{{item.createdTime}} -->
 						{{item.createdTime}}
 					</view>
 					<view style="margin-top: 30rpx;height: 0.5px;background: #E6E6E6;"></view>
 				</view>
+
+
 			</view>
 
 			<view style="width: 95vw;height: 1rpx;color: #f00;"></view>
-		</view> -->
+		</view>
 
 		<u-empty mode="data" style="padding-top: 300rpx;" icon="/pages2/static/img/icon_nodata.png"
 			v-if="listData.length === 0"></u-empty>
@@ -338,13 +223,13 @@
 				show: false,
 				detailPopShow: false,
 				showAsk: false,
-				serviceItemType: '101',
+				serviceItemType: '99',
 				status: '2',
 				choseOne: {
 					userInfo: {}
 				},
 				illData: {},
-				textNum: {},
+				fuzhenNum: {},
 				phoneNum: {},
 				phoneNumVideo: {},
 				popupData: {
@@ -355,30 +240,18 @@
 					closeOnClickOverlay: true
 				},
 				listTab: [{
-						name: '图文咨询',
-						badge: {
-							value: 0,
-						}
-					},
-					{
-						name: '电话咨询',
-						badge: {
-							value: 0,
-						}
-					}, {
-						name: '视频咨询',
-						badge: {
-							value: 0,
-						}
-					},
-					// {
-					// 	// name: '视频咨询',
-					// 	name: '复诊续方',
-					// 	badge: {
-					// 		value: 0,
-					// 	}
-					// }
-				],
+					name: '复诊续方',
+					badge: {
+						value: 0,
+					}
+				}, {
+					// name: '视频咨询',
+					name: '特需心里咨询',
+					disabled: true,
+					badge: {
+						value: 0,
+					}
+				}],
 				listBtn: [{
 					name: '待接诊',
 					canSee: false,
@@ -403,14 +276,18 @@
 		onReady() {
 			console.log('date', this.formatDateFull(new Date()))
 		},
+		/**
+		 * 本页面从原 健康咨询 页面独立出来，把原健康咨询中复诊续方单独抽一个页面出来
+		 */
 		onShow() {
 			this.account = uni.getStorageSync('account') || {
 				user: {}
 			};
 			this.getNum();
-			this.getTextNum();
-			this.getPhoneNum();
-			this.getVideoNum();
+			//注释的两个方法为点击不同的tab或者btn用来改变
+			this.getFuzhenNum();
+			// this.getPhoneNum();
+			// this.getVideoNum();
 			this.chatList();
 		},
 		onPullDownRefresh() {
@@ -421,9 +298,9 @@
 				return
 			}
 			this.getNum();
-			this.getTextNum();
-			this.getPhoneNum();
-			this.getVideoNum();
+			this.getFuzhenNum();
+			// this.getPhoneNum();
+			// this.getVideoNum();
 			this.chatList();
 
 		},
@@ -439,31 +316,34 @@
 				uni.$u.http.post('/medical-api/rightsUse/qryRightsUsingCountByDoc', {
 					docId: this.account.user.userId
 				}).then(res => {
-					this.listTab[0].badge.value = res.data.TextNum
-					this.listTab[1].badge.value = res.data.TelNum
-					this.listTab[2].badge.value = res.data.VedioNum
-					this.listTab[3].badge.value = res.data.appointNum //复诊续方的红点
+					this.listTab[0].badge.value = res.data.appointNum
+					// this.listTab[0].badge.value = res.data.TextNum
+					// this.listTab[1].badge.value = res.data.TelNum
+					// this.listTab[2].badge.value = res.data.VedioNum
+					// this.listTab[3].badge.value = res.data.appointNum //复诊续方的红点
 					if (this.serviceItemType == '99') {
 						this.listBtn[0].canSee = this.listTab[2].badge.value > 0 ? true : false
-						// this.listBtn[1].canSee = this.phoneNum.doing > 0 ? true : false
+
 					}
 				});
 			},
-			getTextNum() {
+
+			getFuzhenNum() {
 				//权益使用待接诊数量查询  这里电话咨询的新增做了红点提示
 				uni.$u.http.post('/medical-api/rightsUse/qryRightsUsingStatusCountByDoc', {
 					docId: this.account.user.userId,
 					serviceItemType: '101',
-					// broadClassify: '4',
+					broadClassify: '4',
 				}).then(res => {
-					this.textNum = res.data
-					if (this.serviceItemType == '102') {
-						this.listBtn[0].canSee = this.textNum.todo > 0 ? true : false
-						this.listBtn[1].canSee = this.textNum.doing > 0 ? true : false
+					this.fuzhenNum = res.data
+					if (this.serviceItemType == '99') {
+						this.listBtn[0].canSee = this.fuzhenNum.todo > 0 ? true : false
+						this.listBtn[1].canSee = this.fuzhenNum.doing > 0 ? true : false
 						// this.listBtn[2].canSee = this.phoneNum.done > 0 ? true : false
 					}
 				});
 			},
+
 			getPhoneNum() {
 				//权益使用待接诊数量查询  这里电话咨询的新增做了红点提示
 				uni.$u.http.post('/medical-api/rightsUse/qryRightsUsingStatusCountByDoc', {
@@ -523,68 +403,48 @@
 					this.listData = res.data
 					this.listData.forEach((item, index) => {
 						//默认的图文咨询时间
-						// item.createdTime = '申请时间：' + item.createdTime
+						item.createdTime = '申请时间：' + item.createdTime
 						console.log('serviceItemType', this.serviceItemType)
-						if (this.serviceItemType == '101') {
-							switch (this.status) {
-								case '2':
-									this.$set(item, 'statusText', '待接诊')
-									this.$set(item, 'statusBtn', '处理')
-									break;
-								case '3':
-
-									this.$set(item, 'statusText', '问诊中')
-									this.$set(item, 'statusBtn', '处理')
-									break;
-									// case '4':
-									// case '5': //已拒诊归纳到已完成
-								case '9':
-									this.$set(item, 'statusText', '已结束')
-									this.$set(item, 'statusBtn', '查看')
-									// this.listBtn[2].canSee = this.listData.length > 0 ? true : false
-									break;
-								default:
-									break;
-							}
-
-						} else if (this.serviceItemType == '102') {
+						if (this.serviceItemType == '102') {
 							switch (this.status) {
 								case '2':
 									item.createdTime = '预约时间：' + item.appointTime.substring(0, 10) + ' ' +
 										item
 										.appointPeriod.substring(3)
-									this.$set(item, 'statusText', '待接诊')
 									// this.listBtn[0].canSee = this.listData.length > 0 ? true : false
 									break;
 								case '3':
 									item.createdTime = '待处理时间：' + item.confirmTime.substring(0, 10) + ' ' +
 										item
 										.confirmPeriod.substring(3)
-									this.$set(item, 'statusText', '已预约')
 									// this.listBtn[1].canSee = this.listData.length > 0 ? true : false
 									break;
 									// case '4':
 									// case '5': //已拒诊归纳到已完成
 								case '9':
 									item.createdTime = '结束时间：' + item.updatedTime
-									this.$set(item, 'statusText', '已结束')
 									// this.listBtn[2].canSee = this.listData.length > 0 ? true : false
 									break;
 								default:
 									break;
 							}
 
-							this.$set(item, 'newTime', item.appointTime.substring(0, 10) + ' ' + item
-								.appointPeriod.substring(3) + '/' + item.serviceTime + '分钟')
-
 						} else if (this.serviceItemType == '103') {
 							switch (this.status) {
 								case '2':
+									item.createdTime = '预约时间：' + item.appointTime.substring(0, 10) + ' ' +
+										item
+										.appointPeriod.substring(3)
+									// this.listBtn[0].canSee = this.listData.length > 0 ? true : false
 									this.$set(item, 'statusText', '待接诊')
 									this.$set(item, 'statusBtn', '处理')
 
 									break;
 								case '3':
+									item.createdTime = '待处理时间：' + item.confirmTime.substring(0, 10) + ' ' +
+										item
+										.confirmPeriod.substring(3)
+									// this.listBtn[1].canSee = this.listData.length > 0 ? true : false
 									this.$set(item, 'statusText', '已预约')
 									this.$set(item, 'statusBtn', '发起视频')
 
@@ -602,7 +462,6 @@
 									break;
 							}
 
-							//视频的时间显示   预约时间
 							this.$set(item, 'newTime', item.appointTime.substring(0, 10) + ' ' + item
 								.appointPeriod.substring(3) + '/' + item.serviceTime + '分钟')
 
@@ -827,44 +686,40 @@
 						// this.listTab[0].badge.value = 0
 						this.listBtn[1].name = '问诊中'
 						this.chatList()
-						this.listBtn[0].canSee = this.textNum.todo > 0 ? true : false
-						this.listBtn[1].canSee = this.textNum.doing > 0 ? true : false
+						this.listBtn[0].canSee = this.fuzhenNum.todo > 0 ? true : false
+						this.listBtn[1].canSee = this.fuzhenNum.doing > 0 ? true : false
 						break;
 					case 1:
-						this.serviceItemType = '102'
-						this.listBtn[1].name = '待处理'
-						this.chatList()
-						this.listBtn[0].canSee = this.phoneNum.todo > 0 ? true : false
-						this.listBtn[1].canSee = this.phoneNum.doing > 0 ? true : false
-						//TODO 模拟入口
-						// uni.navigateTo({
-						// 	url: './detailPhone'
-						// })
+						// this.serviceItemType = '102'
+						// this.listBtn[1].name = '待处理'
+						// this.chatList()
+						// this.listBtn[0].canSee = this.phoneNum.todo > 0 ? true : false
+						// this.listBtn[1].canSee = this.phoneNum.doing > 0 ? true : false
 						break;
-					case 2:
-						//视频咨询
-						this.serviceItemType = '103'
-						this.listBtn[1].name = '待处理'
-						// this.listTab[2].badge.value = 0
-						this.chatList()
-						this.listBtn[0].canSee = this.phoneNumVideo.todo > 0 ? true : false
-						this.listBtn[1].canSee = this.phoneNumVideo.doing > 0 ? true : false
-						break;
-					case 3:
-						//复诊续方，前端自定义一个serviceItemType 99，表示复诊续方
-						this.serviceItemType = '99'
-						this.listBtn[1].name = '待处理'
-						// this.listTab[2].badge.value = 0
-						this.chatList()
-						this.listBtn[0].canSee = false
-						this.listBtn[1].canSee = false
-						this.listBtn[2].canSee = false
-						if (this.serviceItemType == '99') {
-							this.listBtn[0].canSee = this.listTab[3].badge.value > 0 ? true : false
-							// this.listBtn[1].canSee = this.phoneNum.doing > 0 ? true : false
-							// this.listBtn[2].canSee = this.phoneNum.done > 0 ? true : false
-						}
-						break;
+						// case 2:
+						// 	//视频咨询
+						// 	this.serviceItemType = '103'
+						// 	this.listBtn[1].name = '待处理'
+						// 	// this.listTab[2].badge.value = 0
+						// 	this.chatList()
+						// 	this.listBtn[0].canSee = this.phoneNumVideo.todo > 0 ? true : false
+						// 	this.listBtn[1].canSee = this.phoneNumVideo.doing > 0 ? true : false
+						// 	break;
+						// case 3:
+						// 	//原视频咨询不要了  这里处理复诊续方，前端自定义一个serviceItemType 99，表示复诊续方
+						// 	this.serviceItemType = '99'
+						// 	this.listBtn[1].name = '待处理'
+						// 	// this.listTab[2].badge.value = 0
+						// 	this.chatList()
+						// 	this.listBtn[0].canSee = false
+						// 	this.listBtn[1].canSee = false
+						// 	this.listBtn[2].canSee = false
+						// 	if (this.serviceItemType == '99') {
+						// 		this.listBtn[0].canSee = this.listTab[3].badge.value > 0 ? true : false
+						// 		// this.listBtn[1].canSee = this.phoneNum.doing > 0 ? true : false
+						// 		// this.listBtn[2].canSee = this.phoneNum.done > 0 ? true : false
+						// 	}
+						// 	break;
 				}
 
 			},
