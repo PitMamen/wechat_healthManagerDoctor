@@ -465,25 +465,30 @@
 				};
 				const pages = getCurrentPages();
 				const taskItem = uni.getStorageSync('taskItem');
-				if (this.options.preType === 'consultOrderPrescription'){
+				if (taskItem.serviceItemType===102 || taskItem.serviceItemType===103){
 					uni.navigateBack({
 						delta: 1
 					});
 					return;
-					uni.navigateTo({
-						url: `/pages2/pages/TUI-Chat-Group2/chat?conversationID=GROUP${taskItem.imGroupId}`,
-						success(res) {
-							res.eventChannel.emit('sendCfCard_', customMessage);
-						}
-					});
-				}else if (pages.length > 1){
+				}
+				if (pages.length > 1){
 					const page = pages[pages.length - 1 - 1];
 					if (page.route==='pages2/pages/TUI-Chat-Group/chat' || page.route==='pages2/pages/TUI-Chat-Group2/chat'){
 						page.$vm.sendCustomMessage(customMessage);
 						uni.navigateBack({
 							delta: 1
 						});
+						return;
 					}
+				}
+				if (this.options.preType === 'consultOrderPrescription'){
+					uni.navigateTo({
+						url: `/pages2/pages/TUI-Chat-Group2/chat?conversationID=GROUP${taskItem.imGroupId}`,
+						success(res) {
+							res.eventChannel.emit('sendCfCard_', customMessage);
+						}
+					});
+					return;
 				}
 			},
 			checkCa() {
