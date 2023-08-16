@@ -5,14 +5,15 @@
 				<view class="wrap">
 					<view class="content">
 						<span class="message-body-span-text" v-if="item.name === 'span'">
-							<u-tooltip
-								:class="{long: item.text.length > 16}"
-							    :text="item.text"
-								:buttons="['提醒患者', '加入常用语']"
-								direction="top"
-								color="#1A1A1A"
-								@click="clickHandler($event, item.text)"
-							></u-tooltip>
+							<view :class="{long: item.text.length > 16}">
+								<u-tooltip
+								    :text="item.text"
+									:buttons="['提醒患者', '加入常用语']"
+									direction="top"
+									color="#1A1A1A"
+									@click="clickHandler($event, item.text)"
+								></u-tooltip>
+							</view>
 						</span>
 					</view>
 					<view class="tips" v-if="false">线上问诊不能代替面诊，此回复仅供参考</view>
@@ -35,7 +36,9 @@ export default {
 			renderDom: []
 		};
 	},
-
+	options: {
+		styleIsolation: 'shared'
+	},
 	components: {},
 	props: {
 		message: {
@@ -57,11 +60,8 @@ export default {
 			deep: true
 		}
 	},
-
 	beforeMount() {},
-
 	destroyed() {},
-
 	methods: {
 		clickHandler(index, value) {
 			const taskItem = uni.getStorageSync('taskItem')
@@ -92,18 +92,21 @@ export default {
 
 <style>
 @import './index.css';
-
-.message-body-span-text >>> .u-tooltip.long {
-	flex-direction: column;
-}
-.message-body-span-text >>> .u-tooltip.long .u-tooltip__wrapper {
-	white-space: pre-wrap;
-}
 </style>
 <style lang="scss">
 	.wrap {
 		.content {
 			padding: 20rpx 24rpx;
+			.message-body-span-text {
+				.long {
+					.u-tooltip {
+						flex-direction: column;
+						.u-tooltip__wrapper {
+							white-space: pre-wrap;
+						}
+					}
+				}
+			}
 		}
 		.tips {
 			font-size: 24rpx;
@@ -116,3 +119,4 @@ export default {
 		}
 	}
 </style>
+

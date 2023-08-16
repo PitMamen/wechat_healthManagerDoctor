@@ -469,9 +469,6 @@
 					uni.navigateBack({
 						delta: 1
 					});
-					uni.navigateBack({
-						delta: 1
-					});
 					return;
 					uni.navigateTo({
 						url: `/pages2/pages/TUI-Chat-Group2/chat?conversationID=GROUP${taskItem.imGroupId}`,
