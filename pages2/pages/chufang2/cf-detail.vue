@@ -104,7 +104,7 @@
 
 		<view class="detail-remind">
 			<view style="padding: 30rpx 24rpx 0 24rpx;">特别提示：</view>
-			<view style="padding: 30rpx 24rpx 0 24rpx">1、本次处方仅限于中南大学湘雅二医院互联网医院使用，自行下 载配药不具有处方效力。</view>
+			<view style="padding: 30rpx 24rpx 0 24rpx">1、本次处方仅限于{{chufangItem.hospitalName}}互联网医院使用，自行下 载配药不具有处方效力。</view>
 			<view style="padding: 30rpx 24rpx 30rpx 24rpx">2、按照卫生部、国家中医药管理局卫医政发【2011】11号文件规 定：为保证患者用药安全，药品一经发出，不得退换
 			</view>
 		</view>
