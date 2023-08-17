@@ -1,11 +1,6 @@
 <template>
 	<view class="wrap">
-		<!-- TODO视频代码 -->
 		<tuicall ref="TUICall"></tuicall>
-
-		<!-- 	<view style="width: 30%;">
-			<u-slider v-model="mProgress" step="1" min="0" max="100"></u-slider>
-		</view> -->
 		<view class="v-status-top">
 			<!-- 5个点分情况展示 -->
 			<view class="v-dot dot-red" v-if="passItem.status==2"></view>
@@ -20,16 +15,14 @@
 			</view>
 			<u-icon name="arrow-right" v-if="passItem.status==2||passItem.status==3" color="#5A9CF8"
 				style="width: 10px;height: 10px"></u-icon>
-			<!-- <view class="v-time" @click="goChooseTime">2023-10-10 9:00-12:00</view> -->
 			<view class="v-time" v-if="passItem.status==4">
-				{{rightDetail.rightsUseRecordStatus.updatedTime}}
+				{{rightDetail.rightsUseRecordStatus.updatedTime || ''}}
 			</view>
 			<view class="v-time" v-if="passItem.status==5">
-				{{rightDetail.rightsUseRecordStatus.updatedTime}}
+				{{rightDetail.rightsUseRecordStatus.updatedTime || ''}}
 			</view>
-
 		</view>
-		<!-- 套餐信息 -->
+		
 		<view class="v-package">
 			<view class="v-p-name">套餐信息</view>
 			<view class="v-line"></view>
@@ -49,52 +42,31 @@
 				<view class="v-item-name">剩余时长：</view>
 				<view class="v-item-value">{{rightDetail.rightsUseRecordStatus.leftServiceTime}}分钟</view>
 			</view>
-
 		</view>
-
-		<!-- 完成信息 -->
-		<!-- 		<view class="v-package" v-if="passItem.status!=2" style="margin-top: 20rpx;">
-			<view class="v-p-name">完成信息</view>
+		
+		<view class="v-package" style="margin-top: 20rpx;">
+			<view class="v-p-name">问诊信息</view>
 			<view class="v-line"></view>
 			<view class="v-p-item">
-				<view class="v-item-name">拨打电话时间：</view>
-				<view class="v-item-value">{{mCallTime}}</view>
+				<view class="v-item-name">患者意向预约时间：</view>
+				<view class="v-item-value">{{rightDetail.rightsUseRecordStatus.appointPeriod}}</view>
 			</view>
-			<view class="v-p-item">
-				<view class="v-item-name">电话录音：</view>
-				<view v-if="rightDetail.voiceTapeInfo && rightDetail.voiceTapeInfo.length > 0" class="v-voice">
-					<view v-for="(item, index) in rightDetail.voiceTapeInfo" :key="index"
-						style="margin-left: 10rpx;margin-top: 10rpx;width: 100%;display: flex;flex-direction: row;align-items: center;">
-						<image style="width: 36rpx; height: 36rpx;" mode="aspectFit" :src="item.iconUrl"
-							@click="onClick(index)">
-						</image>
-						<u-slider style="flex: 1;" @change="onChange(index)" blockSize="12" v-model="item.progress"
-							step="1" min="0" :max="item.duration">
-						</u-slider>
-					</view>
+			<block v-if="passItem.status!=2 && rightDetail.medicalInfos && rightDetail.medicalInfos.length>0">
+				<view class="v-p-item" v-for="item in rightDetail.medicalInfos" :key="item.preNo">
+					<view class="v-item-name">处方/用药建议：</view>
+					<view class="v-item-value" style="color: #409EFF;" @click="chufangHandler(item)">查看详情</view>
 				</view>
-				<view v-else class="v-item-value">---</view>
-			</view>
-		</view> -->
-
-		<!-- 患者意向预约时间 -->
-		<view class="v-package" style="margin-top: 20rpx;padding-bottom: 20rpx;">
-			<view class="v-p-name">患者意向预约时间</view>
-			<view class="v-line"></view>
-
-			<view class="v-p-item" style="margin-top: 20rpx;">
-				<view class="v-point-time">{{rightDetail.rightsUseRecordStatus.appointPeriod}}</view>
-			</view>
+			</block>
 		</view>
-
-		<!-- 患者信息 -->
-		<view class="v-patient-info" style="margin-top: 20rpx;padding-bottom: 50rpx;">
+		
+		<view class="v-patient-info" style="margin-top: 20rpx;">
 			<view class="v-pa-up">
 				<view class="v-name-des" style="flex: 1;">患者信息</view>
-				<view class="v-name-des">患者：{{rightDetail.userName}}</view>
+				<view class="info-des" style="color: #1A1A1A;">
+					{{rightDetail.userInfo.userName}} | {{rightDetail.userInfo.userSex}} | {{rightDetail.userInfo.userAge}}
+				</view>
 			</view>
 			<view class="v-line"></view>
-
 			<view style="overflow-y: auto;">
 				<view class="info-title">病情描述</view>
 				<view class="info-desc">{{rightDetail.diseaseDesc}}</view>
@@ -102,9 +74,32 @@
 					<u-album :previewFullImage="false" :urls="rightDetail.images" multipleSize="80"></u-album>
 				</view>
 				<view class="info-title">希望获得帮助</view>
-				<view class="info-desc">{{rightDetail.appealDesc}}</view>
+				<view class="info-desc">{{rightDetail.appealDesc || '---'}}</view>
 			</view>
-
+		</view>
+		
+		<view class="v-package" style="margin-top: 20rpx;">
+			<view class="v-p-name">订单信息</view>
+			<view class="v-line"></view>
+			<view class="v-p-item">
+				<view class="v-item-name">订单编号：</view>
+				<view class="v-item-value">{{rightDetail.orderId}}</view>
+			</view>
+			<view class="v-p-item">
+				<view class="v-item-name">支付时间：</view>
+				<view class="v-item-value">{{rightDetail.payTime}}</view>
+			</view>
+			<view class="v-p-item">
+				<view class="v-item-name">订单费用：</view>
+				<view class="v-item-value" style="color: #E14C4C;">￥{{rightDetail.orderTotal}}</view>
+			</view>
+		</view>
+		
+		<view
+			class="v-patient-info"
+			style="margin-top: 20rpx;padding-bottom: 50rpx;"
+			v-if="passItem.status==2 || passItem.status==3 || showHistory"
+		>
 			<!-- 待接诊按钮 -->
 			<view class="view-btn-wait" v-if="passItem.status==2">
 				<view
@@ -113,9 +108,7 @@
 				<view
 					style="width: 50%;text-align: center;margin-left: 30rpx;font-size:30rpx;padding:  17rpx 60rpx;background-color: #409EFF;color: white;border-radius: 8rpx;"
 					@click="goOn">接诊</view>
-
 			</view>
-
 			<!-- 待处理按钮 -->
 			<view class="view-btn-handle" v-if="passItem.status==3">
 				<view
@@ -128,20 +121,15 @@
 				<view
 					style="width: 30%;text-align: center;margin-left: 20rpx;font-size:30rpx;padding:  17rpx 30rpx;background-color: #409EFF;color: white;border-radius: 8rpx;"
 					@click="goCall">立即拨打视频</view>
-
 			</view>
-
 			<!-- 已结束按钮 -->
 			<view class="view-btn-handle" v-if="showHistory">
 				<view
 					style="width: 18%;text-align: center;;font-size:30rpx;padding: 17rpx 30rpx;background-color: #409EFF;color: white;border-radius: 8rpx;"
 					@click="goHistory">交流记录</view>
-
-
 			</view>
-
 		</view>
-
+		
 		<u-modal title="拒诊" confirmText="确定" @cancel="() => showAsk = false" showCancelButton :show="showAsk"
 			closeOnClickOverlay @confirm="goRefuse" @close="() => showAsk = false">
 			<view>请确认是否拒诊？</view>
@@ -150,15 +138,13 @@
 			closeOnClickOverlay @confirm="endTalk" @close="() => showEnd = false">
 			<view>请确认是否结束问诊？</view>
 		</u-modal>
-
 		<block v-if="showRate">
 			<TUI-view-rate ref="TUIViewRate" />
 			<view class="wrap-rate">
 				<view class="btn-rate" @click="viewRateHandler">查看评价</view>
 			</view>
 		</block>
-
-
+		
 	</view>
 </template>
 
@@ -320,9 +306,12 @@
 					this.innerAudioContext.seek(this.rightDetail.voiceTapeInfo[index].progress)
 					// this.goPlay(index)
 					// this.innerAudioContext.play()
-
 				}
-
+			},
+			chufangHandler(item) {
+				uni.navigateTo({
+					url: `/pages2/pages/chufang2/cf-detail?preNo=${item.preNo}`
+				});
 			},
 
 			goPlay(readyIndex) {
