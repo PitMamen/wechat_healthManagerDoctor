@@ -211,15 +211,7 @@
 			this.passItem = JSON.parse(decodeURIComponent(options.item));
 			// 咨询状态(2:待接诊 3:接诊中 9:已完成)   2待接诊3问诊中4已结束5已拒诊
 			console.log('this.passItem ', this.passItem)
-			if (this.passItem.status == 2) {
-				this.statusName = '待接诊'
-			} else if (this.passItem.status == 3) {
-				this.statusName = '待处理'
-			} else if (this.passItem.status == 4) {
-				this.statusName = '已完成'
-			} else if (this.passItem.status == 5) {
-				this.statusName = '已拒诊'
-			}
+
 			this.rightsId = this.passItem.rightsId
 			uni.setStorageSync('timeDate', '');
 			this.checkRate();
@@ -401,6 +393,17 @@
 				}).then(res => {
 					uni.hideLoading()
 					this.rightDetail = res.data
+					//如果是接诊进入详情，则需要改变状态,所以不在onload做处理状态而是请求详情了处理状态
+					this.passItem.status = this.rightDetail.rightsUseRecordStatus.status
+					if (this.passItem.status == 2) {
+						this.statusName = '待接诊'
+					} else if (this.passItem.status == 3) {
+						this.statusName = '待处理'
+					} else if (this.passItem.status == 4) {
+						this.statusName = '已完成'
+					} else if (this.passItem.status == 5) {
+						this.statusName = '已拒诊'
+					}
 					let str = ''
 					if (this.rightDetail.rightsUseRecordStatus.confirmTime && this.rightDetail
 						.rightsUseRecordStatus.confirmPeriod) {
@@ -437,6 +440,7 @@
 						4) {
 						this.showHistory = true
 					}
+
 				});
 			},
 

@@ -180,7 +180,8 @@
 			getList() {
 				uni.$u.http.get('/info-api/medicine/searchDiagnosis', {
 					params: {
-						keyWord: this.value.trim()
+						keyWord: this.value.trim(),
+						preType:uni.getStorageSync('cf-info').preType
 					}
 				}).then(res => {
 					res.data = res.data || {};

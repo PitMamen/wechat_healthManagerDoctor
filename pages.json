@@ -282,6 +282,13 @@
 					}
 				},
 				{
+					"path": "pages/work/talk/fuzhen",
+					"style": {
+						"enablePullDownRefresh": false,
+						"navigationBarTitleText": "本院复诊"
+					}
+				},
+				{
 					"path": "pages/todo/index",
 					"style": {
 						"enablePullDownRefresh": false,

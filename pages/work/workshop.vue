@@ -98,8 +98,12 @@
 		onReady() {},
 		onShow() {
 			this.listData = []
+			// 1.第一个原 互联网医院咨询 改成 本院复诊，原来的健康咨询里面的复诊续方拖出来到首页的应用，点进去跳转到单独的页面
+			// 2.原 互联网医院咨询 其实是 图文咨询 也归纳到 健康咨询 里面去
+
 			this.listData.push({
-				userName: '互联网医院咨询',
+				userName: '本院复诊',
+				// userName: '互联网医院咨询',
 				type: 1, //构造字段 用来区分患者和应用
 				headUrl: '/static/img/icon_mission.png',
 				// nearMsg: '[患者发起的图文咨询/复诊开方]'
@@ -137,17 +141,22 @@
 					// debugger
 					this.$set(this.listData[1], 'unreadCount', res.data.TextNum + res.data.TelNum + res.data
 						// this.$set(this.listData[0], 'unreadCount', res.data.TextNum + res.data.TelNum + res.data
-						.VedioNum + res.data.appointNum)
+						.VedioNum)
+
+					//本院复诊的数量也从这里来
+					this.$set(this.listData[0], 'unreadCount', res.data.appointNum)
+					this.$set(this.listData[0], 'nearMsg', '患者发起的复诊续方')
+
 					// this.listData[1].unreadCount = res.data.TextNum + res.data.TelNum + res.data.VedioNum
 					console.log('this.listData[0]', JSON.stringify(this.listData[1]))
 					//互联网咨询不显示了
 
-					// this.getChatList()
-					this.getnumZX()
+					this.getChatList()
+					// this.getnumZX()
 				});
 			},
 
-			//获取互联网咨询数量
+			//获取互联网咨询数量  最初的湘雅二的咨询数据
 			getnumZX() {
 				uni.$u.http.get('/health-api/health/patient/getUserTaskNum', {
 					params: {
@@ -157,6 +166,7 @@
 						userId: this.account.user.userId
 					}
 				}).then(res => {
+					uni.hideLoading();
 					res.data = res.data || {};
 					this.$set(this.listData[0], 'unreadCount', res.data.taskNum)
 					this.getChatList()
@@ -212,7 +222,8 @@
 				//互联网咨询不显示了
 				if (index == 0) {
 					uni.navigateTo({
-						url: `/pages2/pages/todo/index`
+						// url: `/pages2/pages/todo/index`
+						url: `/pages2/pages/work/talk/fuzhen`
 					});
 				} else
 				if (index == 1) {
@@ -286,6 +297,7 @@
 			},
 
 			///patient/getLastRightsUserRecordByDoc 根据医生获取最新问诊记录
+			//获取原 互联网咨询 的最近消息 
 			getRecentMsg() {
 				uni.$u.http.get('/health-api/patient/getLastRightsUserRecordByDoc', {
 					params: {
@@ -302,6 +314,8 @@
 					}
 				});
 			},
+
+			//获取 健康咨询 的最近消息 
 			getRecentMsgMore() {
 				uni.$u.http.post('/medical-api/rightsUse/qryRightsUseRecord', {
 					docId: this.account.user.userId
@@ -311,12 +325,12 @@
 					if (res.data) {
 						//互联网咨询不显示了
 						// this.$set(this.listData[1], 'nearMsg', res.data[0].serviceItemName ? ('患者发起的' + res.data[0]
-						this.$set(this.listData[0], 'nearMsg', res.data[0].broadClassifyName ? ('患者发起的' + res.data[
+						this.$set(this.listData[1], 'nearMsg', res.data[0].broadClassifyName ? ('患者发起的' + res.data[
 								0]
 							.broadClassifyName) : '')
 						res.data[0].createdTime = this.changeDate(res.data[0].createdTime)
 						// this.$set(this.listData[1], 'lastMsgTime', res.data[0].createdTime ? res
-						this.$set(this.listData[0], 'lastMsgTime', res.data[0].createdTime ? res
+						this.$set(this.listData[1], 'lastMsgTime', res.data[0].createdTime ? res
 							.data[0].createdTime : '')
 					}
 				});
