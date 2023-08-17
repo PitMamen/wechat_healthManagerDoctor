@@ -23,7 +23,8 @@
 			<view style="height: 1rpx;"></view>
 
 			<!-- <view class="view-list-video" @click="onClick(index)" v-for="(item, index) in listData" :key="index"> -->
-			<view class="view-list-video" @click="onClickVideoItem(item,index)" v-for="(item, index) in listData"
+			<!-- //复诊续方本质是图文咨询 点击图文条目没有操作   原来的操作都放到条目的按钮上了 -->
+			<view class="view-list-video" @click="onClickTextItem(item,index)" v-for="(item, index) in listData"
 				:key="index">
 				<view class="view-video-list">
 					<view style="display: flex;flex-direction: row;align-items: center;">
@@ -42,15 +43,14 @@
 						<view style="margin-left: 15px;">{{item.userInfo.userSex}}</view>
 					</view>
 
-					<view
-						style="display: flex;flex-direction: row;align-items: center;color: #1A1A1A;padding: 20rpx 0;">
+					<view style="display: flex;flex-direction: row;color: #1A1A1A;padding: 20rpx 0;">
 						<view style="color: #999999;width: 150rpx;">病情描述：</view>
 						<view style="margin-left: 10px;width: 500rpx;">{{item.diseaseDesc}}</view>
 					</view>
 
 					<view
 						style="display: flex;flex-direction: row;align-items: center;color: #1A1A1A;padding: 20rpx 0;">
-						<view style="color: #999999;width: 150rpx;">申请时间：</view>
+						<view style="color: #999999;width: 150rpx;">预约时间：</view>
 						<view style="margin-left: 10px;width: 500rpx;">{{item.createdTime}}</view>
 					</view>
 
@@ -59,27 +59,27 @@
 						<!-- 空心按钮 -->
 						<view v-if="item.status ==2"
 							style="color: #409EFF;background-color: white;border:1rpx solid  #409EFF ;border-radius: 30rpx;padding: 8rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
-							@click.stop="onClickVideo(item,index)">拒诊</view>
+							@click.stop="onTextRefuse(item,index)">拒诊</view>
 						<view v-if="item.status ==2"
 							style="color: white;background-color: #409EFF;border-radius: 30rpx;padding: 8rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
-							@click.stop="onClickVideo(item,index)">接诊</view>
+							@click.stop="onTextGoOn(item,index)">接诊</view>
 
 						<!-- 空心按钮 -->
 						<view v-if="item.status ==3"
 							style="color: #409EFF;background-color: white;border:1rpx solid  #409EFF ;border-radius: 30rpx;padding: 8rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
-							@click.stop="onClickVideo(item,index)">结束问诊</view>
+							@click.stop="goPopEnd(item,index)">结束问诊</view>
 						<view v-if="item.status ==3"
 							style="color: white;background-color: #409EFF;border-radius: 30rpx;padding: 8rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
-							@click.stop="onClickVideo(item,index)">开具处方</view>
+							@click.stop="goChufang(item,index)">开具处方</view>
 						<view v-if="item.status ==3"
 							style="color: white;background-color: #409EFF;border-radius: 30rpx;padding: 8rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
-							@click.stop="onClickVideo(item,index)">进入诊室</view>
+							@click.stop="goChatClick(item,index)">进入诊室</view>
 
 
 						<!-- 空心按钮 -->
-						<view v-if="item.status ==4||item.status ==5"
+						<view v-if="item.status ==4"
 							style="color: #409EFF;background-color: white;border:1rpx solid  #409EFF ;border-radius: 30rpx;padding: 8rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
-							@click.stop="onClickVideo(item,index)">查看记录</view>
+							@click.stop="goChatHistory(item,index)">查看记录</view>
 					</view>
 				</view>
 
@@ -87,9 +87,8 @@
 			</view>
 		</view>
 
-		<view class="view-list" @click="onClick(index)" v-else v-for="(item, index) in listData" :key="index">
+		<!-- 		<view class="view-list" @click="onClick(index)" v-else v-for="(item, index) in listData" :key="index">
 			<view class="view-info-list">
-				<!-- <image mode="aspectFit" style="width: 80rpx;height: 80rpx;" :src="item.headUrl"></image> -->
 				<image mode="aspectFit" style="width: 90rpx;height: 90rpx;margin-bottom: 25rpx;"
 					src="/pages2/static/static/images/header.png">
 				</image>
@@ -102,27 +101,21 @@
 								{{item.userInfo.userSex}}&nbsp;&nbsp;{{item.userInfo.userAge}}岁
 							</view>
 						</view>
-
-						<!-- <view style="font-size: 24rpx;color: #999999">2023-01</view> -->
 					</view>
 					<view
 						style="font-size: 28rpx;color: #999999;margin-top: 5rpx;overflow: hidden; text-overflow: ellipsis; white-space: nowrap">
-						<!-- 申请时间：{{item.createdTime}} -->
 						{{item.createdTime}}
 					</view>
 					<view style="margin-top: 30rpx;height: 0.5px;background: #E6E6E6;"></view>
 				</view>
-
-
 			</view>
-
 			<view style="width: 95vw;height: 1rpx;color: #f00;"></view>
-		</view>
+		</view> -->
 
 		<u-empty mode="data" style="padding-top: 300rpx;" icon="/pages2/static/img/icon_nodata.png"
 			v-if="listData.length === 0"></u-empty>
 
-		<u-popup :safeAreaInsetBottom="true" :safeAreaInsetTop="true" :mode="popupData.mode" :show="show"
+		<!-- 		<u-popup :safeAreaInsetBottom="true" :safeAreaInsetTop="true" :mode="popupData.mode" :show="show"
 			:round="popupData.round" :overlay="popupData.overlay" :borderRadius="popupData.borderRadius"
 			:closeable="popupData.closeable" :closeOnClickOverlay="popupData.closeOnClickOverlay" @close="close"
 			@open="open">
@@ -133,15 +126,12 @@
 						<view style="margin-left: 20rpx;">{{choseOne.userInfo.userSex}}</view>
 						<view style="margin-left: 20rpx;">{{choseOne.userInfo.userAge}}岁</view>
 					</view>
-
-
 				</view>
 				<view style="overflow-y: auto;">
 					<view class="info-title">病情描述</view>
 					<view class="info-desc">{{illData.diseaseDesc}}</view>
 					<view class="info-pics">
 						<u-album :previewFullImage="false" :urls="illData.images" multipleSize="80"></u-album>
-						<!-- <u-album :previewFullImage="false" :urls="illData.images" rowCount="3" ></u-album> -->
 					</view>
 					<view class="info-title">希望获得帮助</view>
 					<view class="info-desc">{{illData.appealDesc}}</view>
@@ -154,22 +144,14 @@
 						<view
 							style="margin-left: 30rpx;font-size:30rpx;padding:  17rpx 60rpx;background-color: #409EFF;color: white;border-radius: 5rpx;"
 							@click="goOn">接诊</view>
-						<!-- 	<u-button type="primary" size='normal'  @click="goAsk" text="拒诊">
-						</u-button>
-						<u-button style="margin-left: 30rpx;" type="primary" @click="goOn" size='normal' text="接诊">
-						</u-button> -->
 					</view>
-
 				</view>
-
 			</view>
+		</u-popup> -->
 
-		</u-popup>
-
-		<u-popup :show="detailPopShow" round="4px" mode="center" @close="detailPopShow=false">
+		<!-- 		<u-popup :show="detailPopShow" round="4px" mode="center" @close="detailPopShow=false">
 			<view class="detailview">
 				<view class="detailviewtitle">患者信息</view>
-
 				<view style="overflow-y: auto;">
 					<view class="detalviewtext" style="color: #1A1A1A;font-size: 30rpx;font-weight: bold;">基本信息</view>
 					<text class="detalviewtext" decode>
@@ -178,14 +160,12 @@
 					<view class="detalviewtext">挂号时间：{{illData.appointTime}}</view>
 					<view class="detalviewtext">
 						咨询类型：复诊续方
-						<!-- 						咨询类型：{{activeItem.taskDetail.rightsName}} -->
 					</view>
 					<view class="detalviewtext" style="color: #1A1A1A;font-size: 30rpx;font-weight: bold;">
 						病情描述
 					</view>
 					<view class="detalviewtext">{{illData.diseaseDesc}}</view>
 					<view class="detailviewimgview">
-						<!-- <image @click="previewImageClick(item)" v-for="(item, index) in illData.images" :key="index" :src="item" style="width: 156rpx;height: 118rpx;margin-right: 10rpx;" ></image> -->
 						<u-album :previewFullImage="false" :urls="illData.images" multipleSize="80"></u-album>
 					</view>
 				</view>
@@ -196,33 +176,47 @@
 					<u-button type="primary" style="width: 228rpx;" text="接诊" @click="goOn"></u-button>
 				</view>
 			</view>
-		</u-popup>
+		</u-popup> -->
 
-		<u-modal class="wenzhen-modal" title="温馨提示" confirmText="确定" :show="showAsk" closeOnClickOverlay
-			@confirm="goRefuse" @close="() => showAsk = false">
+		<u-modal class="wenzhen-modal" title="温馨提示" confirmText="确定" :show="showRefuse" closeOnClickOverlay
+			@confirm="goRefuse" @close="() => showRefuse = false">
 			<view>确认拒诊吗？</view>
-			<!-- <u--form labelPosition="left" ref="form">
-
-			</u--form> -->
 		</u-modal>
+
+		<u-modal class="wenzhen-modal" title="温馨提示" confirmText="确定" :show="showGoOn" closeOnClickOverlay
+			@confirm="goOn" @close="() => showGoOn = false">
+			<view>确认接诊吗？</view>
+		</u-modal>
+
+		<u-modal title="结束问诊" confirmText="确定" @cancel="() => showEnd = false" showCancelButton :show="showEnd"
+			closeOnClickOverlay @confirm="endTalk" @close="() => showEnd = false">
+			<view>请确认是否结束问诊？</view>
+		</u-modal>
+
+		<TUI-view-rate ref="TUIViewRate" />
 
 	</view>
 </template>
 
 <script>
 	import tuicall from '../../../components/common/tuicall';
+	import TUIViewRate from '../../../components/tui-rate/view/index';
 
 	export default {
 		components: {
-			tuicall
+			tuicall,
+			TUIViewRate
 		},
 		data() {
 			return {
 				numZX: 0,
 				numSF: 0,
-				show: false,
-				detailPopShow: false,
-				showAsk: false,
+				// show: false,
+				// detailPopShow: false,
+				// showAsk: false,
+				showGoOn: false,
+				showRefuse: false,
+				showEnd: false,
 				serviceItemType: '99',
 				status: '2',
 				choseOne: {
@@ -283,12 +277,7 @@
 			this.account = uni.getStorageSync('account') || {
 				user: {}
 			};
-			this.getNum();
-			//注释的两个方法为点击不同的tab或者btn用来改变
-			this.getFuzhenNum();
-			// this.getPhoneNum();
-			// this.getVideoNum();
-			this.chatList();
+			this.refreshAllData()
 		},
 		onPullDownRefresh() {
 			console.log('refresh');
@@ -297,15 +286,15 @@
 				uni.stopPullDownRefresh();
 				return
 			}
-			this.getNum();
-			this.getFuzhenNum();
-			// this.getPhoneNum();
-			// this.getVideoNum();
-			this.chatList();
-
+			this.refreshAllData()
 		},
 
 		methods: {
+			refreshAllData() {
+				this.getNum();
+				this.getFuzhenNum();
+				this.chatList();
+			},
 			goSearch() {
 				uni.navigateTo({
 					url: '/pages2/pages/work/search'
@@ -321,10 +310,9 @@
 					// this.listTab[1].badge.value = res.data.TelNum
 					// this.listTab[2].badge.value = res.data.VedioNum
 					// this.listTab[3].badge.value = res.data.appointNum //复诊续方的红点
-					if (this.serviceItemType == '99') {
-						this.listBtn[0].canSee = this.listTab[2].badge.value > 0 ? true : false
-
-					}
+					// if (this.serviceItemType == '99') {
+					// 	this.listBtn[0].canSee = this.listTab[2].badge.value > 0 ? true : false
+					// }
 				});
 			},
 
@@ -406,72 +394,33 @@
 						item.createdTime = '申请时间：' + item.createdTime
 						console.log('serviceItemType', this.serviceItemType)
 						if (this.serviceItemType == '102') {
-							switch (this.status) {
+							switch (this.choseOne.status) {
 								case '2':
 									item.createdTime = '预约时间：' + item.appointTime.substring(0, 10) + ' ' +
 										item
 										.appointPeriod.substring(3)
-									// this.listBtn[0].canSee = this.listData.length > 0 ? true : false
-									break;
-								case '3':
-									item.createdTime = '待处理时间：' + item.confirmTime.substring(0, 10) + ' ' +
-										item
-										.confirmPeriod.substring(3)
-									// this.listBtn[1].canSee = this.listData.length > 0 ? true : false
-									break;
-									// case '4':
-									// case '5': //已拒诊归纳到已完成
-								case '9':
-									item.createdTime = '结束时间：' + item.updatedTime
-									// this.listBtn[2].canSee = this.listData.length > 0 ? true : false
-									break;
-								default:
-									break;
-							}
-
-						} else if (this.serviceItemType == '103') {
-							switch (this.status) {
-								case '2':
-									item.createdTime = '预约时间：' + item.appointTime.substring(0, 10) + ' ' +
-										item
-										.appointPeriod.substring(3)
-									// this.listBtn[0].canSee = this.listData.length > 0 ? true : false
 									this.$set(item, 'statusText', '待接诊')
-									this.$set(item, 'statusBtn', '处理')
-
 									break;
 								case '3':
 									item.createdTime = '待处理时间：' + item.confirmTime.substring(0, 10) + ' ' +
 										item
 										.confirmPeriod.substring(3)
-									// this.listBtn[1].canSee = this.listData.length > 0 ? true : false
 									this.$set(item, 'statusText', '已预约')
-									this.$set(item, 'statusBtn', '发起视频')
-
 									break;
 									// case '4':
 									// case '5': //已拒诊归纳到已完成
 								case '9':
-									this.$set(item, 'statusText', '已结束')
-									this.$set(item, 'statusBtn', '查看')
 									item.createdTime = '结束时间：' + item.updatedTime
-									// this.listBtn[2].canSee = this.listData.length > 0 ? true : false
-
+									this.$set(item, 'statusText', '已结束')
 									break;
 								default:
 									break;
 							}
-
-							this.$set(item, 'newTime', item.appointTime.substring(0, 10) + ' ' + item
-								.appointPeriod.substring(3) + '/' + item.serviceTime + '分钟')
 
 						} else if (this.serviceItemType == '99') {
 							//复诊续方
-							item.createdTime = '挂号时间：' + item.appointTime.substring(0, 10) + ' ' + item
+							item.createdTime = item.appointTime.substring(0, 10) + ' ' + item
 								.appointPeriod
-							if (this.status == '2') {
-								this.listBtn[0].canSee = this.listData.length > 0 ? true : false
-							}
 						}
 					})
 				});
@@ -487,14 +436,14 @@
 					this.illData.images = this.illData.images.split(',')
 				});
 			},
-			goAsk() {
-				this.show = false
-				this.showAsk = true
-			},
-			goAskFang() {
-				this.detailPopShow = false
-				this.showAsk = true
-			},
+			// goAsk() {
+			// 	this.show = false
+			// 	this.showAsk = true
+			// },
+			// goAskFang() {
+			// 	this.detailPopShow = false
+			// 	this.showAsk = true
+			// },
 
 			goRefuse() {
 				//拒诊
@@ -502,9 +451,8 @@
 					id: this.choseOne.id,
 				}).then(res => {
 					if (res.code == 0) {
-						this.showAsk = false
-						this.chatList()
-						this.getNum()
+						this.showRefuse = false
+						this.refreshAllData()
 						uni.showToast({
 							title: '操作成功！',
 							icon: 'none'
@@ -520,12 +468,9 @@
 					confirmTime: this.formatDateFull(new Date())
 				}).then(res => {
 					if (res.code == 0) {
-						// let grpId = encodeURIComponent('M_' + this.choseOne.orderId)
 						uni.setStorageSync('taskItem', this.choseOne);
-						this.show = false
-						this.detailPopShow = false
-						this.chatList()
-						this.getNum()
+						this.showGoOn = false
+						this.refreshAllData()
 						if (this.serviceItemType == '101') {
 							uni.navigateTo({
 								url: `/pages2/pages/TUI-Chat-Group2/chat?conversationID=GROUP${this.choseOne.imGroupId}`
@@ -540,89 +485,108 @@
 
 				});
 			},
-			onClick(index) {
-				this.choseOne = JSON.parse(JSON.stringify(this.listData[index]))
-				//图文咨询 咨询状态(2:待接诊 3:接诊中 9:已完成)
-				if (this.serviceItemType == '101') {
-					switch (this.choseOne.status) {
-						case 2:
-							//弹询问窗去接诊	现在改成跳转页面，还是有接诊拒诊按钮
-							this.show = true
-							this.getData(index)
-							// uni.navigateTo({
-							// 	url: './detailPhone?rightsId=' + this.listData[index].rightsId
-							// })
-							break;
-							//跳转聊天室
-						case 3:
-							uni.setStorageSync('taskItem', this.choseOne);
-							uni.navigateTo({
-								url: `/pages2/pages/TUI-Chat-Group2/chat?conversationID=GROUP${this.choseOne.imGroupId}`
-							});
-							break;
-						case 4:
-						case 5:
-							uni.setStorageSync('taskItem', this.choseOne);
-							uni.navigateTo({
-								url: `/pages2/pages/TUI-Group-History/chat?conversationID=GROUP${this.choseOne.imGroupId}`
-							});
-							break;
-					}
-				} else if (this.serviceItemType == '102') {
-					//电话咨询 咨询状态(2:待接诊 3:待处理 9:已完成)
-					uni.navigateTo({
-						// url: './detailPhone?rightsId=' + this.listData[index].rightsId
-						url: `./detailPhone?item=${encodeURIComponent(JSON.stringify(this.choseOne))}`,
-					})
-				} else if (this.serviceItemType == '99') {
-					//复诊续方
-					switch (this.choseOne.status) {
-						case 2:
-							//弹询问窗去接诊	现在改成跳转页面，还是有接诊拒诊按钮
-							this.detailPopShow = true
-							this.getData(index)
-							// uni.navigateTo({
-							// 	url: './detailPhone?rightsId=' + this.listData[index].rightsId
-							// })
-							break;
-							//跳转聊天室
-						case 3:
-							uni.setStorageSync('taskItem', this.choseOne); //TODO 去聊天可能要改
-							uni.navigateTo({
-								url: `/pages2/pages/TUI-Chat-Group2/chat?conversationID=GROUP${this.choseOne.imGroupId}`
-							});
-							break;
-						case 4:
-						case 5:
 
-							uni.setStorageSync('taskItem', this.choseOne); //TODO 去聊天可能要改
-							uni.navigateTo({
-								url: `/pages2/pages/TUI-Group-History/chat?conversationID=GROUP${this.choseOne.imGroupId}`
-							});
-							break;
+			/**
+			 * 结束问诊
+			 */
+			endTalk() {
+				uni.showLoading({
+					title: '请求中'
+				});
+				uni.$u.http.post('/medical-api/rightsUse/endRightsUseReq', {
+					id: this.choseOne.id,
+				}).then(res => {
+					uni.hideLoading()
+					if (res.code == 0) {
+						this.showEnd = false
+						uni.showToast({
+							title: '操作成功！',
+							icon: 'none'
+						});
+						this.refreshAllData()
 					}
-				}
-				//TODO 后期处理视频咨询
-
+				});
 			},
 
-			onClickVideo(item, index) {
+			onClickTextItem(item, index) {
+				switch (this.choseOne.status) {
+					case 2:
+						//弹询问窗去接诊	现在改成跳转页面，还是有接诊拒诊按钮
+						// this.show = true
+						// this.getData(index)
 
+						break;
+						//跳转聊天室
+					case 3:
+						// uni.setStorageSync('taskItem', this.choseOne);
+						// uni.navigateTo({
+						// 	url: `/pages2/pages/TUI-Chat-Group2/chat?conversationID=GROUP${this.choseOne.imGroupId}`
+						// });
+						break;
+					case 4:
+					case 5:
+						// uni.setStorageSync('taskItem', this.choseOne);
+						// uni.navigateTo({
+						// 	url: `/pages2/pages/TUI-Group-History/chat?conversationID=GROUP${this.choseOne.imGroupId}`
+						// });
+						break;
+				}
+			},
+
+			onTextRefuse(item, index) {
+				this.choseOne = JSON.parse(JSON.stringify(this.listData[index]))
+				console.log('onTextRefuse')
+				this.showRefuse = true
+			},
+			onTextGoOn(item, index) {
+				this.choseOne = JSON.parse(JSON.stringify(this.listData[index]))
+				console.log('onTextGoOn')
+				this.showGoOn = true
+			},
+
+			goPopEnd(item, index) {
+				this.choseOne = JSON.parse(JSON.stringify(this.listData[index]))
+				this.showEnd = true
+			},
+
+			goChufang(item, index) {
+				this.choseOne = JSON.parse(JSON.stringify(this.listData[index]))
+				uni.setStorageSync('taskItem', this.choseOne);
+				uni.navigateTo({
+					url: `/pages2/pages/chufang2/cf-add?preType=consultOrderPrescription`
+
+				});
+			},
+
+			goChatClick(item, index) {
+				this.choseOne = JSON.parse(JSON.stringify(this.listData[index]))
+				this.goChatRoom()
+			},
+			goChatRoom() {
+				uni.setStorageSync('taskItem', this.choseOne);
+				uni.navigateTo({
+					url: `/pages2/pages/TUI-Chat-Group2/chat?conversationID=GROUP${this.choseOne.imGroupId}`
+				});
+			},
+
+			showComments(item, index) {
+				this.choseOne = JSON.parse(JSON.stringify(this.listData[index]))
+				this.$refs.TUIViewRate.open(this.choseOne.orderId);
+			},
+
+			goChatHistory(item, index) {
+				this.choseOne = JSON.parse(JSON.stringify(this.listData[index]))
+				uni.setStorageSync('taskItem', this.choseOne); //TODO 去聊天可能要改
+				uni.navigateTo({
+					url: `/pages2/pages/TUI-Group-History/chat?conversationID=GROUP${this.choseOne.imGroupId}`
+				});
+			},
+
+
+			onClickVideo(item, index) {
 				//接诊中跳打视频，其他跳详情
 				if (item.status == 3) {
 					this.getMyDetail(item)
-					// if (item.serviceTime - item.usedServiceTime <= 0) {
-					// 	uni.showToast({
-					// 		title: '您的视频通话时长已用尽！',
-					// 		icon: 'none'
-					// 	});
-					// 	return
-					// }
-					// //TODO视频代码
-					// this.startVideoCall(item.id)
-					// // this.$refs.TUICall.groupCall('M_1678244033869307906', ['1841']);
-					// // this.$refs.TUICall.call('1841');
-					// this.$refs.TUICall.call(item.userId, item.imGroupId);
 				} else {
 					uni.navigateTo({
 						// url: './detailPhone?rightsId=' + this.listData[index].rightsId
@@ -681,8 +645,9 @@
 				console.log('item', item)
 				switch (item.index) {
 					case 0:
-						// 咨询类型(101:图文咨询 102:电话咨询 103:视频咨询)
-						this.serviceItemType = '101'
+						// 咨询类型(101:图文咨询 102:电话咨询 103:视频咨询  复诊续方 99)
+						//这里处理复诊续方，前端自定义一个serviceItemType 99，表示复诊续方
+						this.serviceItemType = '99'
 						// this.listTab[0].badge.value = 0
 						this.listBtn[1].name = '问诊中'
 						this.chatList()
@@ -708,7 +673,7 @@
 						// case 3:
 						// 	//原视频咨询不要了  这里处理复诊续方，前端自定义一个serviceItemType 99，表示复诊续方
 						// 	this.serviceItemType = '99'
-						// 	this.listBtn[1].name = '待处理'
+						// 	this.listBtn[1].name = '问诊中'
 						// 	// this.listTab[2].badge.value = 0
 						// 	this.chatList()
 						// 	this.listBtn[0].canSee = false
