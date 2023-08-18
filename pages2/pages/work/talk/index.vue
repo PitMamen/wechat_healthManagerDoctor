@@ -27,7 +27,12 @@
 				:key="index">
 				<view class="view-video-list">
 					<view style="display: flex;flex-direction: row;align-items: center;">
-						<view style="flex:1;font-size: 30rpx;font-weight: bold;">图文咨询</view>
+						<!-- <view style="flex:1;font-size: 30rpx;font-weight: bold;">图文咨询</view> -->
+						<view style="flex: 1;display: flex;flex-direction: row;align-items: center;">
+							<view style="font-size: 30rpx;font-weight: bold;">图文咨询</view>
+							<view style="font-size: 28rpx;color: #F32B0C;margin-left: 26rpx;">￥{{item.orderTotal}}
+							</view>
+						</view>
 						<view v-if="item.status==2" style="color: #F32B0C;">{{item.statusText}}</view>
 						<view v-else-if="item.status==3" style="color: #ECAD14;">{{item.statusText}}</view>
 						<view v-else style="color: #999999;">{{item.statusText}}</view>
@@ -99,7 +104,12 @@
 				:key="index">
 				<view class="view-video-list">
 					<view style="display: flex;flex-direction: row;align-items: center;">
-						<view style="flex:1;font-size: 30rpx;font-weight: bold;">电话咨询</view>
+						<!-- <view style="flex:1;font-size: 30rpx;font-weight: bold;">电话咨询</view> -->
+						<view style="flex: 1;display: flex;flex-direction: row;align-items: center;">
+							<view style="font-size: 30rpx;font-weight: bold;">电话咨询</view>
+							<view style="font-size: 28rpx;color: #F32B0C;margin-left: 26rpx;">￥{{item.orderTotal}}
+							</view>
+						</view>
 						<view v-if="item.status==2" style="color: #F32B0C;">{{item.statusText}}</view>
 						<view v-else-if="item.status==3" style="color: #ECAD14;">{{item.statusText}}</view>
 						<view v-else style="color: #999999;">{{item.statusText}}</view>
@@ -167,7 +177,12 @@
 				:key="index">
 				<view class="view-video-list">
 					<view style="display: flex;flex-direction: row;align-items: center;">
-						<view style="flex:1;font-size: 30rpx;font-weight: bold;">视频咨询</view>
+						<!-- <view style="flex:1;font-size: 30rpx;font-weight: bold;">视频咨询</view> -->
+						<view style="flex: 1;display: flex;flex-direction: row;align-items: center;">
+							<view style="font-size: 30rpx;font-weight: bold;">视频咨询</view>
+							<view style="font-size: 28rpx;color: #F32B0C;margin-left: 26rpx;">￥{{item.orderTotal}}
+							</view>
+						</view>
 						<view v-if="item.status==2" style="color: #F32B0C;">{{item.statusText}}</view>
 						<view v-else-if="item.status==3" style="color: #ECAD14;">{{item.statusText}}</view>
 						<view v-else style="color: #999999;">{{item.statusText}}</view>
@@ -195,9 +210,35 @@
 
 					<view style="display: flex;flex-direction: row;">
 						<view style="flex:1"></view>
-						<view class=""
+
+						<!-- 空心按钮 -->
+						<view v-if="item.status ==2"
+							style="color: #409EFF;background-color: white;border:1rpx solid  #409EFF ;border-radius: 30rpx;padding: 8rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
+							@click.stop="onTextRefuse(item,index)">拒诊</view>
+						<view v-if="item.status ==2"
+							style="color: white;background-color: #409EFF;border-radius: 30rpx;padding: 8rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
+							@click.stop="onTextGoOn(item,index)">接诊</view>
+
+						<!-- 空心按钮 -->
+						<view v-if="item.status ==3"
+							style="color: #409EFF;background-color: white;border:1rpx solid  #409EFF ;border-radius: 30rpx;padding: 8rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
+							@click.stop="goPopEnd(item,index)">结束问诊</view>
+						<view v-if="item.status ==3"
+							style="color: white;background-color: #409EFF;border-radius: 30rpx;padding: 8rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
+							@click.stop="goChufang(item,index)">开具处方</view>
+						<view v-if="item.status ==3"
+							style="color: white;background-color: #409EFF;border-radius: 30rpx;padding: 8rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
+							@click.stop="goCallVideo(item,index)">发起视频</view>
+
+
+						<!-- 空心按钮 -->
+						<view v-if="item.status ==4&&item.appraiseId"
+							style="color: #409EFF;background-color: white;border:1rpx solid  #409EFF ;border-radius: 30rpx;padding: 8rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
+							@click.stop="showComments(item,index)">查看评价</view>
+
+						<!-- <view class=""
 							style="color: white;background-color: #409EFF;border-radius: 30rpx;padding: 8rpx 43rpx 11rpx 43rpx;"
-							@click.stop="onClickVideo(item,index)">{{item.statusBtn}}</view>
+							@click.stop="onClickVideo(item,index)">{{item.statusBtn}}</view> -->
 					</view>
 				</view>
 
@@ -664,12 +705,18 @@
 						this.showGoOn = false
 						this.refreshAllData()
 						if (this.serviceItemType == '101') { //图文咨询接诊成功跳聊天
-							this.goChatRoom()
+							// this.goChatRoom()
+							uni.navigateTo({
+								url: `./detailImg?item=${encodeURIComponent(JSON.stringify(this.choseOne))}`,
+							})
 						} else if (this.serviceItemType == '102') { //电话咨询接诊成功跳电话详情
 							uni.navigateTo({
 								url: `./detailPhone?item=${encodeURIComponent(JSON.stringify(this.choseOne))}`,
 							})
-
+						} else if (this.serviceItemType == '103') { //视频咨询接诊成功跳视频详情
+							uni.navigateTo({
+								url: `./detailVideo?item=${encodeURIComponent(JSON.stringify(this.choseOne))}`,
+							})
 						}
 
 					}
@@ -771,28 +818,33 @@
 
 			//点击图文条目没有操作   原来的操作都放到条目的按钮上了
 			onClickTextItem(item, index) {
-				switch (this.choseOne.status) {
-					case 2:
-						//弹询问窗去接诊	现在改成跳转页面，还是有接诊拒诊按钮
-						// this.show = true
-						// this.getData(index)
+				this.choseOne = JSON.parse(JSON.stringify(this.listData[index]))
+				uni.navigateTo({
+					// url: './detailPhone?rightsId=' + this.listData[index].rightsId
+					url: `./detailImg?item=${encodeURIComponent(JSON.stringify(this.choseOne))}`,
+				})
+				// switch (this.choseOne.status) {
+				// 	case 2:
+				// 		//弹询问窗去接诊	现在改成跳转页面，还是有接诊拒诊按钮
+				// 		// this.show = true
+				// 		// this.getData(index)
 
-						break;
-						//跳转聊天室
-					case 3:
-						// uni.setStorageSync('taskItem', this.choseOne);
-						// uni.navigateTo({
-						// 	url: `/pages2/pages/TUI-Chat-Group2/chat?conversationID=GROUP${this.choseOne.imGroupId}`
-						// });
-						break;
-					case 4:
-					case 5:
-						// uni.setStorageSync('taskItem', this.choseOne);
-						// uni.navigateTo({
-						// 	url: `/pages2/pages/TUI-Group-History/chat?conversationID=GROUP${this.choseOne.imGroupId}`
-						// });
-						break;
-				}
+				// 		break;
+				// 		//跳转聊天室
+				// 	case 3:
+				// 		// uni.setStorageSync('taskItem', this.choseOne);
+				// 		// uni.navigateTo({
+				// 		// 	url: `/pages2/pages/TUI-Chat-Group2/chat?conversationID=GROUP${this.choseOne.imGroupId}`
+				// 		// });
+				// 		break;
+				// 	case 4:
+				// 	case 5:
+				// 		// uni.setStorageSync('taskItem', this.choseOne);
+				// 		// uni.navigateTo({
+				// 		// 	url: `/pages2/pages/TUI-Group-History/chat?conversationID=GROUP${this.choseOne.imGroupId}`
+				// 		// });
+				// 		break;
+				// }
 			},
 
 			onTextRefuse(item, index) {
@@ -891,17 +943,22 @@
 			// 	this.showGoOn = true
 			// },
 
-			onClickVideo(item, index) {
-
-				//接诊中跳打视频，其他跳详情
-				if (item.status == 3) {
-					this.getMyDetail(item)
-				} else {
-					uni.navigateTo({
-						url: `./detailVideo?item=${encodeURIComponent(JSON.stringify(item))}`,
-					})
-				}
+			goCallVideo(item, index) {
+				this.choseOne = JSON.parse(JSON.stringify(this.listData[index]))
+				this.getMyDetail(item)
 			},
+
+			// onClickVideo(item, index) {
+
+			// 	//接诊中跳打视频，其他跳详情
+			// 	if (item.status == 3) {
+			// 		this.getMyDetail(item)
+			// 	} else {
+			// 		uni.navigateTo({
+			// 			url: `./detailVideo?item=${encodeURIComponent(JSON.stringify(item))}`,
+			// 		})
+			// 	}
+			// },
 
 			getMyDetail(item) {
 				uni.$u.http.post('/medical-api/rightsUse/qryRightsUseRecord', {
