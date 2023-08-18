@@ -41,7 +41,7 @@
 <style lang="scss" scoped>
 	.wrap {
 		min-height: 100vh;
-		background: #EFF6FE;
+		
 		
 		.rich {
 			padding: 30rpx;
