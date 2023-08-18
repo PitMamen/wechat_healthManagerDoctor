@@ -12,18 +12,20 @@
 						<u-icon @click="close" style="margin-right: 30rpx;" name="close" size="18"
 							color="#909399"></u-icon>
 					</view>
-					<view class="inputs"><u-search  placeholder="搜索诊断" v-model="value" :show-action="false"
-						@change="change"></u-search></view>
-					
+					<view class="inputs"><u-search placeholder="搜索诊断" v-model="value" :show-action="false"
+							@change="change"></u-search></view>
+
 				</u-sticky>
-				<!-- 搜索列表 -->
-				<view class="result" v-if="listDiag.length > 0">
+				<!-- 搜索列表 需要做分页加载-->
+				<scroll-view class="result" :scroll-y="true" @scrolltolower="scrolltolower" v-if="listDiag.length > 0">
+					<!-- <view class="result"> -->
 					<view class="item" v-for="item in listDiag" :key="item.diagnosisCode" @click="clickItem(item)">
 						<view v-html="item.htmlName" style="flex:1;"></view>
-						
+
 						<view style="margin-right: 30rpx;color: #999999;">{{item.diagnosisCode}}</view>
 					</view>
-				</view>
+					<!-- </view> -->
+				</scroll-view>
 
 				<!-- 常用列表 -->
 				<view v-if="value.length==0"
@@ -51,6 +53,10 @@
 				//常用列表
 				listConstant: [],
 				value: '',
+				flag: false,
+				hasNomore: false,
+				total: 0,
+				pageNo: 1,
 				// diagItem: {},
 				popupData: {
 					overlay: true,
@@ -152,6 +158,9 @@
 			change() {
 				this.value = this.value.trim();
 				if (this.value.length > 0) {
+					this.pageNo = 1;
+					this.total = 0;
+					this.listDiag = [];
 					this.getList();
 				} else {
 					this.listDiag = [];
@@ -178,12 +187,19 @@
 			},
 
 			getList() {
+				uni.showLoading({
+					title: '正在加载'
+				});
 				uni.$u.http.get('/info-api/medicine/searchDiagnosis', {
 					params: {
+						pageNo: this.pageNo,
 						keyWord: this.value.trim(),
-						preType:uni.getStorageSync('cf-info').preType
+						preType: uni.getStorageSync('cf-info').preType
 					}
 				}).then(res => {
+					if (res.data && res.data.length == 0) {
+						this.hasNomore = true
+					}
 					res.data = res.data || {};
 					let arr = []
 					res.data.forEach((item) => {
@@ -195,6 +211,9 @@
 					})
 					// this.listDiag = res.data.rows || [];
 					this.changeColor(arr)
+				}).finally(() => {
+					this.flag = false;
+					uni.hideLoading();
 				});
 
 			},
@@ -204,7 +223,7 @@
 				resultsList.map((item, index) => {
 					if (this.value) {
 						// 匹配关键字正则
-						
+
 						let replaceReg = new RegExp(this.value, 'g')
 						// 高亮替换v-html值
 						let replaceString = '<span class="search-text" style="color:#007BF5;">' + this.value +
@@ -215,10 +234,33 @@
 						}
 					}
 				})
-				console.log(resultsList)
-				this.listDiag = []
-				this.listDiag = resultsList
+				console.log('changeColor', resultsList)
+
+				if (this.flag) { //是下拉的话就需要合并集合
+					this.listDiag = this.listDiag.concat(resultsList)
+				} else { //不是下拉就需要重置
+					this.listDiag = []
+					this.listDiag = resultsList
+				}
+
 			},
+
+			scrolltolower() {
+				// if (this.pageNo * 10 >= this.total) {
+				// 	return;
+				// }
+				console.log('scrolltolower hasNomore', this.hasNomore)
+				console.log('scrolltolower flag', this.flag)
+				if (this.hasNomore) {
+					return;
+				}
+				if (this.flag) {
+					return;
+				}
+				this.flag = true;
+				this.pageNo++;
+				this.getList();
+			}
 		}
 	}
 </script>
@@ -235,7 +277,7 @@
 		overflow-y: auto;
 		width: 97%;
 		padding: 24rpx 30rpx;
-		height: 810rpx;
+		height: 610rpx;
 	}
 
 	.wrap-diag .wrap-pop .pop-top {
@@ -250,7 +292,7 @@
 	}
 
 	.wrap-diag .wrap-pop .result {
-		min-height: 600rpx;
+		height: 400rpx;
 		margin-top: 20rpx;
 		/* border: 1px solid #CCCCCC; */
 		border-radius: 4rpx;
