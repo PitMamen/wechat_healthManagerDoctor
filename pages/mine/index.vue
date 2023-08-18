@@ -40,8 +40,24 @@
 			</view>
 
 		</view>
-
-
+		
+		
+		<view class="v-items" @click="goOrderList">
+			<image src="/static/static/images/mine_dd.png"
+				style="float: left;width: 56rpx;height: 56rpx;margin-left: 2vw;">
+			</image>
+			
+			<view style="margin-left: 10px;font-size: 30rpx;flex: 1;">我的订单</view>
+			
+			<view style="display: flex;flex-direction: row;">
+				<!-- <span style="float: right;font-size: 14px;"></span> -->
+				<u-icon name="arrow-right" color="#333"
+					style="width: 10px;height: 10px;float: right;margin-right: 10px;margin-top: 6.5px;"></u-icon>
+			</view>
+		
+		</view>
+		
+		
 		<view class="v-items" @click="goInquiryList2">
 			<image src="/static/static/images/mine_jk.png"
 				style="float: left;width: 56rpx;height: 56rpx;margin-left: 2vw;">
@@ -170,6 +186,11 @@
 				uni.navigateTo({
 					url: '/pages2/pages/mine/info'
 				})
+			},
+			goOrderList() {
+				uni.navigateTo({
+					url: '/pages2/pages/mine/order'
+				});
 			},
 			//互联网医院问诊咨询
 			goInquiryList() {
