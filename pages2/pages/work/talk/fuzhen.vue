@@ -24,11 +24,15 @@
 
 			<!-- <view class="view-list-video" @click="onClick(index)" v-for="(item, index) in listData" :key="index"> -->
 			<!-- //复诊续方本质是图文咨询 点击图文条目没有操作   原来的操作都放到条目的按钮上了 -->
-			<view class="view-list-video" @click="onClickTextItem(item,index)" v-for="(item, index) in listData"
+			<view class="view-list-video" @click="onClickFuzhenItem(item,index)" v-for="(item, index) in listData"
 				:key="index">
 				<view class="view-video-list">
 					<view style="display: flex;flex-direction: row;align-items: center;">
-						<view style="flex:1;font-size: 30rpx;font-weight: bold;">复诊续方</view>
+						<view style="flex: 1;display: flex;flex-direction: row;align-items: center;">
+							<view style="font-size: 30rpx;font-weight: bold;">复诊续方</view>
+							<view style="font-size: 28rpx;color: #F32B0C;margin-left: 26rpx;">￥{{item.orderTotal}}
+							</view>
+						</view>
 						<view v-if="item.status==2" style="color: #F32B0C;">{{item.statusText}}</view>
 						<view v-else-if="item.status==3" style="color: #ECAD14;">{{item.statusText}}</view>
 						<view v-else style="color: #999999;">{{item.statusText}}</view>
@@ -394,7 +398,7 @@
 						item.createdTime = '申请时间：' + item.createdTime
 						console.log('serviceItemType', this.serviceItemType)
 						if (this.serviceItemType == '102') {
-							switch (this.choseOne.status) {
+							switch (this.status) {
 								case '2':
 									item.createdTime = '预约时间：' + item.appointTime.substring(0, 10) + ' ' +
 										item
@@ -418,6 +422,20 @@
 							}
 
 						} else if (this.serviceItemType == '99') {
+							switch (this.status) {
+								case '2':
+									this.$set(item, 'statusText', '待接诊')
+									break;
+								case '3':
+									this.$set(item, 'statusText', '问诊中')
+									break;
+
+								case '9':
+									this.$set(item, 'statusText', '已结束')
+									break;
+								default:
+									break;
+							}
 							//复诊续方
 							item.createdTime = item.appointTime.substring(0, 10) + ' ' + item
 								.appointPeriod
@@ -476,9 +494,13 @@
 								url: `/pages2/pages/TUI-Chat-Group2/chat?conversationID=GROUP${this.choseOne.imGroupId}`
 							});
 						} else if (this.serviceItemType == '99') {
+							//接诊成功跳详情
 							uni.navigateTo({
-								url: `/pages2/pages/TUI-Chat-Group2/chat?conversationID=GROUP${this.choseOne.imGroupId}`
-							});
+								url: `./detailFz?item=${encodeURIComponent(JSON.stringify(this.choseOne))}`,
+							})
+							// uni.navigateTo({
+							// 	url: `/pages2/pages/TUI-Chat-Group2/chat?conversationID=GROUP${this.choseOne.imGroupId}`
+							// });
 						}
 
 					}
@@ -508,29 +530,34 @@
 				});
 			},
 
-			onClickTextItem(item, index) {
-				switch (this.choseOne.status) {
-					case 2:
-						//弹询问窗去接诊	现在改成跳转页面，还是有接诊拒诊按钮
-						// this.show = true
-						// this.getData(index)
+			onClickFuzhenItem(item, index) {
+				this.choseOne = JSON.parse(JSON.stringify(this.listData[index]))
+				uni.navigateTo({
+					// url: './detailPhone?rightsId=' + this.listData[index].rightsId
+					url: `./detailFz?item=${encodeURIComponent(JSON.stringify(this.choseOne))}`,
+				})
+				// switch (this.choseOne.status) {
+				// 	case 2:
+				// 		//弹询问窗去接诊	现在改成跳转页面，还是有接诊拒诊按钮
+				// 		// this.show = true
+				// 		// this.getData(index)
 
-						break;
-						//跳转聊天室
-					case 3:
-						// uni.setStorageSync('taskItem', this.choseOne);
-						// uni.navigateTo({
-						// 	url: `/pages2/pages/TUI-Chat-Group2/chat?conversationID=GROUP${this.choseOne.imGroupId}`
-						// });
-						break;
-					case 4:
-					case 5:
-						// uni.setStorageSync('taskItem', this.choseOne);
-						// uni.navigateTo({
-						// 	url: `/pages2/pages/TUI-Group-History/chat?conversationID=GROUP${this.choseOne.imGroupId}`
-						// });
-						break;
-				}
+				// 		break;
+				// 		//跳转聊天室
+				// 	case 3:
+				// 		// uni.setStorageSync('taskItem', this.choseOne);
+				// 		// uni.navigateTo({
+				// 		// 	url: `/pages2/pages/TUI-Chat-Group2/chat?conversationID=GROUP${this.choseOne.imGroupId}`
+				// 		// });
+				// 		break;
+				// 	case 4:
+				// 	case 5:
+				// 		// uni.setStorageSync('taskItem', this.choseOne);
+				// 		// uni.navigateTo({
+				// 		// 	url: `/pages2/pages/TUI-Group-History/chat?conversationID=GROUP${this.choseOne.imGroupId}`
+				// 		// });
+				// 		break;
+				// }
 			},
 
 			onTextRefuse(item, index) {
@@ -552,8 +579,10 @@
 			goChufang(item, index) {
 				this.choseOne = JSON.parse(JSON.stringify(this.listData[index]))
 				uni.setStorageSync('taskItem', this.choseOne);
+				// 图文  电话  视频 传consultOrderPrescription  ；复诊续方传 appPrePrescription
 				uni.navigateTo({
-					url: `/pages2/pages/chufang2/cf-add?preType=consultOrderPrescription`
+					// url: `/pages2/pages/chufang2/cf-add?preType=consultOrderPrescription`
+					url: `/pages2/pages/chufang2/cf-add?preType=appPrePrescription`
 
 				});
 			},

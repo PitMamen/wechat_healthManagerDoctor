@@ -252,11 +252,25 @@
 					});
 					return;
 				}
-				const cfInfo = uni.getStorageSync('cf-info');
-				cfInfo.medicalOrdersDetails = this.list;
-				uni.setStorageSync('cf-info', cfInfo);
-				uni.navigateBack({
-					delta: 1
+				uni.showLoading({
+					title:'正在加载'
+				});
+				uni.$u.http.post(`/medical-api/medical/checkDrugStock`, {
+					rightsId: uni.getStorageSync('taskItem').rightsId,
+					drugInfos: this.list.map(item => {
+						return {
+							drugQty: item.num,
+							drugCode: item.code
+						};
+					})
+				}).then(res => {
+					uni.hideLoading();
+					const cfInfo = uni.getStorageSync('cf-info');
+					cfInfo.medicalOrdersDetails = this.list;
+					uni.setStorageSync('cf-info', cfInfo);
+					uni.navigateBack({
+						delta: 1
+					});
 				});
 			}
 		}
