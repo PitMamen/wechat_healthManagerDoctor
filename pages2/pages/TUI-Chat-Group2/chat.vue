@@ -11,7 +11,7 @@
 			</view>
 		</view>
 		<block v-if="tab==='tab1'">
-			<record :userId="taskItem.userId+''" :rightsId="taskItem.rightsId+''"/>
+			<record :userId="taskItem.userId+''" :rightsId="taskItem.rightsId+''" />
 		</block>
 		<block v-if="tab==='tab2'">
 			<view class="message-list" @tap="triggerClose">
@@ -49,7 +49,7 @@
 				taskItem: uni.getStorageSync('taskItem'),
 				tab: 'tab2',
 				rights: 0,
-				
+
 				conversationName: '',
 				conversation: {},
 				messageList: [],
@@ -72,7 +72,7 @@
 				this.videoPlay = value.isPlay;
 				this.videoMessage = value.message;
 			});
-			
+
 			this.$bus.$off('updateRights');
 			this.$bus.$on('updateRights', this.geneRights);
 		},
@@ -98,13 +98,13 @@
 				logger.log('TUI-chat | loadFunction  | ${e}');
 			}
 			uni.$TUIKit.on(uni.$TUIKitEvent.SDK_READY, this.readyHandler);
-			
+
 			const taskItem = uni.getStorageSync('taskItem');
 			const userInfo = taskItem.userInfo || {};
 			uni.setNavigationBarTitle({
 				title: `${userInfo.userName} ${userInfo.userSex} ${userInfo.userAge}岁`
 			});
-			
+
 			const eventChannel = this.getOpenerEventChannel();
 			eventChannel.on('sendCfCard_', message_ => {
 				setTimeout(() => {
@@ -114,7 +114,7 @@
 		},
 		onUnload() {
 			uni.$TUIKit.off(uni.$TUIKitEvent.SDK_READY, this.readyHandler);
-			getApp().globalData.sideY =uni.getWindowInfo().windowHeight - 300
+			getApp().globalData.sideY = uni.getWindowInfo().windowHeight - 300
 		},
 		onShow() {
 			this.geneRights();
@@ -176,16 +176,21 @@
 				// 将自己发送的消息写进消息列表里面
 				this.$refs.messageList.updateMessageList(event.detail.message);
 			},
-			
+
 			sendCustomMessage(e) {
 				let reqParams = {};
 				const taskItem = uni.getStorageSync('taskItem');
 				const payloadData = JSON.parse(e.detail.payload.data);
-                if (payloadData.type === 'CustomChuFangMessage'){
+				if (payloadData.type === 'CustomChuFangMessage') {
 					this.$refs.messageInput.$handleSendCustomMessage(e);
 					return;
 				}
-				if (payloadData.type === 'CustomArticleMessage'){
+				//TODO 推送套餐需求   推送套餐不不调用inquiriesAgency/add接口，患者就不会有套餐通知
+				if (payloadData.type === 'CustomTaoCanMessage') {
+					this.$refs.messageInput.$handleSendCustomMessage(e);
+					return;
+				}
+				if (payloadData.type === 'CustomArticleMessage') {
 					reqParams = {
 						originalId: payloadData.id,
 						originalType: 2,
@@ -193,7 +198,7 @@
 						content: `${taskItem.docName}医生在图文咨询中给您推送了健康宣教文章《${payloadData.content}》，请您及时阅读。`
 					};
 				}
-				if (payloadData.type === 'CustomWenJuanMessage'){
+				if (payloadData.type === 'CustomWenJuanMessage') {
 					reqParams = {
 						originalId: payloadData.id,
 						originalType: 1,
@@ -202,19 +207,19 @@
 						content: `${taskItem.docName}医生在图文咨询中邀请您填写问卷《${payloadData.name}》，请您及时填写。`
 					};
 				}
-				//TODO 推送套餐需求
-				if (payloadData.type === 'CustomTaoCanMessage'){
-					reqParams = {
-						originalId: payloadData.id,
-						originalType: 1,
-						url: payloadData.url,
-						title: '医生邀请您购买套餐',
-						content: `医生给您推荐了一个服务套餐，请您 点击购买。`
-					};
-				}
+				//TODO 推送套餐需求   推送套餐不不调用inquiriesAgency/add接口，患者就不会有套餐通知
+				// if (payloadData.type === 'CustomTaoCanMessage') {
+				// 	reqParams = {
+				// 		originalId: payloadData.id,
+				// 		originalType: 1,
+				// 		url: payloadData.url,
+				// 		title: '医生邀请您购买套餐',
+				// 		content: `医生给您推荐了一个服务套餐，请您 点击购买。`
+				// 	};
+				// }
 				uni.$u.http.post(`/medical-api/inquiriesAgency/add`, {
-					... reqParams,
-					... {
+					...reqParams,
+					...{
 						imGroupId: taskItem.imGroupId,
 						orderId: taskItem.orderId,
 						rightsItemId: taskItem.rightsItemId,
@@ -233,13 +238,13 @@
 					this.$refs.messageInput.handleClose();
 				}
 			},
-			
+
 			geneRights() {
 				this.getTextUsedInfo().then(data => {
 					const record = data[0] || {};
-					if (record.serviceFrequency===null || record.serviceFrequency===undefined){
+					if (record.serviceFrequency === null || record.serviceFrequency === undefined) {
 						this.rights = '无限制';
-					}else {
+					} else {
 						this.rights = record.serviceFrequency - record.usedServiceFrequency;
 					}
 				});
@@ -279,7 +284,7 @@
 					// confirmColor: '#F36F6F',
 					showCancel: true,
 					success: (res) => {
-						if (res.confirm){
+						if (res.confirm) {
 							this.give();
 						}
 					}
@@ -287,7 +292,7 @@
 			},
 			give() {
 				uni.showLoading({
-					title:'正在加载'
+					title: '正在加载'
 				});
 				const taskItem = uni.getStorageSync('taskItem');
 				uni.$u.http.get('/medical-api/rightsUse/giveTextNum', {
@@ -318,13 +323,16 @@
 <style lang="scss">
 	.container {
 		background: #FFFFFF;
+
 		.header {
 			flex-shrink: 0;
 			background: #FFFFFF;
+
 			.tabs {
 				display: flex;
 				justify-content: space-between;
 				padding: 30rpx 121rpx;
+
 				.tab {
 					flex: 1;
 					font-size: 28rpx;
@@ -333,12 +341,15 @@
 					line-height: 68rpx;
 					text-align: center;
 					border: 1rpx solid #E6E6E6;
+
 					&.tab1 {
 						border-radius: 34rpx 0 0 34rpx;
 					}
+
 					&.tab2 {
 						border-radius: 0 34rpx 34rpx 0;
 					}
+
 					&.active {
 						color: #FFFFFF;
 						background: #409EFF;
@@ -346,17 +357,20 @@
 					}
 				}
 			}
+
 			.rights {
 				display: flex;
 				justify-content: space-between;
 				padding: 16rpx 24rpx;
 				border-top: 1rpx solid #E6E6E6;
+
 				.text {
 					font-size: 28rpx;
 					font-weight: 400;
 					color: #F02727;
 					line-height: 48rpx;
 				}
+
 				.btn {
 					width: 200rpx;
 					margin-right: 6rpx;
@@ -370,13 +384,17 @@
 				}
 			}
 		}
+
 		.message-list {
 			background: #EBEBEB;
 		}
+
 		.message-input {
 			background: #F5F5F5;
 		}
+
 		.chat-wrapper {}
+
 		.container-box {
 			.video-message {}
 		}
