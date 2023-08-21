@@ -21,7 +21,7 @@
 			</view>
 		</view>
 		<view class="content">
-			<u-empty mode="data" style="padding-top: 300rpx;" icon="/pages2/static/img/icon_nodata.png" v-if="list.length === 0"></u-empty>
+			<u-empty mode="data" style="padding-top: 500rpx;" icon="/pages2/static/img/icon_nodata.png" v-if="list.length === 0"></u-empty>
 			<scroll-view class="list" :scroll-y="true" @scrolltolower="scrolltolower" v-else>
 				<view class="item" v-for="item in list" :key="item.id" @click="itemClick(item)">
 					<view class="top">
@@ -66,21 +66,115 @@
 							</view>
 						</view>
 					</view>
-					<view class="bottom">
-						<view class="btn btn2">结束问诊</view>
-						<view class="btn btn1">开具处方</view>
-						<view class="btn btn1">进入诊室</view>
+					<view class="bottom" v-if="item.broadClassify === 4">
+						<block v-if="item.status === 2">
+							<view class="btn btn2" @click.stop="onTextRefuse(item)">拒诊</view>
+							<view class="btn btn1" @click.stop="onTextGoOn(item)">接诊</view>
+						</block>
+						<block v-if="item.status === 3">
+							<view class="btn btn2" @click.stop="goPopEnd(item)">结束问诊</view>
+							<view class="btn btn1" @click.stop="goChufang(item)" v-if="item.diagnosisFlag.value === 1">开具处方</view>
+							<view class="btn btn1" @click.stop="goChatClick(item)">进入诊室</view>
+						</block>
+						<block v-if="item.status === 4">
+							<view class="btn btn2" @click.stop="showComments(item)" v-if="item.appraiseId">查看评价</view>
+							<view class="btn btn2" @click.stop="goChatHistory(item)">查看记录</view>
+						</block>
+					</view>
+					<view class="bottom" v-else-if="item.serviceItemType === 101">
+						<block v-if="item.status === 2">
+							<view class="btn btn2" @click.stop="onTextRefuse(item)">拒诊</view>
+							<view class="btn btn1" @click.stop="onTextGoOn(item)">接诊</view>
+						</block>
+						<block v-if="item.status === 3">
+							<view class="btn btn2" @click.stop="goPopEnd(item)">结束问诊</view>
+							<view class="btn btn1" @click.stop="goChufang(item)" v-if="item.diagnosisFlag.value === 1">开具处方</view>
+							<view class="btn btn1" @click.stop="goChatClick(item)">进入诊室</view>
+						</block>
+						<block v-if="item.status === 4">
+							<view class="btn btn2" @click.stop="showComments(item)" v-if="item.appraiseId">查看评价</view>
+							<view class="btn btn2" @click.stop="goChatHistory(item)">查看记录</view>
+						</block>
+					</view>
+					<view class="bottom" v-else-if="item.serviceItemType === 102">
+						<block v-if="item.status === 2">
+							<view class="btn btn2" @click.stop="onTextRefuse(item)">拒诊</view>
+							<view class="btn btn1" @click.stop="onTextGoOn(item)">接诊</view>
+						</block>
+						<block v-if="item.status === 3">
+							<view class="btn btn2" @click.stop="goPopEnd(item)">结束问诊</view>
+							<view class="btn btn1" @click.stop="goChufang(item)" v-if="item.diagnosisFlag.value === 1">开具处方</view>
+							<view class="btn btn1" @click.stop="goCall(item)">拨打电话</view>
+						</block>
+						<block v-if="item.status === 4">
+							<view class="btn btn2" @click.stop="showComments(item)" v-if="item.appraiseId">查看评价</view>
+						</block>
+					</view>
+					<view class="bottom" v-else-if="item.serviceItemType === 103">
+						<block v-if="item.status === 2">
+							<view class="btn btn2" @click.stop="onTextRefuse(item)">拒诊</view>
+							<view class="btn btn1" @click.stop="onTextGoOn(item)">接诊</view>
+						</block>
+						<block v-if="item.status === 3">
+							<view class="btn btn2" @click.stop="goPopEnd(item)">结束问诊</view>
+							<view class="btn btn1" @click.stop="goChufang(item)" v-if="item.diagnosisFlag.value === 1">开具处方</view>
+							<view class="btn btn1" @click.stop="goCallVideo(item)">发起视频</view>
+						</block>
+						<block v-if="item.status === 4">
+							<view class="btn btn2" @click.stop="showComments(item)" v-if="item.appraiseId">查看评价</view>
+						</block>
 					</view>
 				</view>
 			</scroll-view>
 		</view>
 		
+		<tuicall ref="TUICall"></tuicall>
+		<TUI-view-rate ref="TUIViewRate" />
 		<u-picker :show="show1" :columns="list1" @cancel="cancel1" @confirm="confirm1"></u-picker>
 		<u-picker :show="show2" :columns="list2" @cancel="cancel2" @confirm="confirm2"></u-picker>
+		<u-modal
+			title="温馨提示"
+			confirmText="确定"
+			showCancelButton
+			closeOnClickOverlay
+			:show="showRefuse"
+			@confirm="goRefuse"
+			@cancel="() => showRefuse = false;"
+			@close="() => showRefuse = false;"
+		>
+			<view>确认拒诊吗？</view>
+		</u-modal>
+		<u-modal
+			title="温馨提示"
+			confirmText="确定"
+			showCancelButton
+			closeOnClickOverlay
+			:show="showGoOn"
+			@confirm="goOn"
+			@cancel="() => showGoOn = false;"
+			@close="() => showGoOn = false;"
+		>
+			<view>确认接诊吗？</view>
+		</u-modal>
+		<u-modal
+			title="结束问诊"
+			confirmText="确定"
+			showCancelButton
+			closeOnClickOverlay
+			:show="showEnd"
+			@confirm="endTalk"
+			@cancel="() => showEnd = false;"
+			@close="() => showEnd = false;"
+		>
+			<view>请确认是否结束问诊？</view>
+		</u-modal>
 	</view>
 </template>
 
 <script>
+	import tuicall from '/pages2/components/common/tuicall';
+	import TUIViewRate from '/pages2/components/tui-rate/view/index';
+	
 	export default {
 		data() {
 			return {
@@ -107,8 +201,17 @@
 					{text: '待接诊',value: 2},
 					{text: '问诊中',value: 3},
 					{text: '已结束',value: 9}
-				]]
+				]],
+				
+				choseOne: null,
+				showEnd: false,
+				showGoOn: false,
+				showRefuse: false
 			}
+		},
+		components: {
+			tuicall,
+			TUIViewRate
 		},
 		computed: {
 		},
@@ -163,18 +266,21 @@
 			hideKeyboard() {
 				uni.hideKeyboard();
 			},
+			resetPage() {
+				this.pageNo = 1;
+				this.total = 0;
+				this.list = [];
+			},
 			changeTab(tab) {
 				this.serviceItemType = '';
 				this.broadClassify = '';
 				this.status = '';
 				
-				this.pageNo = 1;
-				this.total = 0;
-				this.list = [];
-				
 				this.text1 = '';
 				this.text2 = '';
 				this.tab = tab;
+				
+				this.resetPage();
 				if (this.tab === 1){
 					this.broadClassify = 4;
 				}
@@ -187,7 +293,184 @@
 				}
 				this.changeTab(tab);
 			},
-			itemClick(item) {},
+			itemClick(item) {
+				let pageName = '';
+				if (item.broadClassify === 4){
+					pageName = 'detailFz';
+				}else if (item.serviceItemType === 101){
+					pageName = 'detailImg';
+				}else if (item.serviceItemType === 102){
+					pageName = 'detailPhone';
+				}else if (item.serviceItemType === 103){
+					pageName = 'detailVideo';
+				}
+				uni.setStorageSync('taskItem', item);
+				uni.navigateTo({
+					url: `/pages2/pages/work/talk/${pageName}?item=${encodeURIComponent(JSON.stringify(item))}`
+				});
+			},
+			
+			onTextRefuse(item) {
+				this.choseOne = item;
+				this.showRefuse = true;
+			},
+			onTextGoOn(item) {
+				this.choseOne = item;
+				this.showGoOn = true;
+			},
+			goPopEnd(item) {
+				this.choseOne = item;
+				this.showEnd = true;
+			},
+			goChufang(item) {
+				uni.setStorageSync('taskItem', item);
+				uni.navigateTo({
+					url: `/pages2/pages/chufang2/cf-add?preType=${item.broadClassify===4 ? 'appPrePrescription' : 'consultOrderPrescription'}`
+				});
+			},
+			goChatClick(item) {
+				this.goChatRoom(item);
+			},
+			goChatRoom(item) {
+				uni.setStorageSync('taskItem', item);
+				uni.navigateTo({
+					url: `/pages2/pages/TUI-Chat-Group2/chat?conversationID=GROUP${item.imGroupId}`
+				});
+			},
+			showComments(item) {
+				this.$refs.TUIViewRate.open(item.orderId);
+			},
+			goChatHistory(item) {
+				uni.setStorageSync('taskItem', item);
+				uni.navigateTo({
+					url: `/pages2/pages/TUI-Group-History/chat?conversationID=GROUP${item.imGroupId}`
+				});
+			},
+			goCall(item) {
+				if (!item.docPhone || !item.userPhone){
+					uni.showToast({
+						title: '号码有误！',
+						icon: 'none'
+					});
+					return;
+				}
+				uni.showLoading({
+					title: '正在加载'
+				});
+				uni.$u.http.post('/medical-api/rightsUse/doManualCall', {
+					tradeId: item.id,
+					distPhone: item.userPhone,
+					sourcePhone: item.docPhone
+				}).then(res => {
+					uni.hideLoading();
+					if (res.code == 0){
+						uni.showToast({
+							title: '操作成功,请接听电话！',
+							icon: 'none'
+						});
+					}
+				});
+			},
+			goCallVideo(item) {
+				this.getMyDetail(item);
+			},
+			getMyDetail(item) {
+				uni.$u.http.post('/medical-api/rightsUse/qryRightsUseRecord', {
+					id: item.id
+				}).then(res => {
+					uni.hideLoading();
+					item.serviceTime = res.data[0].serviceTime;
+					item.usedServiceTime = res.data[0].usedServiceTime;
+					if (item.serviceTime-item.usedServiceTime <= 0){
+						uni.showToast({
+							title: '您的视频通话时长已用尽！',
+							icon: 'none'
+						});
+						return;
+					}
+					this.startVideoCall(item.id);
+					this.$refs.TUICall.call(item.userId, item.imGroupId);
+				});
+			},
+			startVideoCall(id) {
+				uni.$u.http.get('/medical-api/rightsUse/startVedio', {
+					params: {
+						tradeId: id
+					}
+				}).then(res => {});
+			},
+			goRefuse() {
+				uni.showLoading({
+					title: '正在加载'
+				});
+				uni.$u.http.post('/medical-api/rightsUse/rejectRightsUseReq', {
+					id: this.choseOne.id
+				}).then(res => {
+					uni.hideLoading();
+					if (res.code == 0){
+						this.showRefuse = false;
+						this.refreshAllData();
+						uni.showToast({
+							title: '操作成功！',
+							icon: 'none'
+						});
+					}
+				});
+			},
+			goOn() {
+				uni.showLoading({
+					title: '正在加载'
+				});
+				uni.$u.http.post('/medical-api/rightsUse/confirmRightsUseReq', {
+					id: this.choseOne.id,
+					confirmTime: this.formatDateFull(new Date())
+				}).then(res => {
+					uni.hideLoading();
+					if (res.code == 0) {
+						this.showGoOn = false;
+						this.refreshAllData();
+						this.itemClick(this.choseOne);
+					}
+				});
+			},
+			endTalk() {
+				uni.showLoading({
+					title: '正在加载'
+				});
+				uni.$u.http.post('/medical-api/rightsUse/endRightsUseReq', {
+					id: this.choseOne.id
+				}).then(res => {
+					uni.hideLoading();
+					if (res.code == 0) {
+						this.showEnd = false;
+						this.refreshAllData();
+						uni.showToast({
+							title: '操作成功！',
+							icon: 'none'
+						});
+					}
+				});
+			},
+			formatDateFull(date) {
+				date = new Date(date);
+				let myyear = date.getFullYear();
+				let mymonth = date.getMonth() + 1;
+				let myweekday = date.getDate();
+				let oHour = date.getHours();
+				let oMin = date.getMinutes();
+				let oSen = date.getSeconds();
+				mymonth < 10 ? (mymonth = '0' + mymonth) : mymonth;
+				myweekday < 10 ? (myweekday = '0' + myweekday) : myweekday;
+				oHour < 10 ? (oHour = '0' + oHour) : oHour;
+				oMin < 10 ? (oMin = '0' + oMin) : oMin;
+				oSen < 10 ? (oSen = '0' + oSen) : oSen;
+				return `${myyear}-${mymonth}-${myweekday} ${oHour}:${oMin}:${oSen}`;
+			},
+			refreshAllData() {
+				this.resetPage();
+				this.getList();
+			},
+			
 			cancel1() {
 				this.show1 = false;
 			},
@@ -199,9 +482,7 @@
 				this.text1 = e.value[0].text;
 				this.serviceItemType = e.value[0].value;
 				
-				this.pageNo = 1;
-				this.total = 0;
-				this.list = [];
+				this.resetPage();
 				this.getList();
 			},
 			confirm2(e) {
@@ -209,9 +490,7 @@
 				this.text2 = e.value[0].text;
 				this.status = e.value[0].value;
 				
-				this.pageNo = 1;
-				this.total = 0;
-				this.list = [];
+				this.resetPage();
 				this.getList();
 			}
 		}
