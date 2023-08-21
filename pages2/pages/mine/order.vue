@@ -139,8 +139,8 @@
 			closeOnClickOverlay
 			:show="showRefuse"
 			@confirm="goRefuse"
-			@cancel="() => showRefuse = false;"
-			@close="() => showRefuse = false;"
+			@cancel="() => showRefuse = false"
+			@close="() => showRefuse = false"
 		>
 			<view>确认拒诊吗？</view>
 		</u-modal>
@@ -151,8 +151,8 @@
 			closeOnClickOverlay
 			:show="showGoOn"
 			@confirm="goOn"
-			@cancel="() => showGoOn = false;"
-			@close="() => showGoOn = false;"
+			@cancel="() => showGoOn = false"
+			@close="() => showGoOn = false"
 		>
 			<view>确认接诊吗？</view>
 		</u-modal>
@@ -163,8 +163,8 @@
 			closeOnClickOverlay
 			:show="showEnd"
 			@confirm="endTalk"
-			@cancel="() => showEnd = false;"
-			@close="() => showEnd = false;"
+			@cancel="() => showEnd = false"
+			@close="() => showEnd = false"
 		>
 			<view>请确认是否结束问诊？</view>
 		</u-modal>
@@ -172,8 +172,8 @@
 </template>
 
 <script>
-	import tuicall from '/pages2/components/common/tuicall';
-	import TUIViewRate from '/pages2/components/tui-rate/view/index';
+	import tuicall from '@/pages2/components/common/tuicall';
+	import TUIViewRate from '@/pages2/components/tui-rate/view/index';
 	
 	export default {
 		data() {
