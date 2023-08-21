@@ -2,55 +2,67 @@
 	<view class="wrap">
 		<view class="head">
 			<view class="tab">
-				<view class="item">
+				<view class="item" :class="{active: tab===1}" @click="tabClick(1)">
 					<view>本院复诊</view>
 				</view>
-				<view class="item active">
+				<view class="item" :class="{active: tab===2}" @click="tabClick(2)">
 					<view>健康咨询</view>
 				</view>
 			</view>
 			<view class="filter">
-				<view class="item">
-					<view class="name">请选择类别</view>
+				<view class="item" @click="show1 = true; hideKeyboard();" v-if="tab === 2">
+					<view class="name">{{text1 || '请选择类别'}}</view>
 					<u-icon name="arrow-down" color="#1A1A1A" size="36rpx"></u-icon>
 				</view>
-				<view class="item">
-					<view class="name">请选择状态</view>
+				<view class="item" @click="show2 = true; hideKeyboard();">
+					<view class="name">{{text2 || '请选择状态'}}</view>
 					<u-icon name="arrow-down" color="#1A1A1A" size="36rpx"></u-icon>
 				</view>
 			</view>
 		</view>
 		<view class="content">
-			<view class="list">
-				<view class="item">
+			<u-empty mode="data" style="padding-top: 300rpx;" icon="/pages2/static/img/icon_nodata.png" v-if="list.length === 0"></u-empty>
+			<scroll-view class="list" :scroll-y="true" @scrolltolower="scrolltolower" v-else>
+				<view class="item" v-for="item in list" :key="item.id" @click="itemClick(item)">
 					<view class="top">
 						<view class="left">
-							<text class="name">复诊续方</text>
-							<text class="price">￥10.00</text>
+							<text class="name" v-if="item.broadClassify === 4">复诊续方</text>
+							<text class="name" v-else>{{getTypeName(item.serviceItemType)}}</text>
+							<text class="price">￥{{item.orderTotal}}</text>
 						</view>
-						<view class="right red">待接诊</view>
+						<view class="right" :class="{red: item.status===2, blue: item.status===3}">{{item.statusName}}</view>
 					</view>
 					<view class="middle">
 						<view class="line">
 							<view class="title">患者信息：</view>
 							<view class="desc">
-								<text>张三</text>
+								<text>{{item.userInfo.userName}}</text>
 								<text class="split1">|</text>
-								<text>18岁</text>
+								<text>{{item.userInfo.userAge}}岁</text>
 								<text class="split1">|</text>
-								<text>男</text>
+								<text>{{item.userInfo.userSex}}</text>
 							</view>
 						</view>
 						<view class="line">
 							<view class="title">病情描述：</view>
-							<view class="desc">糖尿病前期，吃了药品后腹泻</view>
+							<view class="desc">{{item.diseaseDesc || '---'}}</view>
 						</view>
-						<view class="line">
+						<view class="line" v-if="item.broadClassify === 4">
 							<view class="title">预约时间：</view>
 							<view class="desc">
-								<text>2023-01-01  09:00-12:00</text>
-								<text class="split2">/</text>
-								<text>30分钟</text>
+								<text>{{item.createdTime}}</text>
+							</view>
+						</view>
+						<view class="line" v-else-if="item.serviceItemType === 101">
+							<view class="title">申请时间：</view>
+							<view class="desc">
+								<text>{{item.createdTime}}</text>
+							</view>
+						</view>
+						<view class="line" v-else>
+							<view class="title">预约时间：</view>
+							<view class="desc">
+								<text>{{item.appointTimePeriod}}</text>
 							</view>
 						</view>
 					</view>
@@ -60,8 +72,11 @@
 						<view class="btn btn1">进入诊室</view>
 					</view>
 				</view>
-			</view>
+			</scroll-view>
 		</view>
+		
+		<u-picker :show="show1" :columns="list1" @cancel="cancel1" @confirm="confirm1"></u-picker>
+		<u-picker :show="show2" :columns="list2" @cancel="cancel2" @confirm="confirm2"></u-picker>
 	</view>
 </template>
 
@@ -69,23 +84,135 @@
 	export default {
 		data() {
 			return {
-				options: {}
+				serviceItemType: '',
+				broadClassify: 4,
+				status: '',
+				tab: 1,
+				
+				flag: false,
+				total: 0,
+				pageNo: 1,
+				list: [],
+				
+				show1: false,
+				show2: false,
+				text1: '',
+				text2: '',
+				list1: [[
+					{text: '图文咨询',value: 101},
+					{text: '电话咨询',value: 102},
+					{text: '视频咨询',value: 103}
+				]],
+				list2: [[
+					{text: '待接诊',value: 2},
+					{text: '问诊中',value: 3},
+					{text: '已结束',value: 9}
+				]]
 			}
 		},
 		computed: {
 		},
-		components: {
-		},
-		onLoad(options) {
-			this.options = options;
+		onLoad() {
+			this.getList();
 		},
 		onReady() {
 		},
 		onShow() {
-			this.init();
 		},
 		methods: {
-			init() {
+			getList() {
+				uni.showLoading({
+					title:'正在加载'
+				});
+				uni.$u.http.post(`/medical-api/rightsUse/qryRightsUseRecordPageByDoc`, {
+					docId: uni.getStorageSync('account').user.userId,
+					serviceItemType: this.serviceItemType,
+					broadClassify: this.broadClassify,
+					status: this.status,
+					pageNo: this.pageNo,
+					pageSize: 10
+				}).then(res => {
+					uni.hideLoading();
+					this.total = res.data.totalRows;
+					this.list = this.list.concat(res.data.rows || []);
+				}).finally(() => {
+					this.flag = false;
+				});
+			},
+			scrolltolower() {
+				if (this.pageNo*10 >= this.total){
+					return;
+				}
+				if (this.flag){
+					return;
+				}
+				this.flag = true;
+				this.pageNo ++;
+				this.getList();
+			},
+			getTypeName(type) {
+				const result = [
+					{text: '图文咨询',value: 101},
+					{text: '电话咨询',value: 102},
+					{text: '视频咨询',value: 103}
+				].find(item => {
+					return item.value === type;
+				}) || {};
+				return result.text || '';
+			},
+			hideKeyboard() {
+				uni.hideKeyboard();
+			},
+			changeTab(tab) {
+				this.serviceItemType = '';
+				this.broadClassify = '';
+				this.status = '';
+				
+				this.pageNo = 1;
+				this.total = 0;
+				this.list = [];
+				
+				this.text1 = '';
+				this.text2 = '';
+				this.tab = tab;
+				if (this.tab === 1){
+					this.broadClassify = 4;
+				}
+				
+				this.getList();
+			},
+			tabClick(tab) {
+				if (this.tab === tab){
+					return;
+				}
+				this.changeTab(tab);
+			},
+			itemClick(item) {},
+			cancel1() {
+				this.show1 = false;
+			},
+			cancel2() {
+				this.show2 = false;
+			},
+			confirm1(e) {
+				this.cancel1();
+				this.text1 = e.value[0].text;
+				this.serviceItemType = e.value[0].value;
+				
+				this.pageNo = 1;
+				this.total = 0;
+				this.list = [];
+				this.getList();
+			},
+			confirm2(e) {
+				this.cancel2();
+				this.text2 = e.value[0].text;
+				this.status = e.value[0].value;
+				
+				this.pageNo = 1;
+				this.total = 0;
+				this.list = [];
+				this.getList();
 			}
 		}
 	}
@@ -143,7 +270,9 @@
 		}
 		.content {
 			.list {
+				max-height: calc(100vh - 170rpx);
 				padding: 30rpx 24rpx;
+				box-sizing: border-box;
 				.item {
 					margin-bottom: 30rpx;
 					padding: 20rpx 30rpx;
@@ -175,6 +304,7 @@
 						.right {
 							font-size: 28rpx;
 							font-weight: 400;
+							color: #999999;
 							line-height: 50rpx;
 							&.red {
 								color: #F32B0C;

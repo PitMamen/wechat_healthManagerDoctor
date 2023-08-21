@@ -60,7 +60,18 @@
 			</view>
 		</view>
 		
-		<view class="v-package" style="margin-top: 20rpx;" v-if="rightDetail.broadClassify != 2">
+		<view class="v-package" style="margin-top: 20rpx;" v-if="rightDetail.broadClassify == 2">
+			<view class="v-p-name">订单信息</view>
+			<view class="v-line"></view>
+			<view class="v-p-item">
+				<view class="v-item-name">说明：该订单为患者申请使用（{{rightDetail.commodityName}}）中的图文咨询权限。</view>
+			</view>
+			<view class="v-p-item">
+				<view class="v-item-name">订单费用：</view>
+				<view class="v-item-value" style="color: #E14C4C;">￥{{rightDetail.consultTotal}}</view>
+			</view>
+		</view>
+		<view class="v-package" style="margin-top: 20rpx;" v-else>
 			<view class="v-p-name">订单信息</view>
 			<view class="v-line"></view>
 			<view class="v-p-item">
@@ -74,17 +85,6 @@
 			<view class="v-p-item">
 				<view class="v-item-name">订单费用：</view>
 				<view class="v-item-value" style="color: #E14C4C;">￥{{rightDetail.orderTotal}}</view>
-			</view>
-		</view>
-		<view class="v-package" style="margin-top: 20rpx;" v-else>
-			<view class="v-p-name">订单信息</view>
-			<view class="v-line"></view>
-			<view class="v-p-item">
-				<view class="v-item-name">说明：该订单为患者申请使用（{{rightDetail.commodityName}}）中的图文咨询权限。</view>
-			</view>
-			<view class="v-p-item">
-				<view class="v-item-name">订单费用：</view>
-				<view class="v-item-value" style="color: #E14C4C;">￥{{rightDetail.consultTotal}}</view>
 			</view>
 		</view>
 		
