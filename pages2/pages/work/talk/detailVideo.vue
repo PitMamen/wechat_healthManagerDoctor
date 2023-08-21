@@ -63,7 +63,7 @@
 			<view class="v-pa-up">
 				<view class="v-name-des" style="flex: 1;">患者信息</view>
 				<view class="info-des" style="color: #1A1A1A;">
-					{{rightDetail.userInfo.userName}} | {{rightDetail.userInfo.userSex}} | {{rightDetail.userInfo.userAge}}
+					{{rightDetail.userInfo.userName}} | {{rightDetail.userInfo.userSex}} | {{rightDetail.userInfo.userAge}}岁
 				</view>
 			</view>
 			<view class="v-line"></view>
