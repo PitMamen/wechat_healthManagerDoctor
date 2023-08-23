@@ -76,7 +76,7 @@
 							<view class="btn btn1" @click.stop="goChufang(item)" v-if="item.diagnosisFlag.value === 1">开具处方</view>
 							<view class="btn btn1" @click.stop="goChatClick(item)">进入诊室</view>
 						</block>
-						<block v-if="item.status === 4">
+						<block v-if="item.status===4 || item.status===5">
 							<view class="btn btn2" @click.stop="showComments(item)" v-if="item.appraiseId">查看评价</view>
 							<view class="btn btn2" @click.stop="goChatHistory(item)">查看记录</view>
 						</block>
@@ -91,7 +91,7 @@
 							<view class="btn btn1" @click.stop="goChufang(item)" v-if="item.diagnosisFlag.value === 1">开具处方</view>
 							<view class="btn btn1" @click.stop="goChatClick(item)">进入诊室</view>
 						</block>
-						<block v-if="item.status === 4">
+						<block v-if="item.status===4 || item.status===5">
 							<view class="btn btn2" @click.stop="showComments(item)" v-if="item.appraiseId">查看评价</view>
 							<view class="btn btn2" @click.stop="goChatHistory(item)">查看记录</view>
 						</block>
@@ -106,7 +106,7 @@
 							<view class="btn btn1" @click.stop="goChufang(item)" v-if="item.diagnosisFlag.value === 1">开具处方</view>
 							<view class="btn btn1" @click.stop="goCall(item)">拨打电话</view>
 						</block>
-						<block v-if="item.status === 4">
+						<block v-if="item.status===4 || item.status===5">
 							<view class="btn btn2" @click.stop="showComments(item)" v-if="item.appraiseId">查看评价</view>
 						</block>
 					</view>
@@ -120,7 +120,7 @@
 							<view class="btn btn1" @click.stop="goChufang(item)" v-if="item.diagnosisFlag.value === 1">开具处方</view>
 							<view class="btn btn1" @click.stop="goCallVideo(item)">发起视频</view>
 						</block>
-						<block v-if="item.status === 4">
+						<block v-if="item.status===4 || item.status===5">
 							<view class="btn btn2" @click.stop="showComments(item)" v-if="item.appraiseId">查看评价</view>
 						</block>
 					</view>
