@@ -217,7 +217,8 @@
 			//处方列表
 			getcfList() {
 				const postData = {
-					admId: 43015894,
+					// admId: 43015894,
+					admId: this.$data.admRowid
 				}
 				uni.$u.http.get('/health-api/prescription/getHisOrdItem', {
 						params: postData
