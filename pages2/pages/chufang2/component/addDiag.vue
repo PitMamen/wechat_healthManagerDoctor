@@ -6,7 +6,7 @@
 			@open="open">
 			<view class="wrap-pop" style="background: white;top:0">
 				<!-- 的方法給發熱個人 -->
-				<u-sticky style="background-color: white;top:0">
+				<u-sticky style="top:0;padding: 24rpx 30rpx;">
 					<view class="pop-top">
 						<view style="margin-left: 42%;flex: 1;font-size: 30rpx;">诊断</view>
 						<u-icon @click="close" style="margin-right: 30rpx;" name="close" size="18"
@@ -29,7 +29,8 @@
 
 				<!-- 常用列表 -->
 				<view v-if="value.length==0"
-					style="margin-top: 30rpx;color: #1A1A1A;font-size: 30rpx;font-weight: bold;">常用诊断</view>
+					style="margin-top: 30rpx;color: #1A1A1A;font-size: 30rpx;font-weight: bold;margin-left: 24rpx;">常用诊断
+				</view>
 				<view v-if="value.length==0" class="wrap-constant">
 					<view class="cons-item" :class="{checked:item.isChecked}" v-for="item in listConstant"
 						:key="item.diagnosisCode" @click="clickItemConstant(item)">{{item.diagnosis}}</view>
@@ -276,18 +277,25 @@
 	.wrap-diag .wrap-pop {
 		overflow-y: auto;
 		width: 97%;
-		padding: 24rpx 30rpx;
+		/* padding: 24rpx 30rpx; */
 		height: 610rpx;
 	}
 
+	.u-sticky__content {
+		background-color: white !important;
+	}
+
 	.wrap-diag .wrap-pop .pop-top {
+		background-color: white;
 		display: flex;
-		padding: 0 30rpx 30rpx 30rpx;
+		padding: 30rpx;
 		flex-direction: row;
 	}
 
 	.wrap-diag .wrap-pop .inputs {
-		width: 97%;
+		/* width: 97%; */
+		padding-left: 24rpx;
+		background-color: white;
 		/* margin: 30rpx 0; */
 	}
 
@@ -316,6 +324,7 @@
 		flex-direction: row;
 		flex-wrap: wrap;
 		align-items: center;
+		padding: 0 30rpx;
 	}
 
 	.wrap-diag .wrap-pop .wrap-constant .cons-item {

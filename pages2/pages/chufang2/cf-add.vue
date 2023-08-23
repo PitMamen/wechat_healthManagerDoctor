@@ -220,6 +220,7 @@
 		},
 		onLoad(options) {
 			uni.removeStorageSync('cf-info');
+			console.log('cf-add preType',this.options.preType)
 			this.options = options;
 			this.options.preType = this.options.preType || 'appPrePrescription';
 		},

@@ -62,27 +62,28 @@
 						<view style="flex:1"></view>
 						<!-- 空心按钮 -->
 						<view v-if="item.status ==2"
-							style="color: #409EFF;background-color: white;border:1rpx solid  #409EFF ;border-radius: 30rpx;padding: 8rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
+							style="color: #409EFF;background-color: white;border:1rpx solid  #409EFF ;border-radius: 30rpx;padding: 12rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
 							@click.stop="onTextRefuse(item,index)">拒诊</view>
 						<view v-if="item.status ==2"
-							style="color: white;background-color: #409EFF;border-radius: 30rpx;padding: 8rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
+							style="color: white;background-color: #409EFF;border-radius: 30rpx;padding: 12rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
 							@click.stop="onTextGoOn(item,index)">接诊</view>
 
 						<!-- 空心按钮 -->
 						<view v-if="item.status ==3"
-							style="color: #409EFF;background-color: white;border:1rpx solid  #409EFF ;border-radius: 30rpx;padding: 8rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
+							style="color: #409EFF;background-color: white;border:1rpx solid  #409EFF ;border-radius: 30rpx;padding: 12rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
 							@click.stop="goPopEnd(item,index)">结束问诊</view>
 						<view v-if="item.status ==3"
-							style="color: white;background-color: #409EFF;border-radius: 30rpx;padding: 8rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
+							style="color: white;background-color: #409EFF;border-radius: 30rpx;padding: 12rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
 							@click.stop="goChufang(item,index)">开具处方</view>
 						<view v-if="item.status ==3"
-							style="color: white;background-color: #409EFF;border-radius: 30rpx;padding: 8rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
+							style="color: white;background-color: #409EFF;border-radius: 30rpx;padding: 12rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
 							@click.stop="goChatClick(item,index)">进入诊室</view>
 
 
 						<!-- 空心按钮 -->
-						<view v-if="item.status ==4"
-							style="color: #409EFF;background-color: white;border:1rpx solid  #409EFF ;border-radius: 30rpx;padding: 8rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
+						<!-- <view v-if="item.status ==4" -->
+						<view v-if="item.status ==4||item.status ==5"
+							style="color: #409EFF;background-color: white;border:1rpx solid  #409EFF ;border-radius: 30rpx;padding: 12rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
 							@click.stop="goChatHistory(item,index)">查看记录</view>
 					</view>
 				</view>
@@ -780,7 +781,7 @@
 
 	.wrap {
 		min-height: 100vh;
-		background-color: white;
+		background-color: #F5F5F5;
 
 		// .u-sticky__content {
 		// 	background-color: white !important;

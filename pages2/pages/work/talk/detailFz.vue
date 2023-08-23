@@ -507,7 +507,7 @@
 				if (this.canSendBag) {
 					uni.setStorageSync('taskItem', this.passItem);
 					uni.navigateTo({
-						url: `/pages2/pages/chufang2/cf-add?preType=consultOrderPrescription`
+						url: `/pages2/pages/chufang2/cf-add?preType=appPrePrescription`
 
 					});
 				} else {
