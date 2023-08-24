@@ -680,9 +680,13 @@
 
 			goRefuse() {
 				//拒诊
+				uni.showLoading({
+					title: '请求中'
+				});
 				uni.$u.http.post('/medical-api/rightsUse/rejectRightsUseReq', {
 					id: this.choseOne.id,
 				}).then(res => {
+					uni.hideLoading()
 					if (res.code == 0) {
 						this.showRefuse = false
 						this.refreshAllData()
@@ -696,10 +700,14 @@
 			},
 			goOn() {
 				// 接诊
+				uni.showLoading({
+					title: '请求中'
+				});
 				uni.$u.http.post('/medical-api/rightsUse/confirmRightsUseReq', {
 					id: this.choseOne.id,
 					confirmTime: this.formatDateFull(new Date())
 				}).then(res => {
+					uni.hideLoading()
 					if (res.code == 0) {
 						uni.setStorageSync('taskItem', this.choseOne);
 						this.showGoOn = false
