@@ -2,32 +2,23 @@
 	<view class="wrap">
 		<view class="head">
 			<view class="bg">
-				<image src="https://hmg.mclouds.org.cn/content-api/file/I20230703145249841SEOCC6F1GL1O5O-logo.png"></image>
+				<image src="https://hmg.mclouds.org.cn/content-api/file/I20230703145249841SEOCC6F1GL1O5O-logo.png">
+				</image>
 			</view>
 		</view>
 		<view class="content">
 			<view class="login">
 				<view class="title">登录</view>
 				<view class="account">
-					<u-input
-						class="input"
-						placeholder="输入你的用户名/手机号"
-						border="none"
-						v-model="loginData.userName"
-					>
+					<u-input class="input" placeholder="输入你的用户名/手机号" border="none" v-model="loginData.userName">
 						<view slot="prefix" class="prefix">
 							<image src="/static/static/images/login/account.png"></image>
 						</view>
 					</u-input>
 				</view>
 				<view class="passwd">
-					<u-input
-						class="input"
-						type="password"
-						placeholder="输入您的密码"
-						border="none"
-						v-model="loginData.password"
-					>
+					<u-input class="input" type="password" placeholder="输入您的密码" border="none"
+						v-model="loginData.password">
 						<view slot="prefix" class="prefix">
 							<image src="/static/static/images/login/passwd.png"></image>
 						</view>
@@ -42,19 +33,16 @@
 					</view>
 				</view>
 				<view class="protocol">
-					<u-radio-group v-model="checkedProtocol" @change="groupChange" >
-						<!-- <u-radio :name='$attrs' activeColor="#01B1F6" iconColor="#01B1F6" labelColor="#01B1F6"  label="同意并查看《互联网医院用户协议》"></u-radio> -->
-						<u-radio name='1' shape="square" activeColor="#01B1F6" iconColor="#01B1F6" labelColor="#01B1F6"  label="同意并查看《互联网医院用户协议》"></u-radio>
-					</u-radio-group>
+					<u-checkbox-group v-model="checkedProtocol" placement="column" @change="groupChange">
+						<u-checkbox :customStyle="{marginBottom: '24px'}" key="1" label="我已阅读并同意" name="1" />
+						
+					</u-checkbox-group>
+					<view style="color:#01B1F6 ;font-size: 30rpx;marginBottom: 24px" @click="onCheckClick">《用户协议》</view>
+					
 				</view>
 				<view class="button">
-					<u-button
-						type="primary"
-						text="登 录"
-						loadingText="登录中..."
-						:loading="loading"
-						@click="all_ok"
-					></u-button>
+					<u-button type="primary" text="登 录" loadingText="登录中..." :loading="loading" @click="all_ok">
+					</u-button>
 				</view>
 			</view>
 		</view>
@@ -88,8 +76,11 @@
 		},
 		onLoad() {
 			const loginData = uni.getStorageSync('loginData') || {};
-			this.checkedProtocol = uni.getStorageSync('checkedProtocol')||'';
-			this.loginData = { ...this.loginData, ...loginData };
+			this.checkedProtocol = uni.getStorageSync('checkedProtocol') || '';
+			this.loginData = {
+				...this.loginData,
+				...loginData
+			};
 		},
 		methods: {
 			login(res) {
@@ -138,7 +129,7 @@
 					success() {}
 				})
 			},
-			
+
 			// 登录
 			all_ok() {
 				if (!this.loginData.userName) {
@@ -150,19 +141,19 @@
 					return
 				}
 				if (this.checkedProtocol != '1') {
-					this.$u.toast("请同意并查看《互联网医院用户协议》！")
+					this.$u.toast("请阅读并同意《用户协议》！")
 					return
 				}
-				if (this.loading){
+				if (this.loading) {
 					return;
 				}
 				this.loading = true;
-				
+
 				setTimeout(() => {
 					uni.clearStorage();
 					const reqData = JSON.parse(JSON.stringify(this.loginData));
 					uni.$u.http.post('/account-api/login', reqData).then(res => {
-						if (this.remind.length > 0){
+						if (this.remind.length > 0) {
 							uni.setStorageSync('loginData', {
 								userName: this.loginData.userName,
 								password: this.loginData.password
@@ -176,7 +167,7 @@
 						this.loading = false;
 					});
 				});
-				
+
 			},
 
 			getUserInfo() {
@@ -200,20 +191,25 @@
 					},
 				});
 			},
-			
+
 			wechatLogin() {
-				location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${wechatappID}&redirect_uri=${encodeURIComponent(domain + '/pages/wechat/login')}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
+				location.href =
+					`https://open.weixin.qq.com/connect/oauth2/authorize?appid=${wechatappID}&redirect_uri=${encodeURIComponent(domain + '/pages/wechat/login')}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
 			},
-			
+
 			// 注册
 			reg_ok() {
 				uni.navigateTo({
 					url: '/pages/login/register'
 				});
 			},
-			groupChange(){
+			groupChange() {
 				// debugger
 				uni.setStorageSync('checkedProtocol', '1');
+				this.checkedProtocol='1'
+				
+			},
+			onCheckClick(){
 				uni.navigateTo({
 					url: '/pages/login/protocol'
 				});
@@ -235,11 +231,13 @@
 	.wrap {
 		min-height: 100vh;
 		background: #EFF6FE;
+
 		.head {
 			position: relative;
 			width: 100%;
 			height: 534rpx;
-			background: rgba(14,99,215,0.59);
+			background: rgba(14, 99, 215, 0.59);
+
 			.bg {
 				position: absolute;
 				width: 564rpx;
@@ -248,6 +246,7 @@
 				bottom: 102rpx;
 				transform: translateX(-50%);
 				background-size: cover;
+
 				image {
 					position: absolute;
 					width: 321rpx;
@@ -258,6 +257,7 @@
 				}
 			}
 		}
+
 		.content {
 			.login {
 				position: relative;
@@ -266,8 +266,9 @@
 				top: -67rpx;
 				margin: 0 auto;
 				background: #FFFFFF;
-				box-shadow: 0rpx 5rpx 10rpx 0rpx rgba(97,166,247,0.35);
+				box-shadow: 0rpx 5rpx 10rpx 0rpx rgba(97, 166, 247, 0.35);
 				border-radius: 8rpx;
+
 				.title {
 					padding: 40rpx 0rpx 70rpx 60rpx;
 					font-size: 48rpx;
@@ -276,49 +277,59 @@
 					color: #3E4A59;
 					line-height: 45rpx;
 				}
+
 				.input {
 					font-size: 30rpx;
 					font-family: PingFang SC;
 					font-weight: 400;
-					color: rgba(62,74,89,0.45);
+					color: rgba(62, 74, 89, 0.45);
 					line-height: 36rpx;
 				}
+
 				.account {
 					margin: 0 40rpx;
 					margin-bottom: 62rpx;
 					padding: 20rpx 0rpx;
 					border-bottom: 2rpx solid #D3DFEF;
+
 					.prefix {
 						position: relative;
 						top: 4rpx;
 						padding: 0 45rpx;
+
 						image {
 							width: 22rpx;
 							height: 36rpx;
 						}
 					}
 				}
+
 				.passwd {
 					margin: 0 40rpx;
 					margin-bottom: 40rpx;
 					padding: 20rpx 0rpx;
 					border-bottom: 2rpx solid #D3DFEF;
+
 					.prefix {
 						position: relative;
 						top: 4rpx;
 						padding: 0 45rpx;
+
 						image {
 							width: 25.2rpx;
 							height: 36rpx;
 						}
 					}
 				}
+
 				.remind {
 					overflow: hidden;
+
 					.checkbox {
 						float: right;
 						padding-right: 8rpx;
 					}
+
 					.text {
 						float: right;
 						margin-right: 55rpx;
@@ -329,15 +340,15 @@
 						line-height: 30rpx;
 					}
 				}
-				
-				.protocol{
+
+				.protocol {
 					display: flex;
 					flex-direction: row;
-					align-items: center;
+					align-items: flex-start;
 					margin-top: 30rpx;
 					padding: 0 80rpx;
 				}
-				
+
 				.button {
 					position: absolute;
 					width: 510rpx;
@@ -347,9 +358,11 @@
 					transform: translateX(-50%);
 				}
 			}
+
 			.wechat {
 				margin-top: 218rpx;
 				text-align: center;
+
 				.text {
 					margin-bottom: 30rpx;
 					font-size: 22rpx;
@@ -358,6 +371,7 @@
 					color: #4D4D4D;
 					line-height: 22rpx;
 				}
+
 				image {
 					display: inline-block;
 					width: 54rpx;
