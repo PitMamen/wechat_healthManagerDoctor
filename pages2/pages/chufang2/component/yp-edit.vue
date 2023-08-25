@@ -203,15 +203,15 @@
 				uni.showLoading({
 					title:'正在加载'
 				});
-				uni.$u.http.get(`/info-api/medicine/calcDrugNum`, {
-					params: {
+				uni.$u.http.post(`/info-api/medicine/calcDrugNum`, {
+					//params: {
 						code: this.item.code,
 						days: this.item.useDays,
 						freq: this.item.useFrequency,
 						num: this.item.useNum,
 						unit: this.item.useUnit,
                         preType: this.options.preType
-					}
+					//}
 				}).then(res => {
 					this.$set(this.item, 'num', res.data);
 				}).finally(() => {
