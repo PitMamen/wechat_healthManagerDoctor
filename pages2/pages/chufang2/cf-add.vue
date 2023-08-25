@@ -482,7 +482,7 @@
 						return;
 					}
 				}
-				if (this.options.preType === 'consultOrderPrescription'){
+				if (true){
 					uni.navigateTo({
 						url: `/pages2/pages/TUI-Chat-Group2/chat?conversationID=GROUP${taskItem.imGroupId}`,
 						success(res) {
