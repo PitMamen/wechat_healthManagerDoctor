@@ -435,8 +435,7 @@
 					}
 
 					//处理逻辑
-					if (this.rightDetail.rightsUseRecordStatus.serviceFrequency > 0 && this.passItem.status ==
-						4) {
+					if (this.passItem.status==4 || this.passItem.status==5) {
 						this.showHistory = true
 					}
 				});
