@@ -58,7 +58,7 @@
 		</view>
 		
 		
-		<view class="v-items" @click="goInquiryList2">
+		<!-- <view class="v-items" @click="goInquiryList2">
 			<image src="/static/static/images/mine_jk.png"
 				style="float: left;width: 56rpx;height: 56rpx;margin-left: 2vw;">
 			</image>
@@ -66,12 +66,12 @@
 			<view style="margin-left: 10px;font-size: 30rpx;flex: 1;">健康服务</view>
 			
 			<view style="display: flex;flex-direction: row;">
-				<!-- <span style="float: right;font-size: 14px;"></span> -->
+				
 				<u-icon name="arrow-right" color="#333"
 					style="width: 10px;height: 10px;float: right;margin-right: 10px;margin-top: 6.5px;"></u-icon>
 			</view>
 		
-		</view>
+		</view> -->
 
 
 		<view  class="v-items" @click="goFollowList">
