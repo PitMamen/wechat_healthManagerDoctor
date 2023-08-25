@@ -788,7 +788,6 @@
 
 			.view-btn-wait {
 				width: 100%;
-				margin-top: 50rpx;
 				display: flex;
 				flex-direction: row;
 				justify-content: center;
@@ -797,7 +796,6 @@
 
 			.view-btn-handle {
 				width: 100%;
-				margin-top: 50rpx;
 				display: flex;
 				flex-direction: row;
 				justify-content: space-around;
