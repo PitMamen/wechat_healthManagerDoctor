@@ -1,5 +1,6 @@
 <template>
 	<view class="content">
+		<view style="background-color: aqua;padding: 20rpx 10rpx;" @click="goIdentify">实名认证</view>
 		<view class="v-home-head">
 			<image @click="goInfoPage" mode="aspectFill"
 				:src="account.user.avatarUrl || '/static/static/images/header.png'"
@@ -208,6 +209,11 @@
 				})
 
 
+			},
+			goIdentify(){
+				uni.navigateTo({
+					url: '/pages2/pages/mine/identify-base'
+				})
 			},
 			//随访记录
 			goFollowList() {

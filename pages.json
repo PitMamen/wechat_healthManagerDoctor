@@ -124,6 +124,30 @@
 					}
 				},
 				{
+					"path": "pages/mine/identify-base",
+					"style": {
+						"navigationBarTitleText": "实名认证"
+					}
+				},
+				{
+					"path": "pages/mine/identify-detail",
+					"style": {
+						"navigationBarTitleText": "实名认证"
+					}
+				},
+				{
+					"path": "pages/mine/identify-result",
+					"style": {
+						"navigationBarTitleText": "实名认证"
+					}
+				},
+				{
+					"path": "pages/mine/search-hospital",
+					"style": {
+						"navigationBarTitleText": "选择医院"
+					}
+				},
+				{
 					"path": "pages/config/consult-text",
 					"style": {
 						"navigationBarTitleText": "图文咨询"

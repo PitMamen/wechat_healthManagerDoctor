@@ -322,7 +322,7 @@
 				}).then(res => {
 					// res.data = res.data || {};
 					// rightsName createTime
-					if (res.data) {
+					if (res.data && res.data.length > 0) {
 						//互联网咨询不显示了
 						// this.$set(this.listData[1], 'nearMsg', res.data[0].serviceItemName ? ('患者发起的' + res.data[0]
 						this.$set(this.listData[1], 'nearMsg', res.data[0].broadClassifyName ? ('患者发起的' + res.data[
