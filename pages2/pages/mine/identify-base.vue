@@ -7,8 +7,7 @@
 			<view style="color: #1A1A1A;font-size: 32rpx;font-weight: bold;margin-left: 24rpx;">请填写真实个人信息，完成实名认证</view>
 			<view
 				style="display: flex;flex-direction: row;margin-top: 20rpx;margin-left: 24rpx;background-color: white;">
-				<image src="/static/static/images/mine_chufang.png" style="width: 28rpx;height: 28rpx;">
-					<!-- <image src="/static/static/images/icon_an.png" mode="aspectFit" style="width: 28rpx;height: 28rpx;"> -->
+				<image src="../../static/static/images/icon_dunpai.png" style="width: 28rpx;height: 28rpx;">
 				</image>
 				<view style="color: #999;font-size: 24rpx;margin-left: 3rpx;">平台严格保障您的信息安全，请放心填写</view>
 			</view>
@@ -66,8 +65,9 @@
 								v-model="baseData.phone" />
 						</view>
 					</view>
-					
-					<view style="color: white;background-color: #3894FF;padding: 10rpx 15rpx;font-size: 28rpx;border-radius: 6rpx;">
+
+					<view
+						style="color: white;background-color: #3894FF;padding: 10rpx 15rpx;font-size: 28rpx;border-radius: 6rpx;">
 						获取校验码
 					</view>
 				</view>
@@ -75,8 +75,7 @@
 
 			<view class="info-item">
 				<view class="info-item-content">
-					<view style="flex: 1;display: flex;flex-direction: row;"
-						@click="showChooseHospital = true; hideKeyboard();">
+					<view style="flex: 1;display: flex;flex-direction: row;" @click="goChooseHospital">
 						<view style="color: #1A1A1A;font-size: 32rpx;">所在医院</view>
 						<view style="color: red;padding-top: 5rpx;">*</view>
 						<view style="margin-left: 30rpx;color: #999;font-size: 28rpx;padding-top: 5rpx;"
@@ -200,10 +199,16 @@
 				this.hospitalName = e.value[0].text
 				// this.$set(this.item, 'useFrequencyName', e.value[0].id);
 			},
-			
-			goNext(){
+
+			goNext() {
 				uni.navigateTo({
 					url: '/pages2/pages/mine/identify-detail'
+				})
+			},
+
+			goChooseHospital() {
+				uni.navigateTo({
+					url: '/pages2/pages/mine/search-hospital'
 				})
 			},
 

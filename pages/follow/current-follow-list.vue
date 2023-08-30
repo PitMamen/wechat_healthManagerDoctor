@@ -2,7 +2,7 @@
 
 
 	<view class="content">
-		<u-sticky style="top:0">
+		<u-sticky style="top:0"  v-if="account && account.accountId && account.bindStatus == 0">
 			<view class="topselect" @click="popWindowShow=true">
 
 				<image src="/static/static/images/icon_shaixuan.png"
@@ -11,6 +11,17 @@
 			</view>
 			<view style="width: 100%;height: 1rpx;background-color: #eeeeee;"></view>
 		</u-sticky>
+		
+		<view class="identyView" v-else @click="goIdentify">
+			<view class="identyitem">
+				<view>您可以进行实名认证</view>
+				<view style="margin-top: 33rpx;font-size: 28rpx;color: #AED3FF;">实名认证通过后可以使用更多功能</view>
+			</view>
+			<view class="identyright">
+				<view>实名认证</view>
+			</view>
+		</view>
+		
 		<view v-if="taskList.length>0" class="carditem" v-for="(item, index) in taskList" :key="index">
 
 			<view class="histitem">
@@ -145,6 +156,9 @@
 	export default {
 		data() {
 			return {
+				account: {
+					user: {}
+				},
 				status: 'loadmore',
 				noData: false,
 				popWindowShow: false,
@@ -319,7 +333,11 @@
 			// 		})
 			// 	})
 			// },
-
+			goIdentify(){
+				uni.navigateTo({
+					url: '/pages2/pages/mine/identify-base'
+				})
+			},
 			goCall(phone, recordId, item) {
 				debugger
 				console.log('goCall 1')
@@ -691,6 +709,38 @@
 </script>
 
 <style lang="scss">
+	.identyView{
+		width: 690rpx;
+		margin-left: 30rpx;
+		height: 208rpx;
+		background: #3894FF;
+		border-radius: 4rpx;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		
+		.identyitem{
+			display: flex;
+			flex-direction: column;		
+			font-size: 32rpx;
+			margin-left: 30rpx;
+			color: #FFFFFF;
+		}
+		.identyright{
+			width: 150rpx;
+			height: 68rpx;
+			background: #FFFFFF;
+			border-radius: 34rpx;
+			font-size: 28rpx;
+			color: #3894FF;
+			display: flex;
+			flex-direction: row;	
+			align-items: center;
+			justify-content: center;
+			margin-left: auto;
+			margin-right: 30rpx;
+		}
+	}
 	.uni-tabbar .uni-tabbar-border {
 		height: 3px !important;
 	}

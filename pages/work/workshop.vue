@@ -1,6 +1,6 @@
 <template>
 	<view class="wrap">
-		<u-sticky style="top:0;background-color: white;">
+		<u-sticky style="top:0;background-color: white;" v-if="account && account.accountId && account.bindStatus == 0">
 			<view class="view-info">
 				<image @click="goInfoPage" :src="account.user.avatarUrl || '/static/static/images/header.png'"
 					mode="aspectFill"></image>
@@ -25,6 +25,15 @@
 			</view>
 
 		</u-sticky>
+		<view class="identyView" v-else @click="goIdentify">
+			<view class="identyitem">
+				<view>您可以进行实名认证</view>
+				<view style="margin-top: 33rpx;font-size: 28rpx;color: #AED3FF;">实名认证通过后可以使用更多功能</view>
+			</view>
+			<view class="identyright">
+				<view>实名认证</view>
+			</view>
+		</view>
 
 		<!-- 这里 uview不能用 -->
 		<!-- <u-divider text=""></u-divider> -->
@@ -134,11 +143,19 @@
 				// nearMsg: '[患者发起的图文&电话&视频咨询]'
 				nearMsg: ''
 			})
-			this.getNum();
+			
+			
+			if(this.account && this.account.accountId && this.account.bindStatus == 0){
+				
+				this.getNum();
+				
+				setTimeout(() => {
+					this.$refs.caCheck.check();
+				});
+			}
+			
 
-			setTimeout(() => {
-				this.$refs.caCheck.check();
-			});
+		
 		},
 		methods: {
 			//个人信息页
@@ -147,8 +164,14 @@
 					url: '/pages2/pages/mine/info'
 				})
 			},
+			goIdentify(){
+				uni.navigateTo({
+					url: '/pages2/pages/mine/identify-base'
+				})
+			},
 			//获取健康咨询数量
 			getNum() {
+				
 				uni.showLoading({
 					title: '请求中'
 				});
@@ -156,7 +179,7 @@
 				uni.$u.http.post('/medical-api/rightsUse/qryRightsUsingCountByDoc', {
 					docId: this.account.user.userId
 				}).then(res => {
-					// debugger
+					uni.hideLoading()
 					this.$set(this.listData[1], 'unreadCount', res.data.TextNum + res.data.TelNum + res.data
 						// this.$set(this.listData[0], 'unreadCount', res.data.TextNum + res.data.TelNum + res.data
 						.VedioNum)
@@ -171,6 +194,9 @@
 
 					this.getChatList()
 					// this.getnumZX()
+				})
+				.catch(() => {
+					uni.hideLoading()
 				});
 			},
 
@@ -239,6 +265,13 @@
 			 * @param {Object} index
 			 */
 			onItemClick(index) {
+				
+				if(!this.account || !this.account.accountId || this.account.bindStatus !== 0){
+					//如果没有账号 或者 没有认证
+					this.goIdentify()
+					return
+				}
+				
 				//互联网咨询不显示了
 				if (index == 0) {
 					uni.navigateTo({
@@ -419,6 +452,38 @@
 			align-items: center;
 			justify-content: center;
 			margin-bottom: 30rpx;
+		}
+	}
+	.identyView{
+		width: 690rpx;
+		margin-left: 30rpx;
+		height: 208rpx;
+		background: #3894FF;
+		border-radius: 4rpx;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		
+		.identyitem{
+			display: flex;
+			flex-direction: column;		
+			font-size: 32rpx;
+			margin-left: 30rpx;
+			color: #FFFFFF;
+		}
+		.identyright{
+			width: 150rpx;
+			height: 68rpx;
+			background: #FFFFFF;
+			border-radius: 34rpx;
+			font-size: 28rpx;
+			color: #3894FF;
+			display: flex;
+			flex-direction: row;	
+			align-items: center;
+			justify-content: center;
+			margin-left: auto;
+			margin-right: 30rpx;
 		}
 	}
 	.uni-tabbar .uni-tabbar-border {

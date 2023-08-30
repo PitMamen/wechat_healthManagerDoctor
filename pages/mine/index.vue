@@ -1,12 +1,12 @@
 <template>
 	<view class="content">
-		<view style="background-color: aqua;padding: 20rpx 10rpx;" @click="goIdentify">实名认证</view>
+		
 		<view class="v-home-head">
 			<image @click="goInfoPage" mode="aspectFill"
 				:src="account.user.avatarUrl || '/static/static/images/header.png'"
 				style="width: 128rpx;height: 128rpx;margin-left: 2vw;border-radius: 50%;">
 			</image>
-			<view class="v-right-head">
+			<view class="v-right-head" v-if="account && account.accountId && account.bindStatus == 0">
 
 				<view style="color: #141418;font-size: 32rpx;width: 100%;margin-top: 10rpx;font-weight: bold;">
 					{{account.user.userName}}
@@ -20,7 +20,18 @@
 				</view>
 
 			</view>
-			<view class="v-right-btn" @tap="quit">
+			<view class="v-right-head" v-else>
+			
+				<view class="identytag" @click="goIdentify">
+					<view>未认证</view>
+				</view>
+				
+				<view class="identytext" @click="goIdentify">
+					点击进行实名认证以使用更多功能
+				</view>
+			
+			</view>
+			<view class="v-right-btn" @tap="unbindDoctorPhone">
 				<image mode="aspectFill" src="/static/static/images/quit.png" style="width: 42rpx;height: 42rpx;">
 					<view style="color: #1A1A1A;font-size: 24rpx;margin-left: -5rpx;">
 						退出
@@ -158,9 +169,33 @@
 			</view>
 		</view>
 
+			<view class="v-items" @click="goIdentify">
+			<image src="/static/static/images/mine-srrz.png"
+				style="float: left;width: 56rpx;height: 56rpx;margin-left: 2vw;">
+			</image>
+			
+			<view style="margin-left: 10px;font-size: 30rpx;flex: 1;">实人认证</view>
+			
+			<view style="display: flex;flex-direction: row;">
+				<!-- <span style="float: right;font-size: 14px;">全部</span> -->
+				<u-icon name="arrow-right" color="#333"
+					style="width: 10px;height: 10px;float: right;margin-right: 10px;margin-top: 6.5px;"></u-icon>
+			</view>
+		</view>
 
-
-		
+		<view class="v-items" @click="goMyCertificate">
+			<image src="/static/static/images/mine-wdzj.png"
+				style="float: left;width: 56rpx;height: 56rpx;margin-left: 2vw;">
+			</image>
+			
+			<view style="margin-left: 10px;font-size: 30rpx;flex: 1;">我的证件</view>
+			
+			<view style="display: flex;flex-direction: row;">
+				<!-- <span style="float: right;font-size: 14px;">全部</span> -->
+				<u-icon name="arrow-right" color="#333"
+					style="width: 10px;height: 10px;float: right;margin-right: 10px;margin-top: 6.5px;"></u-icon>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -193,7 +228,10 @@
 
 		},
 		onShow() {
-			this.getShowCa();
+			if(this.account && this.account.accountId && this.account.bindStatus == 0){
+				this.getShowCa();
+			}
+			
 		},
 		methods: {
 			jump() {
@@ -205,20 +243,31 @@
 					url: '/pages/tab/index'
 				});
 			},
+			
+			
+			
 			//个人信息页
 			goInfoPage() {
+				if(!this.checkAuth()){
+					return
+				}
 				uni.navigateTo({
 					url: '/pages2/pages/mine/info'
 				})
 			},
 			goOrderList() {
+				if(!this.checkAuth()){
+					return
+				}
 				uni.navigateTo({
 					url: '/pages2/pages/mine/order'
 				});
 			},
 			//互联网医院问诊咨询
 			goInquiryList() {
-
+				if(!this.checkAuth()){
+					return
+				}
 				uni.navigateTo({
 					url: '/pages2/pages/mine/history-list'
 				})
@@ -227,6 +276,9 @@
 			},
 			//健康管家问诊咨询
 			goInquiryList2() {
+				if(!this.checkAuth()){
+					return
+				}
 				uni.navigateTo({
 					url: '/pages2/pages/mine/health-history-list'
 				})
@@ -238,26 +290,54 @@
 					url: '/pages2/pages/mine/identify-base'
 				})
 			},
+			
+			//检验是否认证
+			checkAuth(){
+				if(!this.account || !this.account.accountId || this.account.bindStatus !== 0){
+					//如果没有账号 或者 没有认证
+					this.goIdentify()
+					return false
+				}else {
+					return true
+				}
+			},
 			//随访记录
 			goFollowList() {
+				if(!this.checkAuth()){
+					return
+				}
 				uni.navigateTo({
 					url: '/pages2/pages/follow/history-follow-list'
 				})
 			},
 			goChuFangModel() {
+				if(!this.checkAuth()){
+					return
+				}
 			},
 			goCaManage() {
+				if(!this.checkAuth()){
+					return
+				}
 				uni.navigateTo({
 					url: '/pages2/pages/ca/manage'
 				});
 			},
 			goUpdatePwd() {
+				if(!this.checkAuth()){
+					return
+				}
 				uni.navigateTo({
 					url: '/pages2/pages/login/update'
 				})
 			},
-			
+			goMyCertificate(){
+				if(!this.checkAuth()){
+					return
+				}
+			},
 			getShowCa() {
+				
 				uni.$u.http.get(`/info-api/sysConfigData/getConfig/CA_AUTH_FLAG`).then(res => {
 					this.showCa = res.data.value === '1';
 				});
@@ -284,19 +364,58 @@
 				});
 			},
 			
+
+			//解绑
+			unbindDoctorPhone() {
+				uni.showLoading({
+					title: '加载中'
+				})
+				var reqData = {
+					appId: uni.getAccountInfoSync().miniProgram.appId
+				}
+				uni.$u.http.post('/account-api/accountInfo/unbindDoctorPhone', reqData).then(res => {
+					uni.hideLoading()
+					if (res.code == 0) {
+						uni.redirectTo({
+							
+							url: '../login/login',
+							success: () => {
+								uni.showToast({
+									title: '退出成功',
+									icon: 'none'
+								});
+							}
+						});
+						
+					} else {
+						this.$u.toast("解绑失败")
+			
+					}
+				}).catch(() => {
+					uni.hideLoading()
+				});
+			},
+
 			cashEyeClick(eye) {
 				this.cashEye = eye;
 			},
 			goCashDetail() {
+				if(!this.checkAuth()){
+					return
+				}
 				uni.navigateTo({
 					url: '/pages2/pages/cash/detail'
 				});
 			},
 			goCashPack() {
+				if(!this.checkAuth()){
+					return
+				}
 				uni.navigateTo({
 					url: '/pages2/pages/cash/pack'
 				});
 			}
+
 		}
 	}
 </script>
@@ -329,9 +448,28 @@
 		margin-left: 3vw;
 		width: 100%;
 		flex-direction: column;
-		align-items: center;
+		
 	}
 
+	.identytag{
+		width: 112rpx;
+		height: 48rpx;
+		background: #F5F5F5;
+		border: 1rpx solid #3894FF;
+		border-radius: 4rpx;
+		font-size: 24rpx;
+		color: #3894FF;
+		display: flex;
+		flex-direction: row;	
+		align-items: center;
+		justify-content: center;
+		
+	}
+	.identytext{
+		font-size: 24rpx;
+		color: #3894FF;
+		margin-top: 19rpx;
+	}
 	.content .v-home-head .v-right-btn {
 		display: flex;
 		flex-direction: column;

@@ -1,48 +1,25 @@
 <template>
 	<view class="wrap">
-		<view class="head">
-			<view class="bg">
-				<image src="https://hmg.mclouds.org.cn/content-api/file/I20230703145249841SEOCC6F1GL1O5O-logo.png">
-				</image>
-			</view>
-		</view>
+
 		<view class="content">
 			<view class="login">
-				<view class="title">登录</view>
-				<view class="account">
-					<u-input class="input" placeholder="输入你的用户名/手机号" border="none" v-model="loginData.userName">
-						<view slot="prefix" class="prefix">
-							<image src="/static/static/images/login/account.png"></image>
-						</view>
-					</u-input>
-				</view>
-				<view class="passwd">
-					<u-input class="input" type="password" placeholder="输入您的密码" border="none"
-						v-model="loginData.password">
-						<view slot="prefix" class="prefix">
-							<image src="/static/static/images/login/passwd.png"></image>
-						</view>
-					</u-input>
-				</view>
-				<view class="remind">
-					<text class="text">记住密码</text>
-					<view style="float: right;">
-						<u-checkbox-group class="checkbox" v-model="remind">
-							<u-checkbox></u-checkbox>
-						</u-checkbox-group>
-					</view>
-				</view>
+
+				<image src="https://hmg.mclouds.org.cn/content-api/file/F20230829140605406OK6PA9B5E6N1GR-logoys.png">
+				</image>
+				<text class="title">您好，欢迎使用雅医医生端小程序</text>
+
 				<view class="protocol">
 					<u-checkbox-group v-model="checkedProtocol" placement="column" @change="groupChange">
-						<u-checkbox :customStyle="{marginBottom: '24px'}" key="1" label="我已阅读并同意" name="1" />
-						
+						<u-checkbox key="1" label="我已阅读并同意" name="1" />
+
 					</u-checkbox-group>
-					<view style="color:#01B1F6 ;font-size: 30rpx;marginBottom: 24px" @click="onCheckClick">《用户协议》</view>
-					
+					<view style="color:#01B1F6 ;font-size: 15px;margin-left:12rpx ;" @click="onCheckClick">《用户协议》</view>
+
 				</view>
 				<view class="button">
-					<u-button type="primary" text="登 录" loadingText="登录中..." :loading="loading" @click="all_ok">
-					</u-button>
+					<button type="primary" class="button" :open-type="checkedProtocol == '1'?'getPhoneNumber':''"
+						@getphonenumber="onGetphonenumber" @click="btnClick">
+						登 录</button>
 				</view>
 			</view>
 		</view>
@@ -71,16 +48,23 @@
 					password: '',
 					loginType: '2',
 					terminal: '1'
-				}
+				},
+				openid: '',
+				unionid: '',
+				sessionKey: '',
 			}
 		},
 		onLoad() {
 			const loginData = uni.getStorageSync('loginData') || {};
-			this.checkedProtocol = uni.getStorageSync('checkedProtocol') || '';
+
 			this.loginData = {
 				...this.loginData,
 				...loginData
 			};
+
+			uni.removeStorageSync('bussinessToken')
+			uni.removeStorageSync('account')
+			this.WXlogin()
 		},
 		methods: {
 			login(res) {
@@ -170,6 +154,162 @@
 
 			},
 
+			btnClick() {
+				console.log('checkedProtocol', this.checkedProtocol)
+				if (this.checkedProtocol != '1') {
+					this.$u.toast("请阅读并同意《用户协议》！")
+					return
+				}
+			},
+
+
+			//获取到手机号
+			onGetphonenumber(e) {
+				console.log(e)
+				if (e.detail.iv && e.detail.encryptedData) {
+					this.decryptPhone(e.detail.iv, e.detail.encryptedData)
+				}
+
+			},
+			//获取code
+			WXlogin() {
+				this.loading = true
+				uni.showLoading({
+					title: '加载中'
+				})
+				let that = this
+				uni.login({
+					provider: 'weixin', //使用微信登录
+					success: function(res) {
+						console.log(res);
+						that.getOpenId(res.code)
+					},
+					fail: function(error) {
+						console.error(error)
+						this.loading = false
+					}
+				});
+
+			},
+			//获取openid
+			getOpenId(code) {
+
+
+				var reqData = {
+					code: code,
+					appId: uni.getAccountInfoSync().miniProgram.appId,
+					loginType: '21',
+					pubkey: '123'
+				}
+				uni.$u.http.post('/account-api/wx/user/login', reqData).then(res => {
+					uni.hideLoading()
+					console.log(res)
+					if (res.code == 0) {
+						/**
+						bindstatus=0;登录成功，可正常执行各项业务操作
+						bindstatus=99902;微信open_id未绑定医生账号,需要进入步骤[3]引导用户提供手机号并绑定账号
+						bindstatus=99903;微信open_id绑定了手机号,但手机号对应医生账号不存在,进入空白页面,医生可提交资料供审核
+						bindstatus=99904;已提交资料,认证审核中/注册审核不通过,进入空白页面,医生可查看、修改资料
+						**/
+
+
+						uni.setStorageSync('account', res.data.account);
+						uni.setStorageSync('bussinessToken', res.data.jwt)
+
+						if (res.data.bindStatus == 0) {
+
+							this.login(res.data)
+
+						} else if (res.data.bindStatus == 99902) {
+
+							this.sessionKey = res.data.sessionKey
+						} else if (res.data.bindStatus == 99903) {
+
+							uni.reLaunch({
+								url: '/pages/work/workshop',
+								success() {}
+							})
+						} else if (res.data.bindStatus == 99904) {
+							uni.reLaunch({
+								url: '/pages/work/workshop',
+								success() {}
+							})
+						}
+					} else {
+						this.$u.toast("登录失败")
+
+					}
+				}).catch(() => {
+					uni.hideLoading()
+				});
+			},
+
+			//获取解密手机号
+			decryptPhone(iv, encryptedData) {
+				uni.showLoading({
+					title: '加载中'
+				})
+				var reqData = {
+					iv: iv,
+					encryptedData: encryptedData,
+					sessionKey: this.sessionKey,
+					appId: uni.getAccountInfoSync().miniProgram.appId
+				}
+				uni.$u.http.post('/account-api/wx/user/phone', reqData).then(res => {
+					if (res.code == 0) {
+
+						console.log(res.data)
+						this.bindDoctorPhone(res.data)
+					} else {
+						this.$u.toast("获取手机号失败")
+
+					}
+				}).catch(() => {
+					uni.hideLoading()
+				});
+			},
+			//绑定账号
+			bindDoctorPhone(phone) {
+
+				var reqData = {
+					phone: phone,
+					pubKey: '123',
+					appId: uni.getAccountInfoSync().miniProgram.appId
+				}
+				uni.$u.http.post('/account-api/accountInfo/bindDoctorPhone', reqData).then(res => {
+					uni.hideLoading()
+					if (res.code == 0) {
+
+						uni.setStorageSync('account', res.data.account);
+						uni.setStorageSync('bussinessToken', res.data.jwt)
+
+						if (res.data.bindStatus == 0) {
+
+							this.login(res.data)
+
+						} else if (res.data.bindStatus == 99902) {
+
+							this.sessionKey = res.data.sessionKey
+						} else if (res.data.bindStatus == 99903) {
+
+							uni.reLaunch({
+								url: '/pages/work/workshop',
+								success() {}
+							})
+						} else if (res.data.bindStatus == 99904) {
+							uni.reLaunch({
+								url: '/pages/work/workshop',
+								success() {}
+							})
+						}
+					} else {
+						this.$u.toast("绑定账号失败")
+
+					}
+				}).catch(() => {
+					uni.hideLoading()
+				});
+			},
 			getUserInfo() {
 				uni.getUserInfo({
 					provider: 'weixin',
@@ -204,12 +344,12 @@
 				});
 			},
 			groupChange() {
-				// debugger
-				uni.setStorageSync('checkedProtocol', '1');
-				this.checkedProtocol='1'
-				
+
+
+				this.checkedProtocol = '1'
+
 			},
-			onCheckClick(){
+			onCheckClick() {
 				uni.navigateTo({
 					url: '/pages/login/protocol'
 				});
@@ -230,7 +370,7 @@
 <style lang="scss" scoped>
 	.wrap {
 		min-height: 100vh;
-		background: #EFF6FE;
+		background: #ffffff;
 
 		.head {
 			position: relative;
@@ -259,23 +399,33 @@
 		}
 
 		.content {
+
 			.login {
 				position: relative;
 				width: 670rpx;
-				height: 610rpx;
-				top: -67rpx;
+
+				top: 450rpx;
 				margin: 0 auto;
-				background: #FFFFFF;
-				box-shadow: 0rpx 5rpx 10rpx 0rpx rgba(97, 166, 247, 0.35);
-				border-radius: 8rpx;
+
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+
+				image {
+
+					width: 448rpx;
+					height: 81rpx;
+					margin-bottom: 40rpx;
+				}
 
 				.title {
-					padding: 40rpx 0rpx 70rpx 60rpx;
-					font-size: 48rpx;
-					font-family: SourceHanSansCN;
+
+					font-size: 30rpx;
+
 					font-weight: 400;
-					color: #3E4A59;
-					line-height: 45rpx;
+					color: #1A1A1A;
+
+					margin-bottom: 40rpx;
 				}
 
 				.input {
@@ -345,17 +495,19 @@
 					display: flex;
 					flex-direction: row;
 					align-items: flex-start;
-					margin-top: 30rpx;
-					padding: 0 80rpx;
+
+					margin-bottom: 63rpx;
 				}
 
 				.button {
-					position: absolute;
-					width: 510rpx;
-					height: 88rpx;
-					left: 50%;
-					bottom: -44rpx;
-					transform: translateX(-50%);
+
+					width: 670rpx;
+
+					color: #ffffff;
+					background-color: #3894FF !important;
+
+					border-color: #3894FF !important;
+					border-radius: 46rpx;
 				}
 			}
 
