@@ -6,7 +6,7 @@
 				:src="account.user.avatarUrl || '/static/static/images/header.png'"
 				style="width: 128rpx;height: 128rpx;margin-left: 2vw;border-radius: 50%;">
 			</image>
-			<view class="v-right-head" v-if="account && account.bindStatus == 0">
+			<view class="v-right-head" v-if="account && account.accountId && account.bindStatus == 0">
 
 				<view style="color: #141418;font-size: 32rpx;width: 100%;margin-top: 10rpx;font-weight: bold;">
 					{{account.user.userName}}
@@ -36,7 +36,29 @@
 					<view style="color: #1A1A1A;font-size: 24rpx;margin-left: -5rpx;">
 						退出
 					</view>
-
+			</view>
+		</view>
+		
+		<view class="cash-wrap">
+			<view class="cash-title">钱包余额</view>
+			<view class="cash-line">
+				<view class="cash-info">
+					<text class="cash-unit" v-if="cashEye">￥</text>
+					<text v-if="cashEye">2300.00</text>
+					<text v-else>******</text>
+				</view>
+				<u-icon name="eye-fill" color="#FFFFFF" size="36rpx" @click="cashEyeClick(false)" v-if="cashEye"></u-icon>
+				<u-icon name="eye-off" color="#FFFFFF" size="36rpx" @click="cashEyeClick(true)" v-else></u-icon>
+			</view>
+			<view class="cash-action">
+				<view class="cash-btn" @click="goCashDetail">
+					<image src="/static/static/images/mine_shouru.png"></image>
+					<view>收入明细</view>
+				</view>
+				<view class="cash-btn" @click="goCashPack">
+					<image src="/static/static/images/mine_tixian.png"></image>
+					<view>去提现</view>
+				</view>
 			</view>
 		</view>
 
@@ -182,6 +204,7 @@
 		data() {
 			return {
 				showCa: false,
+				cashEye: true,
 				title: 'Hello',
 				account: {
 					name: '李雅',
@@ -270,7 +293,7 @@
 			
 			//检验是否认证
 			checkAuth(){
-				if(!this.account || this.account.accountId || this.account.bindStatus !== 0){
+				if(!this.account || !this.account.accountId || this.account.bindStatus !== 0){
 					//如果没有账号 或者 没有认证
 					this.goIdentify()
 					return false
@@ -288,6 +311,9 @@
 				})
 			},
 			goChuFangModel() {
+				if(!this.checkAuth()){
+					return
+				}
 			},
 			goCaManage() {
 				if(!this.checkAuth()){
@@ -306,7 +332,9 @@
 				})
 			},
 			goMyCertificate(){
-				
+				if(!this.checkAuth()){
+					return
+				}
 			},
 			getShowCa() {
 				
@@ -336,6 +364,7 @@
 				});
 			},
 			
+
 			//解绑
 			unbindDoctorPhone() {
 				uni.showLoading({
@@ -366,6 +395,27 @@
 					uni.hideLoading()
 				});
 			},
+
+			cashEyeClick(eye) {
+				this.cashEye = eye;
+			},
+			goCashDetail() {
+				if(!this.checkAuth()){
+					return
+				}
+				uni.navigateTo({
+					url: '/pages2/pages/cash/detail'
+				});
+			},
+			goCashPack() {
+				if(!this.checkAuth()){
+					return
+				}
+				uni.navigateTo({
+					url: '/pages2/pages/cash/pack'
+				});
+			}
+
 		}
 	}
 </script>
@@ -535,5 +585,65 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
+	}
+</style>
+<style lang="scss">
+	.content {
+		.cash-wrap {
+			width: 90%;
+			padding: 20rpx 24rpx;
+			background: linear-gradient(270deg, #388CF6, #69C3FF);
+			background-image: url('https://hmg.mclouds.org.cn/content-api/file/F20230830145137912OLK8JKDAG3YP83-20230830145111.png');
+			background-size: cover;
+			border-radius: 4rpx;
+			.cash-title {
+				font-size: 30rpx;
+				font-weight: 400;
+				color: #FFFFFF;
+				line-height: 50rpx;
+			}
+			.cash-line {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				.cash-info {
+					margin-top: 14rpx;
+					margin-bottom: 20rpx;
+					font-size: 48rpx;
+					font-weight: 400;
+					color: #FFFFFF;
+					line-height: 72rpx;
+					.cash-unit {
+						margin-right: 10rpx;
+						font-size: 30rpx;
+					}
+				}
+				>.u-icon {
+					position: relative;
+					top: 2rpx;
+				}
+			}
+			.cash-action {
+				display: flex;
+				align-items: center;
+				justify-content: space-around;
+				.cash-btn {
+					display: flex;
+					align-items: center;
+					justify-content: flex-start;
+					image {
+						width: 28rpx;
+						height: 28rpx;
+						margin-right: 10rpx;
+					}
+					view {
+						font-size: 24rpx;
+						font-weight: 400;
+						color: #FFFFFF;
+						line-height: 44rpx;
+					}
+				}
+			}
+		}
 	}
 </style>

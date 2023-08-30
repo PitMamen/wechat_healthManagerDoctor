@@ -2,7 +2,7 @@
 
 
 	<view class="content">
-		<u-sticky style="top:0"  v-if="account && account.bindStatus == 0">
+		<u-sticky style="top:0"  v-if="account && account.accountId && account.bindStatus == 0">
 			<view class="topselect" @click="popWindowShow=true">
 
 				<image src="/static/static/images/icon_shaixuan.png"

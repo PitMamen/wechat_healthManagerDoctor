@@ -1,6 +1,6 @@
 <template>
 	<view class="wrap">
-		<u-sticky style="top:0;background-color: white;" v-if="account && account.bindStatus == 0">
+		<u-sticky style="top:0;background-color: white;" v-if="account && account.accountId && account.bindStatus == 0">
 			<view class="view-info">
 				<image @click="goInfoPage" :src="account.user.avatarUrl || '/static/static/images/header.png'"
 					mode="aspectFill"></image>
@@ -266,7 +266,7 @@
 			 */
 			onItemClick(index) {
 				
-				if(!this.account || this.account.accountId || this.account.bindStatus !== 0){
+				if(!this.account || !this.account.accountId || this.account.bindStatus !== 0){
 					//如果没有账号 或者 没有认证
 					this.goIdentify()
 					return
