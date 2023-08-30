@@ -348,6 +348,18 @@
 					"style": {
 						"navigationBarTitleText": "记录详情"
 					}
+				},
+				{
+					"path": "pages/cash/pack",
+					"style": {
+						"navigationBarTitleText": "我的钱包"
+					}
+				},
+				{
+					"path": "pages/cash/detail",
+					"style": {
+						"navigationBarTitleText": "收入明细"
+					}
 				}
 			]
 		}
