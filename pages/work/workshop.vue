@@ -13,7 +13,7 @@
 						</view>
 					</view>
 				</view>
-				<view class="view-info-card">
+				<view class="view-info-card" @click="()=>{showCode=true}">
 					<image src="/static/img/mingpian.png"></image>
 					<!-- <view>名片</view> -->
 				</view>
@@ -68,6 +68,23 @@
 		<u-empty mode="data" style="padding-top: 300rpx;" v-if="listData.length === 0"
 			icon="/static/img/icon_nodata.png"></u-empty>
 
+		<u-popup :show="showCode" mode="center" :round="4"  @close="closeCodePop" >
+			<view class="codeview">
+				<image class="code" src="https://develop.mclouds.org.cn/content-api/file/I20230829172942343GY3Q8LWPKFV9K8-QqR665518ce7f85d18a7c0759e3fe2eec8d.jpg">
+				</image>
+				<view class="codeitem">
+					<image src="/static/static/images/yisheng.png" style="width: 30rpx;height: 34rpx;margin-right: 20rpx;">
+					</image>
+					<text>{{account.user.userName}}</text>
+				</view>
+				<view class="codeitem">
+					<text>{{account.user.professionalTitle}}</text>
+					<view style="margin-left: 20rpx;margin-right: 20rpx;">|</view>
+					<text>{{account.user.departmentName}}</text>
+				</view>
+				<text style="color: #3894FF;">让患者微信扫一扫添加</text>
+			</view>
+		</u-popup>
 		<ca-check ref="caCheck" />
 	</view>
 </template>
@@ -78,6 +95,7 @@
 	export default {
 		data() {
 			return {
+				showCode:false,
 				numZX: 0,
 				numSF: 0,
 				listData: [],
@@ -213,7 +231,9 @@
 				});
 			},
 
-
+			closeCodePop(){
+				this.showCode=false
+			},
 			/**
 			 * 这里也是只有图文咨询聊天用group，其他的三种都用group2
 			 * @param {Object} index
@@ -373,6 +393,34 @@
 </script>
 
 <style lang="scss">
+	.codeview{
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 620rpx;
+		padding-top: 100rpx;
+		padding-bottom: 32rpx;
+		
+		.code {
+			width: 316rpx;
+			height: 316rpx;
+			margin-bottom: 32rpx;
+			
+		}
+		
+		text {
+			font-size: 30rpx;
+			color: #1A1A1A;
+		}
+		
+		.codeitem{
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			justify-content: center;
+			margin-bottom: 30rpx;
+		}
+	}
 	.uni-tabbar .uni-tabbar-border {
 		height: 3px !important;
 	}

@@ -3,6 +3,7 @@
 </template>
 
 <script>
+	import { CAURL } from '@/config/config';
 	export default {
 		data() {
 			return {
@@ -38,7 +39,7 @@
 						})
 				}else {
 					//重置网页
-					var url=	caAuthUrl.replace('https://realnameverify-test','https://realnameverify-test05')
+					var url=	caAuthUrl.replace('https://realnameverify-test.fadada.com',CAURL).replace('https://realnameverify.fadada.com',CAURL)
 					this.url = decodeURIComponent(url)
 				}
 				
