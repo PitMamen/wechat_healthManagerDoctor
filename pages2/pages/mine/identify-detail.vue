@@ -3,146 +3,232 @@
 
 		<view style="width: 100vw;height: 20rpx;background-color: #F2F2F2;"></view>
 
+
+
 		<view class="view-base">
-			<view style="color: #1A1A1A;font-size: 32rpx;font-weight: bold;margin-left: 24rpx;">请填写真实个人信息，完成实名认证</view>
-			<view
-				style="display: flex;flex-direction: row;margin-top: 20rpx;margin-left: 24rpx;background-color: white;">
-				<image src="/static/static/images/mine_chufang.png" style="width: 28rpx;height: 28rpx;">
-					<!-- <image src="/static/static/images/icon_an.png" mode="aspectFit" style="width: 28rpx;height: 28rpx;"> -->
+			<view style="color: #1A1A1A;font-size: 32rpx;font-weight: bold;margin-left: 24rpx;">完成资质认证，开通问诊服务</view>
+
+			<view class="view-head">
+				<u-upload :fileList="fileList1" @afterRead="afterRead" @delete="deletePic" :maxCount="1" name="1">
+					<!-- 					multiple :maxCount="10"> -->
+					<view style="display: flex;flex-direction: row;align-items: center;">
+						<view style="width: 128rpx;height: 128rpx;background-color: #F2F2F2;border-radius: 64rpx;">
+						</view>
+						<view style="color: #999999;font-size: 30rpx;margin-left: 33rpx;">请上传您清晰的免冠正面照</view>
+						<view style="margin-left: 20rpx;">
+							<u-icon name="arrow-right" color="#999" style="width: 13rpx;height: 24rpx;"></u-icon>
+						</view>
+					</view>
+
+				</u-upload>
+
+			</view>
+
+			<view style="color: #4D4D4D;font-size: 30rpx;margin-left: 24rpx;margin-top: 30rpx;">上传头像示例:</view>
+
+			<!-- 头像示例 -->
+			<view style="display: flex;flex-direction: row;align-items: center;margin-left: 24rpx;margin-top: 20rpx;">
+				<image
+					src="https://hmg.mclouds.org.cn/content-api/file/I20230830160747241CXMHU0IEPSV6U5-doctorM_20230830160445.png"
+					style="width: 88rpx;height: 88rpx;border: 1rpx dashed #999999;">
 				</image>
-				<view style="color: #999;font-size: 24rpx;margin-left: 3rpx;">平台严格保障您的信息安全，请放心填写</view>
+				<image
+					src="https://hmg.mclouds.org.cn/content-api/file/I20230830160814611MF3018AHTA5IGM-doctorF_20230830160445_1.png"
+					style="width: 88rpx;height: 88rpx;border: 1rpx dashed #999999;margin-left: 20rpx;">
+				</image>
 			</view>
 
-			<view class="info-item">
-				<view class="info-item-content">
-					<view style="flex: 1;display: flex;flex-direction: row;">
-						<view style="color: #1A1A1A;font-size: 32rpx;">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名
+			<!-- 分割线 -->
+			<view style="height: 1rpx;background-color: #E6E6E6;margin: 30rpx 24rpx 24rpx 24rpx;"></view>
+
+			<!-- 身份证 -->
+			<view style="display: flex;flex-direction: row;margin-left: 24rpx;">
+				<view style="color: #4D4D4D;font-size: 30rpx;">身份证正反面</view>
+				<view style="color: red;margin-top: 6rpx;">*</view>
+			</view>
+
+			<view style="display: flex;flex-direction: row;align-items: center;margin-left: 24rpx;margin-top: 20rpx;">
+				<view style="display: flex;flex-direction: column;align-items: center;justify-content: center;">
+					<u-upload :fileList="fileList1" @afterRead="afterRead" @delete="deletePic" :maxCount="1" name="1">
+						<view
+							style="display: flex;flex-direction: column;justify-content: center;align-items: center;border: 1rpx dashed #999999;width: 180rpx;height: 180rpx;">
+							<view>
+								<u-icon name="plus" size="28"></u-icon>
+							</view>
+							<view style="color: #999999;font-size: 30rpx;margin-top: 36rpx;">上传头像面</view>
 						</view>
-						<view style="color: red;padding-top: 5rpx;">*</view>
-						<view style="margin-left: 30rpx;">
-							<u-input class="input" fontSize="28rpx" placeholder="请输入真实姓名" border="none"
-								v-model="baseData.name" />
-						</view>
-
-
-					</view>
-
+					</u-upload>
+					<view style="color: #3894FF;font-size: 28rpx;margin-top: 30rpx;">查看示例</view>
 				</view>
-			</view>
-			<view class="info-item">
-				<view class="info-item-content">
-					<view style="flex: 1;display: flex;flex-direction: row;">
-						<view style="color: #1A1A1A;font-size: 32rpx;">身份证号</view>
-						<view style="color: red;padding-top: 5rpx;">*</view>
-						<view style="margin-left: 30rpx;">
-							<u-input class="input" fontSize="28rpx" placeholder="请输入身份证号" border="none"
-								v-model="baseData.idNo" />
-						</view>
-					</view>
-					<!-- 	<u-icon name="arrow-right" color="#333"
-						style="width: 10rpx;height: 10rpx;float: right;margin-right: 10rpx;margin-top: 6.5rpx;"></u-icon> -->
-				</view>
-			</view>
-			<view class="info-item">
-				<view class="info-item-content">
-					<view style="flex: 1;display: flex;flex-direction: row;">
-						<view style="color: #1A1A1A;font-size: 32rpx;">手&nbsp;&nbsp;机&nbsp;&nbsp;号</view>
-						<view style="color: red;padding-top: 5rpx;">*</view>
-						<view style="margin-left: 30rpx;">
-							<u-input class="input" fontSize="28rpx" type="number" placeholder="请输入手机号" border="none"
-								v-model="baseData.phone" />
-						</view>
-					</view>
-				</view>
-			</view>
 
-			<view class="info-item">
-				<view class="info-item-content">
-					<view style="flex: 1;display: flex;flex-direction: row;">
-						<view style="color: #1A1A1A;font-size: 32rpx;">校&nbsp;&nbsp;验&nbsp;&nbsp;码</view>
-						<view style="color: red;padding-top: 5rpx;">*</view>
-						<view style="margin-left: 30rpx;">
-							<u-input class="input" fontSize="28rpx" type="number" placeholder="请输入校验码" border="none"
-								v-model="baseData.phone" />
-						</view>
-					</view>
 
-					<view
-						style="color: white;background-color: #3894FF;padding: 10rpx 15rpx;font-size: 28rpx;border-radius: 6rpx;">
-						获取校验码
-					</view>
+				<view
+					style="margin-left: 40rpx;display: flex;flex-direction: column;align-items: center;justify-content: center;">
+					<u-upload :fileList="fileList1" @afterRead="afterRead" @delete="deletePic" :maxCount="1" name="1">
+						<view
+							style="display: flex;flex-direction: column;justify-content: center;align-items: center;border: 1rpx dashed #999999;width: 180rpx;height: 180rpx;">
+							<view>
+								<u-icon name="plus" size="28"></u-icon>
+							</view>
+							<view style="color: #999999;font-size: 30rpx;margin-top: 36rpx;">上传国徽面</view>
+						</view>
+					</u-upload>
+					<view style="color: #3894FF;font-size: 28rpx;margin-top: 30rpx;">查看示例</view>
 				</view>
 			</view>
 
-			<view class="info-item">
-				<view class="info-item-content">
-					<view style="flex: 1;display: flex;flex-direction: row;"
-						@click="showChooseHospital = true; hideKeyboard();">
-						<view style="color: #1A1A1A;font-size: 32rpx;">所在医院</view>
-						<view style="color: red;padding-top: 5rpx;">*</view>
-						<view style="margin-left: 30rpx;color: #999;font-size: 28rpx;padding-top: 5rpx;"
-							v-if="!hospitalName">请选择</view>
-						<view style="margin-left: 30rpx;font-size: 28rpx;padding-top: 5rpx;" v-else>
-							{{ hospitalName || '~' }}
+			<!-- 分割线 -->
+			<view style="height: 1rpx;background-color: #E6E6E6;margin: 30rpx 24rpx 24rpx 24rpx;"></view>
+
+			<!-- 职称证 -->
+			<view style="display: flex;flex-direction: row;margin-left: 24rpx;">
+				<view style="color: #4D4D4D;font-size: 30rpx;">职称证</view>
+				<view style="color: red;margin-top: 6rpx;">*</view>
+			</view>
+
+			<view style="display: flex;flex-direction: row;align-items: center;margin-left: 24rpx;margin-top: 20rpx;">
+				<view style="display: flex;flex-direction: column;align-items: center;justify-content: center;">
+					<u-upload :fileList="fileList1" @afterRead="afterRead" @delete="deletePic" :maxCount="1" name="1">
+						<view
+							style="display: flex;flex-direction: column;justify-content: center;align-items: center;border: 1rpx dashed #999999;width: 180rpx;height: 180rpx;">
+							<view>
+								<u-icon name="plus" size="28"></u-icon>
+							</view>
+							<view style="color: #999999;font-size: 30rpx;margin-top: 36rpx;">上传</view>
 						</view>
-					</view>
+					</u-upload>
+					<view style="color: #3894FF;font-size: 28rpx;margin-top: 30rpx;">查看示例</view>
+				</view>
+			</view>
 
-					<u-icon name="arrow-right" color="#333"
-						style="width: 10rpx;height: 10rpx;float: right;margin-right: 10rpx;margin-top: 6.5rpx;"></u-icon>
+			<!-- 分割线 -->
+			<view style="height: 1rpx;background-color: #E6E6E6;margin: 30rpx 24rpx 24rpx 24rpx;"></view>
 
+			<!-- 资格证 -->
+			<view style="display: flex;flex-direction: row;margin-left: 24rpx;">
+				<view style="color: #4D4D4D;font-size: 30rpx;">资格证正反面</view>
+				<view style="color: red;margin-top: 6rpx;">*</view>
+			</view>
+
+			<view style="display: flex;flex-direction: row;align-items: center;margin-left: 24rpx;margin-top: 20rpx;">
+				<view style="display: flex;flex-direction: column;align-items: center;justify-content: center;">
+					<u-upload :fileList="fileList1" @afterRead="afterRead" @delete="deletePic" :maxCount="1" name="1">
+						<view
+							style="display: flex;flex-direction: column;justify-content: center;align-items: center;border: 1rpx dashed #999999;width: 180rpx;height: 180rpx;">
+							<view>
+								<u-icon name="plus" size="28"></u-icon>
+							</view>
+							<view style="color: #999999;font-size: 30rpx;margin-top: 36rpx;">上传正面</view>
+						</view>
+					</u-upload>
+					<view style="color: #3894FF;font-size: 28rpx;margin-top: 30rpx;">查看示例</view>
+				</view>
+
+
+				<view
+					style="margin-left: 40rpx;display: flex;flex-direction: column;align-items: center;justify-content: center;">
+					<u-upload :fileList="fileList1" @afterRead="afterRead" @delete="deletePic" :maxCount="1" name="1">
+						<view
+							style="display: flex;flex-direction: column;justify-content: center;align-items: center;border: 1rpx dashed #999999;width: 180rpx;height: 180rpx;">
+							<view>
+								<u-icon name="plus" size="28"></u-icon>
+							</view>
+							<view style="color: #999999;font-size: 30rpx;margin-top: 36rpx;">上传反面</view>
+						</view>
+					</u-upload>
+					<view style="color: #3894FF;font-size: 28rpx;margin-top: 30rpx;">查看示例</view>
 				</view>
 			</view>
 
 
-			<view class="info-item">
-				<view class="info-item-content">
-					<view style="flex: 1;display: flex;flex-direction: row;"
-						@click="showChooseHospital = true; hideKeyboard();">
-						<view style="color: #1A1A1A;font-size: 32rpx;">科&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;室
-						</view>
-						<view style="color: red;padding-top: 5rpx;">*</view>
-						<view style="margin-left: 30rpx;color: #999;font-size: 28rpx;padding-top: 5rpx;"
-							v-if="!hospitalName">请选择</view>
-						<view style="margin-left: 30rpx;font-size: 28rpx;padding-top: 5rpx;" v-else>
-							{{ hospitalName || '~' }}
-						</view>
-					</view>
+			<!-- 分割线 -->
+			<view style="height: 1rpx;background-color: #E6E6E6;margin: 30rpx 24rpx 24rpx 24rpx;"></view>
 
-					<u-icon name="arrow-right" color="#333"
-						style="width: 10rpx;height: 10rpx;float: right;margin-right: 10rpx;margin-top: 6.5rpx;"></u-icon>
+			<!-- 资格证 -->
+			<view style="display: flex;flex-direction: row;margin-left: 24rpx;">
+				<view style="color: #4D4D4D;font-size: 30rpx;">执业证正反面</view>
+				<view style="color: red;margin-top: 6rpx;">*</view>
+			</view>
 
+			<view style="display: flex;flex-direction: row;align-items: center;margin-left: 24rpx;margin-top: 20rpx;">
+				<view style="display: flex;flex-direction: column;align-items: center;justify-content: center;">
+					<u-upload :fileList="fileList1" @afterRead="afterRead" @delete="deletePic" :maxCount="1" name="1">
+						<view
+							style="display: flex;flex-direction: column;justify-content: center;align-items: center;border: 1rpx dashed #999999;width: 180rpx;height: 180rpx;">
+							<view>
+								<u-icon name="plus" size="28"></u-icon>
+							</view>
+							<view style="color: #999999;font-size: 30rpx;margin-top: 36rpx;">上传正面</view>
+						</view>
+					</u-upload>
+					<view style="color: #3894FF;font-size: 28rpx;margin-top: 30rpx;">查看示例</view>
+				</view>
+
+
+				<view
+					style="margin-left: 40rpx;display: flex;flex-direction: column;align-items: center;justify-content: center;">
+					<u-upload :fileList="fileList1" @afterRead="afterRead" @delete="deletePic" :maxCount="1" name="1">
+						<view
+							style="display: flex;flex-direction: column;justify-content: center;align-items: center;border: 1rpx dashed #999999;width: 180rpx;height: 180rpx;">
+							<view>
+								<u-icon name="plus" size="28"></u-icon>
+							</view>
+							<view style="color: #999999;font-size: 30rpx;margin-top: 36rpx;">上传反面</view>
+						</view>
+					</u-upload>
+					<view style="color: #3894FF;font-size: 28rpx;margin-top: 30rpx;">查看示例</view>
 				</view>
 			</view>
 
-			<view class="info-item">
-				<view class="info-item-content">
-					<view style="flex: 1;display: flex;flex-direction: row;"
-						@click="showChooseHospital = true; hideKeyboard();">
-						<view style="color: #1A1A1A;font-size: 32rpx;">职&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称
-						</view>
-						<view style="color: red;padding-top: 5rpx;">*</view>
-						<view style="margin-left: 30rpx;color: #999;font-size: 28rpx;padding-top: 5rpx;"
-							v-if="!hospitalName">请选择</view>
-						<view style="margin-left: 30rpx;font-size: 28rpx;padding-top: 5rpx;" v-else>
-							{{ hospitalName || '~' }}
-						</view>
-					</view>
 
-					<u-icon name="arrow-right" color="#333"
-						style="width: 10rpx;height: 10rpx;float: right;margin-right: 10rpx;margin-top: 6.5rpx;"></u-icon>
+			<!-- 分割线 -->
+			<view style="height: 1rpx;background-color: #E6E6E6;margin: 30rpx 24rpx 24rpx 24rpx;"></view>
 
-				</view>
+
+			<!-- 擅长领域 -->
+			<view style="display: flex;flex-direction: row;margin-left: 24rpx;">
+				<view style="color: #4D4D4D;font-size: 30rpx;flex: 1;">擅长领域（选填）</view>
+				<view>0/300</view>
 			</view>
 
-			<view style="color: #999;font-size: 24rpx;margin: 30rpx 24rpx;">依据相关法律规定，医疗机构应当对开展互联网诊疗活动对医务人员进行实名认证。</view>
+			<view style="margin: 20rpx 30rpx;">
+				<u--textarea v-model="goodAt" class="input" maxlength="300"
+					placeholder="请描述您的专业领域、擅长疾病；如：擅长高血压、 冠心病等疾病的专断和治疗；擅长CT诊断，由其对 心血管疾病对影像诊断。"></u--textarea>
+			</view>
+
+			<!-- 分割线 -->
+			<view style="height: 1rpx;background-color: #E6E6E6;margin: 10rpx 24rpx 24rpx 24rpx;"></view>
+
+
+			<!-- 个人简介 -->
+			<view style="display: flex;flex-direction: row;margin-left: 24rpx;">
+				<view style="color: #4D4D4D;font-size: 30rpx;flex: 1;">个人简介（选填）</view>
+				<view>0/1000</view>
+			</view>
+
+			<view style="margin: 20rpx 30rpx;">
+				<u--textarea v-model="goodAt" class="input" maxlength="300"
+					placeholder="填写要求：\n 1.简介内容：从业年限，毕业学校，进修经历，学术， 科研成果，所获奖项，社会任职等 2.不包含敏感词汇，黄赌毒、反党、不文明用语 3.不虚假、不夸大"></u--textarea>
+			</view>
+
+			<!-- 分割线 -->
+			<view style="height: 1rpx;background-color: #E6E6E6;margin: 10rpx 24rpx 24rpx 24rpx;"></view>
+			<view
+				style="display: flex;flex-direction: row;margin-left: 24rpx;background-color: white;">
+				<image src="../../static/static/images/icon_blue.png" style="width: 28rpx;height: 28rpx;">
+				</image>
+				<view style="color: #3894FF;font-size: 24rpx;margin-left: 3rpx;">所有证件照仅用于认证，雅医互联网医院严格保证您等信息安全</view>
+			</view>
 
 			<!-- 底部按钮 下一步按钮-->
 			<view
-				style="width: 100vw;display: flex;flex-direction: row;align-items: center;justify-content: center;margin-top: 50rpx;">
+				style="width: 100vw;display: flex;flex-direction: row;align-items: center;justify-content: center;margin-top: 60rpx;">
 				<view @click="goNext"
 					style="color: white;background-color: #3894FF;width: 90vw;padding: 20rpx 0;border-radius: 8rpx;text-align: center;font-size: 30rpx;">
 					提交资质认证</view>
 			</view>
+			
+			<view style="height: 30rpx;"></view>
 
 		</view>
 
@@ -164,6 +250,8 @@
 					phone: '123',
 				},
 				hospitalName: '',
+				goodAt: '',
+				fileList1: [],
 				showChooseHospital: false,
 				columnsHospital: [
 					[{
@@ -181,6 +269,52 @@
 			console.log('option', option)
 		},
 		methods: {
+
+			// 删除图片
+			deletePic(event) {
+				this[`fileList${event.name}`].splice(event.index, 1)
+			},
+			// 新增图片
+			async afterRead(event) {
+				// 当设置 mutiple 为 true 时, file 为数组格式，否则为对象格式
+				let lists = [].concat(event.file)
+				let fileListLen = this[`fileList${event.name}`].length
+				lists.map((item) => {
+					this[`fileList${event.name}`].push({
+						...item,
+						status: 'uploading',
+						message: '上传中'
+					})
+				})
+				for (let i = 0; i < lists.length; i++) {
+					const result = await this.uploadFilePromise(lists[i].url)
+					let item = this[`fileList${event.name}`][fileListLen]
+					this[`fileList${event.name}`].splice(fileListLen, 1, Object.assign(item, {
+						status: 'success',
+						message: '',
+						url: result
+					}))
+					fileListLen++
+				}
+			},
+			uploadFilePromise(url) {
+				return new Promise((resolve, reject) => {
+					let a = uni.uploadFile({
+						url: 'http://www.example.com/upload', // 仅为示例，非真实的接口地址
+						filePath: url,
+						name: 'file',
+						formData: {
+							user: 'test'
+						},
+						success: (res) => {
+							setTimeout(() => {
+								resolve(res.data.data)
+							}, 1000)
+						}
+					});
+				})
+			},
+
 			hideKeyboard() {
 				uni.hideKeyboard();
 			},
@@ -205,6 +339,11 @@
 			goNext() {
 				uni.navigateTo({
 					url: '/pages2/pages/mine/identify-result'
+				})
+			},
+			goChooseHospital() {
+				uni.navigateTo({
+					url: '/pages2/pages/mine/search-hospital'
 				})
 			},
 
@@ -244,26 +383,27 @@
 			flex-direction: column;
 			padding: 30rpx 24rpx;
 
-			.info-item {
-				padding: 35rpx 0;
-				margin: 0 24rpx;
-				border-bottom: 1rpx solid #E6E6E6;
-
-				.info-item-content {
-					display: flex;
-					flex-direction: row;
-					align-items: center;
-
-					.input {
-						font-size: 28rpx;
-						margin-left: 30rpx;
-						font-family: PingFang SC;
-						font-weight: 400;
-						color: rgba(62, 74, 89, 0.45);
-						line-height: 36rpx;
-					}
-				}
+			.u-upload {
+				flex: none;
 			}
+
+			.view-head {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				margin-left: 24rpx;
+				margin-top: 30rpx;
+			}
+
+
+			.input {
+				text-indent: 0;
+				min-height: 138rpx;
+			}
+
+
+
+
 		}
 	}
 </style>
