@@ -1,34 +1,38 @@
 <template>
 	<view class="wrap">
-		<view class="head">
-			<u-search
-				placeholder="输入文章标题进行搜索"
-				v-model="value"
-				:show-action="false"
-				@change="change"
-			></u-search>
+		<view class="headers">
+			<view class="status" :style="{height: statusHeight + 'px'}"></view>
+			<view class="navigator" :style="{height: navigatorHeight + 'px'}">
+				<u-icon name="arrow-left" color="#FFFFFF" size="36rpx" @click="goBack()"></u-icon>
+				<view class="title">收入明细</view>
+			</view>
+		</view>
+		<view class="filter">
+			<view class="date">
+				<view class="contain">
+					<view class="text">{{ createdTime.replace('-', '年') }}月</view>
+					<u-icon name="arrow-down" color="#FFFFFF" size="28rpx"></u-icon>
+				</view>
+			</view>
+			<view class="time">入账周期：2023.08.03至2023.08.13</view>
+			<view class="tabs">
+				<view class="item" :class="{active: settlementStatus===0}" @click="tabClick(0)">全部</view>
+				<view class="item" :class="{active: settlementStatus===1}" @click="tabClick(1)">待结算</view>
+				<view class="item" :class="{active: settlementStatus===2}" @click="tabClick(2)">已结算</view>
+				<view class="item" :class="{active: settlementStatus===3}" @click="tabClick(3)">不予结算</view>
+			</view>
 		</view>
 		<view class="content">
-			<u-empty mode="data" style="padding-top: 300rpx;" icon="/pages2/static/img/icon_nodata.png" v-if="list.length === 0"></u-empty>
+			<u-empty mode="data" icon="/pages2/static/img/icon_nodata.png" v-if="list.length === 0"></u-empty>
 			<scroll-view class="list" :scroll-y="true" @scrolltolower="scrolltolower" v-else>
-				<view class="item" v-for="item in list" :key="item.articleId">
-					<view class="top" @click="viewHandler(item)">
-						<view class="row title">
-							<image src="/pages2/static/static/images/group/icon_note.png"></image>
-							<text>{{ item.title || '' }}</text>
-						</view>
-						<view class="row desc">{{ item.brief || '暂无' }}</view>
-						<view class="read">
-							<image src="/pages2/static/static/images/group/icon_read.png"></image>
-							<text>{{ item.clickNum || 0 }}</text>
-						</view>
-						<image class="abs" :src="item.previewUrl"></image>
+				<view class="item" v-for="item in list" :key="item.id">
+					<view class="row row1">
+						<view class="time">2023-07-12 11:02:23</view>
+						<view class="status">不予结算</view>
 					</view>
-					<view class="bottom">
-						<view class="btn" @click="sendHandler(item)">
-							<image src="/pages2/static/static/images/group/icon_send.png"></image>
-							<text>发送给患者</text>
-						</view>
+					<view class="row row2">
+						<view class="desc">在线咨询</view>
+						<view class="price">￥8.00</view>
 					</view>
 				</view>
 			</scroll-view>
@@ -40,82 +44,43 @@
 	export default {
 		data() {
 			return {
+				list: [],
 				flag: false,
 				total: 0,
 				pageNo: 1,
-				value: '',
-				list: []
+				pageSize: 20,
+				settlementStatus: 0,
+				createdTime: this.formatDate(new Date()),
+				headerHeight: getApp().globalData.headerInfo.height,
+				statusHeight: getApp().globalData.headerInfo.statusBarHeight,
+				navigatorHeight: getApp().globalData.headerInfo.navigatorHeight
 			}
 		},
 		onLoad() {
 			this.getList();
 		},
-		onReady() {
-		},
 		onShow() {
 		},
 		methods: {
-			viewHandler(item) {
-				uni.navigateTo({
-					url: `/pages2/pages/group/note-info?id=${item.articleId}&title=${item.title}`
-				});
-			},
-			sendHandler(item) {
-				const pages = getCurrentPages();
-				if (pages.length > 1){
-					const page = pages[pages.length - 1 - 1];
-					if (page.route==='pages2/pages/TUI-Chat-Group/chat' || page.route==='pages2/pages/TUI-Chat-Group2/chat'){
-						page.$vm.sendCustomMessage({
-							detail: {
-								payload: {
-									data: JSON.stringify({
-										content: item.title,
-										description: '文章卡',
-										id: item.articleId,
-										type: 'CustomArticleMessage'
-									}),
-									extension: '',
-									description: '文章卡'
-								}
-							}
-						});
-						uni.navigateBack({
-							delta: 1
-						});
-					}
-				}
-			},
-			change() {
-				this.value = this.value.trim();
-				this.pageNo = 1;
-				this.total = 0;
-				this.list = [];
-				this.getList();
-			},
 			getList() {
 				uni.showLoading({
 					title:'正在加载'
 				});
-				uni.$u.http.get(`/health-api/health/patient/allArticlesNewPage`, {
-					params: {
-						status: 2,
-						title: this.value,
-						pageSize: 10,
-						start: this.pageNo
-					}
+				uni.$u.http.post(`/medical-api/userRightsSettlement/getIncomeDetailsByLoginUser`, {
+					pageNo: this.pageNo,
+					pageSize: this.pageSize,
+					createdTime: this.createdTime,
+					settlementStatus: this.settlementStatus===0 ? undefined : this.settlementStatus
 				}).then(res => {
-					res.data = res.data || {};
-					res.data.list = res.data.list || [];
-					res.data.total = res.data.total || 0;
+					uni.hideLoading();
 					this.total = res.data.total;
-					this.list = this.list.concat(res.data.list);
+					//this.list = this.list.concat(res.data.records);
 				}).finally(() => {
 					this.flag = false;
-					uni.hideLoading();
 				});
 			},
 			scrolltolower() {
-				if (this.pageNo*10 >= this.total){
+				if (this.pageNo*this.pageSize >= this.total){
 					return;
 				}
 				if (this.flag){
@@ -123,6 +88,28 @@
 				}
 				this.flag = true;
 				this.pageNo ++;
+				this.getList();
+			},
+			formatDate(date) {
+				date = new Date(date);
+				let myyear = date.getFullYear();
+				let mymonth = date.getMonth() + 1;
+				mymonth < 10 ? (mymonth = '0' + mymonth) : mymonth;
+				return `${myyear}-${mymonth}`;
+			},
+			goBack() {
+				uni.navigateBack({
+					delta: 1
+				});
+			},
+			tabClick(settlementStatus) {
+				if (this.settlementStatus === settlementStatus){
+					return;
+				}
+				this.settlementStatus = settlementStatus;
+				this.pageNo = 1;
+				this.total = 0;
+				this.list = [];
 				this.getList();
 			}
 		}
@@ -133,101 +120,123 @@
 	.wrap {
 		min-height: 100vh;
 		background: #FFFFFF;
-		.head {
-			position: fixed;
-			top: 0;
-			width: 100%;
-			padding: 30rpx 24rpx;
-			z-index: 1;
-			background: #FFFFFF;
-			box-sizing: border-box;
+		.headers {
+			background: #5AB0FF;
+			.navigator {
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				>.u-icon {
+					position: absolute;
+					left: 0;
+					padding: 5rpx 10rpx;
+				}
+				.title {
+					font-size: 36rpx;
+					font-weight: 500;
+					color: #FFFFFF;
+					text-align: center;
+				}
+			}
+		}
+		.filter {
+			padding: 10rpx 40rpx;
+			background: #5AB0FF;
+			.date {
+				padding: 10rpx 0;
+				.contain {
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+					width: 190rpx;
+					height: 68rpx;
+					padding: 0 20rpx;
+					border: 2rpx solid #FFFFFF;
+					border-radius: 4rpx;
+					.text {
+						font-size: 28rpx;
+						font-weight: 400;
+						color: #FFFFFF;
+					}
+					>.u-icon {
+						position: relative;
+						top: 2rpx;
+					}
+				}
+			}
+			.time {
+				font-size: 28rpx;
+				font-weight: 400;
+				color: #FFFFFF;
+				line-height: 48rpx;
+			}
+			.tabs {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 20rpx 0 5rpx 0;
+				.item {
+					font-size: 32rpx;
+					font-weight: 400;
+					color: #FFFFFF;
+					line-height: 62rpx;
+					border-bottom: 5rpx solid transparent;
+					&.active {
+						border-bottom: 5rpx solid #FFFFFF;
+					}
+				}
+			}
 		}
 		.content {
-			margin-top: calc(60rpx + 32px);
+			background: #FFFFFF;
+			.u-empty {
+				padding-top: 200rpx;
+			}
 			.list {
-				max-height: calc(100vh - 60rpx - 32px);
-				background: #F2F2F2;
+				max-height: calc(100vh - 40px - 40px - 300rpx);
+				padding-top: 50rpx;
+				overflow-y: auto;
 				.item {
-					margin-bottom: 20rpx;
-					background: #FFFFFF;
-					&:first-child {
-						margin-top: 20rpx;
+					margin-bottom: 30rpx;
+					padding: 0 40rpx;
+					&:last-child {
+						margin-bottom: 10rpx;
 					}
-					.top {
-						position: relative;
-						padding: 28rpx 24rpx;
-						.row {
-							max-width: 540rpx;
-							white-space: nowrap;
-							overflow: hidden;
-							text-overflow: ellipsis;
+					.row {
+						display: flex;
+						align-items: center;
+						justify-content: space-between;
+						&.row1 {
+							margin-bottom: 10rpx;
 						}
-						.title {
-							font-size: 30rpx;
-							font-weight: 500;
-							color: #4D4D4D;
+						.time {
+							font-size: 24rpx;
+							font-weight: 400;
+							color: #999999;
 							line-height: 36rpx;
-							image {
-								width: 28rpx;
-								height: 30rpx;
-								margin-right: 15rpx;
-								padding: 3rpx 0;
-								vertical-align: middle;
-							}
-							text {
-								vertical-align: middle;
-							}
+						}
+						.status {
+							width: 100rpx;
+							font-size: 24rpx;
+							font-weight: 400;
+							color: #1A1A1A;
+							line-height: 36rpx;
+							text-align: center;
+							background: #E6E6E6;
+							border-radius: 2rpx;
 						}
 						.desc {
-							margin-top: 24rpx;
-							font-size: 28rpx;
+							font-size: 30rpx;
 							font-weight: 400;
-							color: #999999;
-							line-height: 34rpx;
+							color: #1A1A1A;
+							line-height: 50rpx;
 						}
-						.read {
-							margin-top: 24rpx;
-							font-size: 22rpx;
+						.price {
+							font-size: 30rpx;
 							font-weight: 400;
-							color: #999999;
-							line-height: 26rpx;
-							image {
-								width: 26rpx;
-								height: 26rpx;
-								margin-right: 10rpx;
-								vertical-align: middle;
-							}
-							text {
-								vertical-align: text-bottom;
-							}
-						}
-						.abs {
-							position: absolute;
-							top: 28rpx;
-							right: 24rpx;
-							width: 140rpx;
-							height: 140rpx;
-						}
-					}
-					.bottom {
-						padding: 30rpx 0;
-						border-top: 1rpx solid #E6E6E6;
-						.btn {
-							text-align: center;
-							image {
-								display: inline-block;
-								width: 33rpx;
-								height: 31rpx;
-								margin-right: 10rpx;
-								vertical-align: middle;
-							}
-							text {
-								font-size: 28rpx;
-								font-weight: 400;
-								color: #4D4D4D;
-								line-height: 31rpx;
-								vertical-align: middle;
-							}
+							color: #1A1A1A;
+							line-height: 50rpx;
 						}
 					}
 				}

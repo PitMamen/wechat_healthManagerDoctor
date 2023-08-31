@@ -358,6 +358,7 @@
 				{
 					"path": "pages/cash/detail",
 					"style": {
+						"navigationStyle": "custom",
 						"navigationBarTitleText": "收入明细"
 					}
 				}

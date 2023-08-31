@@ -46,6 +46,19 @@
 		);
 	}
 	// #endif
+	
+	const headerInfo = () => {
+		const { statusBarHeight } = uni.getSystemInfoSync();
+		const { width, height, top } = uni.getMenuButtonBoundingClientRect();
+		const navigatorHeight = (top - statusBarHeight) * 2 + height;
+		return {
+			statusBarHeight,
+			navigatorHeight,
+			menuHeight: height,
+			menuPadding: top - statusBarHeight,
+			height: statusBarHeight + navigatorHeight
+		};
+	};
 	export default {
 		onLaunch() {
 			const SDKAppID = SDKAPPID;
@@ -98,6 +111,7 @@
 			this.login()
 		},
 		globalData: {
+			headerInfo: headerInfo(),
 			// userInfo: userID userSig token phone
 			userInfo: getTokenStorageSync(),
 			// 个人信息

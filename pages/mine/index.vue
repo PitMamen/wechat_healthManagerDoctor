@@ -395,27 +395,25 @@
 					uni.hideLoading()
 				});
 			},
-
 			cashEyeClick(eye) {
 				this.cashEye = eye;
 			},
 			goCashDetail() {
-				if(!this.checkAuth()){
-					return
-				}
+				// if(!this.checkAuth()){
+				// 	return
+				// }
 				uni.navigateTo({
 					url: '/pages2/pages/cash/detail'
 				});
 			},
 			goCashPack() {
-				if(!this.checkAuth()){
-					return
-				}
+				// if(!this.checkAuth()){
+				// 	return
+				// }
 				uni.navigateTo({
 					url: '/pages2/pages/cash/pack'
 				});
 			}
-
 		}
 	}
 </script>
