@@ -36,6 +36,7 @@
 			}
 		},
 		onLoad(option) {
+			this.type = option.type
 			this.account = uni.getStorageSync('account');
 			console.log('option', option)
 		},

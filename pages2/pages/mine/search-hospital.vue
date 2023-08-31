@@ -17,28 +17,18 @@
 
 		<!-- 列表 -->
 		<view class="view-list" v-for="(item, index) in listData" @click="onItemClick(index)" :key="index">
-			<view class="view-info-list">
-				<view class="v-num">
-					<image mode="aspectFit" style="width: 80rpx;height: 80rpx;float: left;"
-						src="/pages2/static/static/images/header.png"></image>
-					<view class="v-num-wrap" v-if="item.unreadCount > 0">
-						<view class="num">{{ item.unreadCount||'' }}</view>
-					</view>
 
-				</view>
+			<view class="view-info-list">
+
 				<view class="view-info-personal-list">
 					<view class="info-personal-list">
 						<view style="flex: 1;display: flex;flex-direction: row;">
-							<view style="font-size: 32rpx;color: #1A1A1A;font-weight: bold;">{{item.userName}}</view>
+							<view style="font-size: 32rpx;color: #1A1A1A;">{{item.hospitalName}}</view>
 						</view>
 
 						<view style="font-size: 24rpx;color: #999999">{{item.lastMsgTime}}</view>
 					</view>
-					<view
-						style="font-size: 28rpx;color: ##999999;margin-top: 5rpx;overflow: hidden; text-overflow: ellipsis; white-space: nowrap">
-						<!-- {{item.nick+'：' +item.nearMsg}} -->
-						{{item.nick?(item.nick+'：' +item.nearMsg):'无最新消息'}}
-					</view>
+
 				</view>
 
 			</view>
@@ -65,6 +55,7 @@
 		onLoad(option) {
 			this.account = uni.getStorageSync('account');
 			console.log('option', option)
+			this.getChatList("")
 		},
 		methods: {
 			searchChange(name) {
@@ -80,104 +71,43 @@
 			},
 
 			getChatList(name) {
-				this.conversationIDList = []
-				uni.$u.http.post('/medical-api/rightsUse/qryRightsUsingByDoc', {
-					keyWord: name,
-					userId: this.account.user.userId
+
+				uni.showLoading({
+					title: '正在加载'
+				});
+				uni.$u.http.get('/uam-api/hospital/medHosOrgs', {
+					params: {
+						queryText: name
+					}
 				}).then(res => {
-					res.data = res.data || {};
-					if (res.data.length > 0) {
-						res.data.forEach((item) => {
-							this.$set(item, 'type', 2)
-							this.$set(item, 'headUrl', '/pages2/static/static/images/header.png')
-							// this.$set(item, 'nearMsg', '在吗？吃饭了吗')
-
-							if (item.imGroupId) {
-								console.log('ggg', 'GROUP' + item.imGroupId)
-								this.$set(item, 'conversationID', 'GROUP' + item.imGroupId)
-								this.conversationIDList.push(item.conversationID)
-							}
-						})
-
-
-						console.log('fff', res.data)
-						this.listData = []
-						this.listData = this.listData.concat(res.data)
-						console.log('fffddd', this.listData)
-						this.getConversationList() //TODO 聊天H5 api暂时无法使用
+					if (res.code == 0) {
+						this.listData = res.data
+					} else {
+						this.$u.toast(res.message)
 					}
+
+				}).finally(() => {
+					uni.hideLoading();
 				});
-			},
-
-			//获取问诊列表的未读数
-			getConversationList() {
-				if (this.conversationIDList.length == 0) {
-					return
-				}
-				console.log(this.conversationIDList)
-				// if (getApp().globalData.sdkReady) {
-				// 获取指定的会话列表
-				let promise = uni.$TUIKit.getConversationList(this.conversationIDList);
-				let that = this
-				let listDataTemp = JSON.parse(JSON.stringify(this.listData))
-				promise.then(function(imResponse) {
-					const conversationList = imResponse.data.conversationList; // 缓存中已存在的指定的会话列表
-					console.log("获取指定的会话列表", JSON.stringify(conversationList))
-					console.log("获取指定的会话列表dd", imResponse)
-					// var num = 0
-					if (conversationList && conversationList.length > 0) {
-						for (var i = 0; i < conversationList.length; i++) {
-							for (var j = 0; j < listDataTemp.length; j++) {
-								if (conversationList[i].conversationID == listDataTemp[j].conversationID) {
-									listDataTemp[j].unreadCount = conversationList[i].unreadCount
-									listDataTemp[j].nearMsg = conversationList[i].lastMessage.messageForShow
-									listDataTemp[j].nick = conversationList[i].lastMessage.nick
-									listDataTemp[j].lastMsgTime = that.formatDateFull(conversationList[i]
-										.lastMessage
-										.lastTime * 1000)
-									// num = num + conversationList[i].unreadCount
-								}
-							}
-						}
-						// that.setData({
-						// 	appointList: appointList,
-						// 	unreadConsult: num
-						// })
-					}
-					that.listData = listDataTemp
-					console.log("转换后的数据", JSON.stringify(listDataTemp))
-				}).catch(function(imError) {
-					console.warn('getConversationList error:', imError); // 获取会话列表失败的相关信息
-				})
-				// this.listData = listDataTemp
-				// }
 
 			},
 
+			/**
+			 * {
+			      "tenantId": "902",
+			      "hospitalCode": "992",
+			      "hospitalName": "一块糍粑租户下的机构",
+			      "hospitalLevelName": "一级甲等",
+			      "imgUrl": ""
+			    }
+			 * @param {Object} index
+			 */
 			onItemClick(index) {
-				uni.setStorageSync('taskItem', this.listData[index]);
-				this.listData[index].unreadCount = 0
-				// this.chatList()
-				uni.navigateTo({
-					url: `/pages2/pages/TUI-Chat-Group2/chat?conversationID=GROUP${this.listData[index].imGroupId}`
+				uni.setStorageSync('choose_hospital', this.listData[index]);
+				uni.navigateBack({
+					delta: 1
 				});
 
-			},
-
-			formatDateFull(date) {
-				date = new Date(date)
-				let myyear = date.getFullYear()
-				let mymonth = date.getMonth() + 1
-				let myweekday = date.getDate()
-				let oHour = date.getHours()
-				let oMin = date.getMinutes()
-				let oSen = date.getSeconds()
-				mymonth < 10 ? (mymonth = '0' + mymonth) : mymonth
-				myweekday < 10 ? (myweekday = '0' + myweekday) : myweekday
-				oHour < 10 ? (oHour = '0' + oHour) : oHour
-				oMin < 10 ? (oMin = '0' + oMin) : oMin
-				oSen < 10 ? (oSen = '0' + oSen) : oSen
-				return `${myyear}-${mymonth}-${myweekday} ${oHour}:${oMin}:${oSen}`
 			},
 
 		}
