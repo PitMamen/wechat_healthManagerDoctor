@@ -9,12 +9,12 @@
 		</view>
 		<view class="filter">
 			<view class="date">
-				<view class="contain">
+				<view class="contain" @click="show = true; hideKeyboard();">
 					<view class="text">{{ createdTime.replace('-', '年') }}月</view>
 					<u-icon name="arrow-down" color="#FFFFFF" size="28rpx"></u-icon>
 				</view>
 			</view>
-			<view class="time">入账周期：2023.08.03至2023.08.13</view>
+			<view class="time">入账周期：{{ timePeriod }}</view>
 			<view class="tabs">
 				<view class="item" :class="{active: settlementStatus===0}" @click="tabClick(0)">全部</view>
 				<view class="item" :class="{active: settlementStatus===1}" @click="tabClick(1)">待结算</view>
@@ -25,31 +25,44 @@
 		<view class="content">
 			<u-empty mode="data" icon="/pages2/static/img/icon_nodata.png" v-if="list.length === 0"></u-empty>
 			<scroll-view class="list" :scroll-y="true" @scrolltolower="scrolltolower" v-else>
-				<view class="item" v-for="item in list" :key="item.id">
+				<view class="item" v-for="(item, index) in list" :key="index">
 					<view class="row row1">
-						<view class="time">2023-07-12 11:02:23</view>
-						<view class="status">不予结算</view>
+						<view class="time">{{ item.createdTime }}</view>
+						<view class="status">{{ item.settlementStatus }}</view>
 					</view>
 					<view class="row row2">
-						<view class="desc">在线咨询</view>
-						<view class="price">￥8.00</view>
+						<view class="desc">{{ item.orderType }}</view>
+						<view class="price">￥{{ item.paySum }}</view>
 					</view>
 				</view>
 			</scroll-view>
 		</view>
+		
+		<u-datetime-picker
+		    mode="year-month"
+			:show="show"
+			:maxDate="maxDate"
+			@close="close"
+			@cancel="close"
+			@confirm="confirm"
+		></u-datetime-picker>
 	</view>
 </template>
 
 <script>
+	import moment from 'moment';
+	
 	export default {
 		data() {
 			return {
 				list: [],
-				flag: false,
 				total: 0,
 				pageNo: 1,
 				pageSize: 20,
+				show: false,
+				flag: false,
 				settlementStatus: 0,
+				maxDate: new Date().getTime(),
 				createdTime: this.formatDate(new Date()),
 				headerHeight: getApp().globalData.headerInfo.height,
 				statusHeight: getApp().globalData.headerInfo.statusBarHeight,
@@ -58,6 +71,7 @@
 		},
 		onLoad() {
 			this.getList();
+			this.geneTimePeriod(new Date());
 		},
 		onShow() {
 		},
@@ -74,7 +88,7 @@
 				}).then(res => {
 					uni.hideLoading();
 					this.total = res.data.total;
-					//this.list = this.list.concat(res.data.records);
+					this.list = this.list.concat(res.data.records);
 				}).finally(() => {
 					this.flag = false;
 				});
@@ -90,6 +104,14 @@
 				this.pageNo ++;
 				this.getList();
 			},
+			hideKeyboard() {
+				uni.hideKeyboard();
+			},
+			goBack() {
+				uni.navigateBack({
+					delta: 1
+				});
+			},
 			formatDate(date) {
 				date = new Date(date);
 				let myyear = date.getFullYear();
@@ -97,10 +119,10 @@
 				mymonth < 10 ? (mymonth = '0' + mymonth) : mymonth;
 				return `${myyear}-${mymonth}`;
 			},
-			goBack() {
-				uni.navigateBack({
-					delta: 1
-				});
+			geneTimePeriod(date) {
+				const moment1 = moment(date).startOf('month');
+				const moment2 = moment(date).endOf('month');
+				this.timePeriod = `${moment1.format('YYYY.MM.DD')}至${moment2.format('YYYY.MM.DD')}`;
 			},
 			tabClick(settlementStatus) {
 				if (this.settlementStatus === settlementStatus){
@@ -110,6 +132,18 @@
 				this.pageNo = 1;
 				this.total = 0;
 				this.list = [];
+				this.getList();
+			},
+			close() {
+				this.show = false;
+			},
+			confirm(event) {
+				this.createdTime = this.formatDate(event.value);
+				this.geneTimePeriod(event.value);
+				this.pageNo = 1;
+				this.total = 0;
+				this.list = [];
+				this.close();
 				this.getList();
 			}
 		}

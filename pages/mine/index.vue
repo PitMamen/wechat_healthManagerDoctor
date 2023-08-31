@@ -44,7 +44,7 @@
 			<view class="cash-line">
 				<view class="cash-info">
 					<text class="cash-unit" v-if="cashEye">￥</text>
-					<text v-if="cashEye">2300.00</text>
+					<text v-if="cashEye">{{ info.settlementSum || 0 }}</text>
 					<text v-else>******</text>
 				</view>
 				<u-icon name="eye-fill" color="#FFFFFF" size="36rpx" @click="cashEyeClick(false)" v-if="cashEye"></u-icon>
@@ -213,6 +213,7 @@
 					hos: '中南大学湘雅二医院',
 					disease: '疾病: 青少年精神障碍',
 				},
+				info: {},
 
 				taskList: [],
 			}
@@ -231,7 +232,7 @@
 			if(this.account && this.account.accountId && this.account.bindStatus == 0){
 				this.getShowCa();
 			}
-			
+			this.getInfo();
 		},
 		methods: {
 			jump() {
@@ -395,21 +396,33 @@
 					uni.hideLoading()
 				});
 			},
+			getInfo() {
+				uni.showLoading({
+					title:'正在加载'
+				});
+				uni.$u.http.get(`/medical-api/userRightsSettlement/getSettlementSumByLoginUser`, {
+					params: {
+					}
+				}).then(res => {
+					uni.hideLoading();
+					this.info = res.data || {};
+				});
+			},
 			cashEyeClick(eye) {
 				this.cashEye = eye;
 			},
 			goCashDetail() {
-				// if(!this.checkAuth()){
-				// 	return
-				// }
+				if(!this.checkAuth()){
+					return
+				}
 				uni.navigateTo({
 					url: '/pages2/pages/cash/detail'
 				});
 			},
 			goCashPack() {
-				// if(!this.checkAuth()){
-				// 	return
-				// }
+				if(!this.checkAuth()){
+					return
+				}
 				uni.navigateTo({
 					url: '/pages2/pages/cash/pack'
 				});

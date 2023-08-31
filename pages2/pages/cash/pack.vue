@@ -2,15 +2,15 @@
 	<view class="wrap">
 		<view class="top">
 			<view class="title">钱包余额</view>
-			<view class="cash">￥2300.00</view>
+			<view class="cash">￥{{ info.settlementSum || 0 }}</view>
 			<view class="block">
 				<view class="left">
 					<view class="line line1">可提现金额</view>
-					<view class="line line2">￥2000.00</view>
+					<view class="line line2">￥{{ info.canRecoverSum || 0 }}</view>
 				</view>
 				<view class="right">
 					<view class="line line1">待结算金额</view>
-					<view class="line line2">￥2000.00</view>
+					<view class="line line2">￥{{ info.noSettlementSum || 0 }}</view>
 				</view>
 			</view>
 			<view class="action">
@@ -62,6 +62,7 @@
 	export default {
 		data() {
 			return {
+				info: {}
 			}
 		},
 		onLoad() {
@@ -69,8 +70,21 @@
 		onReady() {
 		},
 		onShow() {
+			this.getInfo();
 		},
 		methods: {
+			getInfo() {
+				uni.showLoading({
+					title:'正在加载'
+				});
+				uni.$u.http.get(`/medical-api/userRightsSettlement/getSettlementSumByLoginUser`, {
+					params: {
+					}
+				}).then(res => {
+					uni.hideLoading();
+					this.info = res.data || {};
+				});
+			},
 			goCashOut() {
 				uni.navigateTo({
 					url: '/pages2/pages/cash/out'
