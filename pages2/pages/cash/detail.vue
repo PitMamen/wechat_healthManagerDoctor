@@ -61,6 +61,7 @@
 				pageSize: 20,
 				show: false,
 				flag: false,
+                timePeriod: '',
 				settlementStatus: 0,
 				maxDate: new Date().getTime(),
 				createdTime: this.formatDate(new Date()),
