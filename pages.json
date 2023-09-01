@@ -367,6 +367,18 @@
 						"navigationStyle": "custom",
 						"navigationBarTitleText": "收入明细"
 					}
+				},
+				{
+					"path": "pages/cash/card",
+					"style": {
+						"navigationBarTitleText": "银行卡管理"
+					}
+				},
+				{
+					"path": "pages/cash/card-add",
+					"style": {
+						"navigationBarTitleText": "新增银行卡"
+					}
 				}
 			]
 		}

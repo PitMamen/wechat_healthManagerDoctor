@@ -446,9 +446,9 @@
 				});
 			},
 			goCashPack() {
-				if(!this.checkAuth()){
-					return
-				}
+				// if(!this.checkAuth()){
+				// 	return
+				// }
 				uni.navigateTo({
 					url: '/pages3/pages/cash/pack'
 				});
