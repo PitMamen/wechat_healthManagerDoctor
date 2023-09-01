@@ -351,6 +351,20 @@
 					}
 				},
 				{
+				
+					"path": "pages/ai/index",
+					"style": {
+					"navigationBarTitleText": "智能回复",
+					"navigationBarBackgroundColor": "#ffffff"
+					}
+				}
+			]
+		},
+		{
+			"root": "pages3",
+			"name": "pages3",
+			"pages": [
+				{
 					"path": "pages/cash/pack",
 					"style": {
 						"navigationBarTitleText": "我的钱包"
@@ -364,10 +378,15 @@
 					}
 				},
 				{
-					"path": "pages/ai/index",
+					"path": "pages/cash/card",
 					"style": {
-						"navigationBarTitleText": "智能回复",
-						"navigationBarBackgroundColor": "#ffffff"
+						"navigationBarTitleText": "银行卡管理"
+					}
+				},
+				{
+					"path": "pages/cash/card-add",
+					"style": {
+						"navigationBarTitleText": "新增银行卡"
 					}
 				}
 			]
@@ -376,7 +395,7 @@
 	"preloadRule": {
 		"pages/work/workshop": {
 			"network": "all",
-			"packages": ["pages2"]
+			"packages": ["pages2", "pages3"]
 		}
 	},
 	"plugins": {},

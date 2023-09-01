@@ -21,7 +21,7 @@
 			<view class="row" @click="goCashOutList">
 				<view class="contain">
 					<view class="left">
-						<image src="/static/static/images/cash/pack-1.png"></image>
+						<image src="/pages3/static/static/images/cash/pack-1.png"></image>
 						<view class="name">提现记录</view>
 					</view>
 					<u-icon name="arrow-right" color="#1A1A1A" size="36rpx"></u-icon>
@@ -30,7 +30,7 @@
 			<view class="row" @click="goCashCard">
 				<view class="contain">
 					<view class="left">
-						<image src="/static/static/images/cash/pack-2.png"></image>
+						<image src="/pages3/static/static/images/cash/pack-2.png"></image>
 						<view class="name">银行卡管理</view>
 					</view>
 					<u-icon name="arrow-right" color="#1A1A1A" size="36rpx"></u-icon>
@@ -39,7 +39,7 @@
 			<view class="row" @click="goCashTradeList">
 				<view class="contain">
 					<view class="left">
-						<image src="/static/static/images/cash/pack-3.png"></image>
+						<image src="/pages3/static/static/images/cash/pack-3.png"></image>
 						<view class="name">交易记录</view>
 					</view>
 					<u-icon name="arrow-right" color="#1A1A1A" size="36rpx"></u-icon>
@@ -48,7 +48,7 @@
 			<view class="row" @click="goCashPwd">
 				<view class="contain">
 					<view class="left">
-						<image src="/static/static/images/cash/pack-4.png"></image>
+						<image src="/pages3/static/static/images/cash/pack-4.png"></image>
 						<view class="name">支付密码管理</view>
 					</view>
 					<u-icon name="arrow-right" color="#1A1A1A" size="36rpx"></u-icon>
@@ -87,22 +87,22 @@
 			},
 			goCashOut() {
 				uni.navigateTo({
-					url: '/pages2/pages/cash/out'
+					url: '/pages3/pages/cash/out'
 				});
 			},
 			goCashOutList() {
 				uni.navigateTo({
-					url: '/pages2/pages/cash/out-list'
+					url: '/pages3/pages/cash/out-list'
 				});
 			},
 			goCashCard() {
 				uni.navigateTo({
-					url: '/pages2/pages/cash/card'
+					url: '/pages3/pages/cash/card'
 				});
 			},
 			goCashTradeList() {
 				uni.navigateTo({
-					url: '/pages2/pages/cash/trade-list'
+					url: '/pages3/pages/cash/trade-list'
 				});
 			},
 			goCashPwd() {}

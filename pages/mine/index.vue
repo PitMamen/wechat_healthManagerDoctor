@@ -442,15 +442,15 @@
 					return
 				}
 				uni.navigateTo({
-					url: '/pages2/pages/cash/detail'
+					url: '/pages3/pages/cash/detail'
 				});
 			},
 			goCashPack() {
-				if(!this.checkAuth()){
-					return
-				}
+				// if(!this.checkAuth()){
+				// 	return
+				// }
 				uni.navigateTo({
-					url: '/pages2/pages/cash/pack'
+					url: '/pages3/pages/cash/pack'
 				});
 			}
 		}
