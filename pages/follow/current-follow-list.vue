@@ -27,7 +27,7 @@
 			<view class="histitem">
 
 				<image
-					:src="item.sex=='男'?'/static/static/images/follow_icon_nan.png':'/static/static/images/follow_icon_nv.png'"
+					:src="item.sex=='男'?'https://hmg.mclouds.org.cn/content-api/file/F20230901104620552ZAFKPPDHICNEOX-follow_icon_nan.png':'https://hmg.mclouds.org.cn/content-api/file/F20230901104637129JKWMLVJEEVJFVF-follow_icon_nv.png'"
 					style="width: 82rpx;height: 82rpx;"></image>
 				<view style="flex:1; display: flex; flex-direction: column;margin-left: 21rpx;">
 					<view style="color: #1A1A1A;font-size: 30rpx;">{{item.userName}}</view>
