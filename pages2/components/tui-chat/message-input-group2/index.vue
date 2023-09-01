@@ -171,6 +171,10 @@ export default {
 				{
 					name: '推荐套餐',
 					key: '0'
+				},
+				{
+					name: '智能回复',
+					key: '5'
 				}
 			],
 			messageData: {},
@@ -556,7 +560,12 @@ export default {
 						displayMedicalFolder: true
 					});
 					break;
-
+				case '5':
+					uni.navigateTo({
+						url: '/pages2/pages/ai/index'
+					
+					})
+					break;
 				default:
 					break;
 			}

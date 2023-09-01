@@ -33,7 +33,8 @@
 				"navigationBarTitleText": "随访"
 			}
 		}
-	],
+	   
+    ],
 	"subpackages": [{
 			"root": "pagesFace",
 			"name": "pagesFace",
@@ -360,6 +361,13 @@
 					"style": {
 						"navigationStyle": "custom",
 						"navigationBarTitleText": "收入明细"
+					}
+				},
+				{
+					"path": "pages/ai/index",
+					"style": {
+						"navigationBarTitleText": "智能回复",
+						"navigationBarBackgroundColor": "#ffffff"
 					}
 				}
 			]
