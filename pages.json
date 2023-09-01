@@ -348,7 +348,13 @@
 					"style": {
 						"navigationBarTitleText": "记录详情"
 					}
-				},
+				}
+			]
+		},
+		{
+			"root": "pages3",
+			"name": "pages3",
+			"pages": [
 				{
 					"path": "pages/cash/pack",
 					"style": {
@@ -368,7 +374,7 @@
 	"preloadRule": {
 		"pages/work/workshop": {
 			"network": "all",
-			"packages": ["pages2"]
+			"packages": ["pages2", "pages3"]
 		}
 	},
 	"plugins": {},
