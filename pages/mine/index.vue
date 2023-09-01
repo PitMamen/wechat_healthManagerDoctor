@@ -169,7 +169,7 @@
 			</view>
 		</view>
 
-			<view class="v-items" @click="goIdentify">
+	<!-- 	<view class="v-items" @click="goIdentify">
 			<image src="/static/static/images/mine-srrz.png"
 				style="float: left;width: 56rpx;height: 56rpx;margin-left: 2vw;">
 			</image>
@@ -177,7 +177,7 @@
 			<view style="margin-left: 10px;font-size: 30rpx;flex: 1;">实人认证</view>
 			
 			<view style="display: flex;flex-direction: row;">
-				<!-- <span style="float: right;font-size: 14px;">全部</span> -->
+				
 				<u-icon name="arrow-right" color="#333"
 					style="width: 10px;height: 10px;float: right;margin-right: 10px;margin-top: 6.5px;"></u-icon>
 			</view>
@@ -191,11 +191,11 @@
 			<view style="margin-left: 10px;font-size: 30rpx;flex: 1;">我的证件</view>
 			
 			<view style="display: flex;flex-direction: row;">
-				<!-- <span style="float: right;font-size: 14px;">全部</span> -->
+				
 				<u-icon name="arrow-right" color="#333"
 					style="width: 10px;height: 10px;float: right;margin-right: 10px;margin-top: 6.5px;"></u-icon>
 			</view>
-		</view>
+		</view> -->
 	</view>
 </template>
 

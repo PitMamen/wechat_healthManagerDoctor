@@ -215,6 +215,7 @@
 
 						uni.setStorageSync('account', res.data.account);
 						uni.setStorageSync('bussinessToken', res.data.jwt)
+						this.sessionKey = res.data.sessionKey
 
 						if (res.data.bindStatus == 0) {
 
@@ -246,6 +247,7 @@
 
 			//获取解密手机号
 			decryptPhone(iv, encryptedData) {
+				
 				uni.showLoading({
 					title: '加载中'
 				})
@@ -255,6 +257,7 @@
 					sessionKey: this.sessionKey,
 					appId: uni.getAccountInfoSync().miniProgram.appId
 				}
+				console.log('解密',reqData)
 				uni.$u.http.post('/account-api/wx/user/phone', reqData).then(res => {
 					if (res.code == 0) {
 
