@@ -81,7 +81,7 @@
 						uni.navigateBack({
 							delta: 1
 						});
-					}, 2000);
+					});
 				}).finally(() => {
 					this.flag = false;
 				});
