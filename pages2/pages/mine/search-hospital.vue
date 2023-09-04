@@ -6,7 +6,7 @@
 			<!-- <image class="img-qr" src="/pages2/static/img/qr_blue.png" /> -->
 			<view class="search-wrap">
 				<view class="search">
-					<u-search v-model="searchName" placeholder="请输入患者名字" :show-action="false" @change="searchChange">
+					<u-search v-model="searchName" placeholder="搜索医院" :show-action="false" @change="searchChange">
 					</u-search>
 				</view>
 			</view>

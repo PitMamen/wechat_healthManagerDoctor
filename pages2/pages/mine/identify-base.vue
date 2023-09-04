@@ -259,15 +259,15 @@
 								hospitalCode: baseInfo.hospitalCode,
 								hospitalName: baseInfo.hospitalName
 							}
-							console.log('getIdentifyInfo',JSON.stringify(this.hospitalItem))
+							console.log('getIdentifyInfo', JSON.stringify(this.hospitalItem))
 							this.hospitalName = baseInfo.hospitalName
-							
+
 							this.deptItem = {
 								departmentId: baseInfo.departmentId,
 								departmentName: baseInfo.departmentName
 							}
 							this.deptName = baseInfo.departmentName
-							
+
 							this.profItem = {
 								value: baseInfo.professionalTitle
 							}
@@ -452,6 +452,7 @@
 				// 	"hospitalLevelName": "一级甲等",
 				// 	"imgUrl": ""
 				// }
+				let that = this
 				let param = JSON.parse(JSON.stringify(this.baseData))
 				this.$set(param, 'hospitalCode', this.hospitalItem.hospitalCode)
 				this.$set(param, 'departmentId', this.deptItem.departmentId)
@@ -463,12 +464,12 @@
 				});
 				uni.$u.http.post('/account-api/accountInfo/submitDoctorBaseInfo', param).then(res => {
 					if (res.code == 0) {
-						this.$u.toast("操作成功！")
+						that.$u.toast("操作成功！")
 						uni.navigateTo({
 							url: '/pages2/pages/mine/identify-detail'
 						})
 					} else {
-						this.$u.toast(res.message)
+						that.$u.toast(res.message)
 					}
 
 				}).finally(() => {

@@ -4,7 +4,7 @@
 		<view style="display: flex;flex-direction: row;padding-left: 20rpx;">
 			<u-icon @click="goBack" bold name="arrow-left" size='45rpx' color="#333"
 				style="width: 10rpx;height: 10rpx;float: right;margin-right: 10rpx;margin-top: 6.5rpx;"></u-icon>
-				<view style="margin-left: 30vw;font-size: 30rpx;">实名认证</view>
+			<view style="margin-left: 30vw;font-size: 30rpx;">实名认证</view>
 		</view>
 		<view class="content">
 
@@ -59,6 +59,9 @@
 		},
 		methods: {
 
+			/**
+			 * 重新返回键需要在pages.js里面配置"navigationStyle": "custom",然后重新写返回键的样式以及页面标题
+			 */
 			goBack() {
 				console.log('goBack jumpFrom', this.jumpFrom)
 				if (this.jumpFrom == 1) {
