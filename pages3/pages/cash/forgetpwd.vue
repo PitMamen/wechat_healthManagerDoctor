@@ -146,19 +146,19 @@
 			
 			
 			getVerfiCode() {
-				
+				  this.doShow(1)  //呼出数字键盘
 				uni.$u.http.get(`/account-api/captcha/sms`, {
 					params: {
 						phone:this.account.phone
 					}
 				}).then(res => {
-						 
+						
 					 if(res.code==0){
-						 this.doShow(1)  //呼出数字键盘
+						
 					 uni.showLoading({
 					 	title:'验证码已发送,请注意查收'
 					 });
-					this.code = res.data || {};
+					// this.code = res.data || {};
 					 }
 				
 					
