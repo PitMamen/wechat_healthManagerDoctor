@@ -367,6 +367,13 @@
 						"navigationStyle": "custom",
 						"navigationBarTitleText": "收入明细"
 					}
+				},
+				{
+					"path": "pages/cash/forgetpwd",
+					"style": {
+						
+						"navigationBarTitleText": "忘记支付密码"
+					}
 				}
 			]
 		}

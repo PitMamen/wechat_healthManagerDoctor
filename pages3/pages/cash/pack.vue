@@ -105,7 +105,15 @@
 					url: '/pages3/pages/cash/trade-list'
 				});
 			},
-			goCashPwd() {}
+			goCashPwd() {
+				
+				// 跳转支付密码管理
+				uni.navigateTo({
+					url: '/pages3/pages/cash/forgetpwd'
+				});
+				
+				
+			}
 		}
 	}
 </script>
