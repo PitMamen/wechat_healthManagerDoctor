@@ -265,6 +265,7 @@
 		},
 		onShow() {
 			this.getData(true)
+			this.refreshBindStatus();
 		},
 		onUnload() {
 			//取消监听
@@ -333,10 +334,51 @@
 			// 		})
 			// 	})
 			// },
-			goIdentify(){
-				uni.navigateTo({
-					url: '/pages2/pages/mine/identify-base'
-				})
+			/**
+			 * auditStatus  0待完善/1审核中/2审核通过/3审核不通过
+			 * 1、3有单独两个页面展示；0为提交一个页面为待完善，直接进基础页面；2审核通过后就没有入口看不见了
+			 */
+			goIdentify() {
+				uni.$u.http.get('/account-api/accountInfo/getDoctorAuthStatus', {
+					params: {}
+				}).then(res => {
+					if (res.code == 0) {
+						if (res.data.auditStatus == 1) { //审核中
+							uni.navigateTo({
+								url: '/pages2/pages/mine/identify-result?type=1&jumpFrom=1'
+							})
+						} else if (res.data.auditStatus == 3) { //审核不通过
+							uni.navigateTo({
+								url: '/pages2/pages/mine/identify-result?type=2&jumpFrom=1'
+							})
+						} else { // 0待完善   进去后查询数据来确定填充信息还是完全的新增
+							uni.navigateTo({
+								url: '/pages2/pages/mine/identify-base'
+							})
+						}
+
+					} else {
+						this.$u.toast(res.message)
+					}
+
+				}).finally(() => {
+					uni.hideLoading();
+				});
+			},
+			
+			refreshBindStatus(){
+				uni.$u.http.get('/account-api/accountInfo/getDoctorAuthStatus', {
+					params: {}
+				}).then(res => {
+					if (res.code == 0) {
+						this.account.bindStatus =res.data.bindStatus
+					} else {
+						this.$u.toast(res.message)
+					}
+				
+				}).finally(() => {
+					uni.hideLoading();
+				});
 			},
 			goCall(phone, recordId, item) {
 				debugger

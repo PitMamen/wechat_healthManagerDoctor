@@ -33,6 +33,7 @@
 				"navigationBarTitleText": "随访"
 			}
 		}
+
 	],
 	"subpackages": [{
 			"root": "pagesFace",
@@ -138,6 +139,7 @@
 				{
 					"path": "pages/mine/identify-result",
 					"style": {
+						"navigationStyle": "custom",
 						"navigationBarTitleText": "实名认证"
 					}
 				},
@@ -348,14 +350,21 @@
 					"style": {
 						"navigationBarTitleText": "记录详情"
 					}
+				},
+				{
+
+					"path": "pages/ai/index",
+					"style": {
+						"navigationBarTitleText": "智能回复",
+						"navigationBarBackgroundColor": "#ffffff"
+					}
 				}
 			]
 		},
 		{
 			"root": "pages3",
 			"name": "pages3",
-			"pages": [
-				{
+			"pages": [{
 					"path": "pages/cash/pack",
 					"style": {
 						"navigationBarTitleText": "我的钱包"
