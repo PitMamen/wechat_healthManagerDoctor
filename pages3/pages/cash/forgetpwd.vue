@@ -155,7 +155,6 @@
 						 
 					 if(res.code==0){
 						 this.doShow(1)  //呼出数字键盘
-						 	uni.hideLoading();
 					 uni.showLoading({
 					 	title:'验证码已发送,请注意查收'
 					 });
@@ -163,6 +162,8 @@
 					 }
 				
 					
+				}).catch(err => {
+					uni.hideLoading();
 				});
 				
 				this.showText = false
@@ -191,6 +192,14 @@
 					this.$u.toast("请输入密码！")
 					return
 				}
+				
+				if(this.newPassword.length<6){
+					this.$u.toast("密码必须为6数字！")
+					return
+				}
+				
+				
+				
 		
 				uni.showLoading({
 					title:'正在加载'
