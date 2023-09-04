@@ -33,8 +33,8 @@
 				"navigationBarTitleText": "随访"
 			}
 		}
-	   
-    ],
+
+	],
 	"subpackages": [{
 			"root": "pagesFace",
 			"name": "pagesFace",
@@ -139,6 +139,7 @@
 				{
 					"path": "pages/mine/identify-result",
 					"style": {
+						"navigationStyle": "custom",
 						"navigationBarTitleText": "实名认证"
 					}
 				},
@@ -351,11 +352,11 @@
 					}
 				},
 				{
-				
+
 					"path": "pages/ai/index",
 					"style": {
-					"navigationBarTitleText": "智能回复",
-					"navigationBarBackgroundColor": "#ffffff"
+						"navigationBarTitleText": "智能回复",
+						"navigationBarBackgroundColor": "#ffffff"
 					}
 				}
 			]
@@ -363,8 +364,7 @@
 		{
 			"root": "pages3",
 			"name": "pages3",
-			"pages": [
-				{
+			"pages": [{
 					"path": "pages/cash/pack",
 					"style": {
 						"navigationBarTitleText": "我的钱包"
