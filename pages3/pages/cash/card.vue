@@ -1,37 +1,33 @@
 <template>
 	<view class="wrap">
-		<view class="head">
-			<u-search
-				placeholder="输入文章标题进行搜索"
-				v-model="value"
-				:show-action="false"
-				@change="change"
-			></u-search>
+		<view class="top">
+			<u-icon name="grid" color="#3894FF" size="42rpx"></u-icon>
+			<view class="action" @click="management(true)" v-if="!manager">管理</view>
+			<view class="action" @click="management(false)" v-else>退出</view>
 		</view>
 		<view class="content">
-			<u-empty mode="data" style="padding-top: 300rpx;" icon="/pages2/static/img/icon_nodata.png" v-if="list.length === 0"></u-empty>
-			<scroll-view class="list" :scroll-y="true" @scrolltolower="scrolltolower" v-else>
-				<view class="item" v-for="item in list" :key="item.articleId">
-					<view class="top" @click="viewHandler(item)">
-						<view class="row title">
-							<image src="/pages2/static/static/images/group/icon_note.png"></image>
-							<text>{{ item.title || '' }}</text>
-						</view>
-						<view class="row desc">{{ item.brief || '暂无' }}</view>
-						<view class="read">
-							<image src="/pages2/static/static/images/group/icon_read.png"></image>
-							<text>{{ item.clickNum || 0 }}</text>
-						</view>
-						<image class="abs" :src="item.previewUrl"></image>
+			<view class="list">
+				<view class="item" v-for="item in list" :key="item.id">
+					<view class="radio-wrap" v-if="manager">
+						<view class="mask" @click="radioClick(item)"></view>
+						<u-radio-group v-model="currentItem.id">
+							<u-radio shape="circle" :name="item.id"></u-radio>
+						</u-radio-group>
 					</view>
-					<view class="bottom">
-						<view class="btn" @click="sendHandler(item)">
-							<image src="/pages2/static/static/images/group/icon_send.png"></image>
-							<text>发送给患者</text>
-						</view>
+					<view class="card">
+						<view class="name">{{ item.bankName }}</view>
+						<view class="desc">储蓄卡</view>
+						<view class="number">**** **** **** **** {{ item.bankCard.substring(item.bankCard.length-4, item.bankCard.length) }}</view>
 					</view>
 				</view>
-			</scroll-view>
+			</view>
+			<view class="add-block" @click="goAdd()" v-if="!manager && list.length<3">
+				<u-icon name="plus" color="#999999" size="52rpx"></u-icon>
+				<view class="btn">添加银行卡</view>
+			</view>
+		</view>
+		<view class="fix-btn" v-if="manager">
+			<view class="btn" @click="unBind()">解除绑定</view>
 		</view>
 	</view>
 </template>
@@ -41,89 +37,76 @@
 		data() {
 			return {
 				flag: false,
-				total: 0,
-				pageNo: 1,
-				value: '',
-				list: []
+				manager: false,
+				list: [],
+				currentItem: {}
 			}
 		},
 		onLoad() {
-			this.getList();
 		},
 		onReady() {
 		},
 		onShow() {
+			this.getList();
 		},
 		methods: {
-			viewHandler(item) {
-				uni.navigateTo({
-					url: `/pages2/pages/group/note-info?id=${item.articleId}&title=${item.title}`
-				});
-			},
-			sendHandler(item) {
-				const pages = getCurrentPages();
-				if (pages.length > 1){
-					const page = pages[pages.length - 1 - 1];
-					if (page.route==='pages2/pages/TUI-Chat-Group/chat' || page.route==='pages2/pages/TUI-Chat-Group2/chat'){
-						page.$vm.sendCustomMessage({
-							detail: {
-								payload: {
-									data: JSON.stringify({
-										content: item.title,
-										description: '文章卡',
-										id: item.articleId,
-										type: 'CustomArticleMessage'
-									}),
-									extension: '',
-									description: '文章卡'
-								}
-							}
-						});
-						uni.navigateBack({
-							delta: 1
-						});
-					}
-				}
-			},
-			change() {
-				this.value = this.value.trim();
-				this.pageNo = 1;
-				this.total = 0;
-				this.list = [];
-				this.getList();
-			},
 			getList() {
 				uni.showLoading({
 					title:'正在加载'
 				});
-				uni.$u.http.get(`/health-api/health/patient/allArticlesNewPage`, {
+				uni.$u.http.get(`/account-api/tfUserInfoHvyogo/getBankListByUserId`, {
 					params: {
-						status: 2,
-						title: this.value,
-						pageSize: 10,
-						start: this.pageNo
 					}
 				}).then(res => {
-					res.data = res.data || {};
-					res.data.list = res.data.list || [];
-					res.data.total = res.data.total || 0;
-					this.total = res.data.total;
-					this.list = this.list.concat(res.data.list);
-				}).finally(() => {
-					this.flag = false;
 					uni.hideLoading();
+					this.list = res.data || [];
 				});
 			},
-			scrolltolower() {
-				if (this.pageNo*10 >= this.total){
+			goAdd() {
+				uni.navigateTo({
+					url: '/pages3/pages/cash/card-add'
+				});
+			},
+			unBind() {
+				if (!this.currentItem.id){
+					uni.showToast({
+						title: '请先选择需要解绑的银行卡',
+						icon: 'none'
+					});
 					return;
 				}
 				if (this.flag){
 					return;
 				}
 				this.flag = true;
-				this.pageNo ++;
-				this.getList();
+				uni.showLoading({
+					title:'正在加载'
+				});
+				uni.$u.http.post(`/account-api/tfUserInfoHvyogo/bindBankLoginUser`, {
+					bindFlag: 'unbind',
+					...this.currentItem
+				}).then(res => {
+					this.manager = false;
+					uni.hideLoading();
+					uni.showToast({
+						title: '解绑成功',
+						icon: 'success'
+					});
+					setTimeout(() => {
+						this.getList();
+					}, 2000);
+				}).finally(() => {
+					this.flag = false;
+				});
+			},
+			radioClick(item) {
+				this.currentItem = item;
+			},
+			management(manager) {
+				if (this.list.length === 0){
+					return;
+				}
+				this.manager = manager;
 			}
 		}
 	}
@@ -132,105 +115,108 @@
 <style lang="scss">
 	.wrap {
 		min-height: 100vh;
-		background: #FFFFFF;
-		.head {
-			position: fixed;
-			top: 0;
-			width: 100%;
-			padding: 30rpx 24rpx;
-			z-index: 1;
-			background: #FFFFFF;
-			box-sizing: border-box;
+		background: #F5F5F5;
+		.top {
+			display: flex;
+			align-items: center;
+			justify-content: flex-end;
+			padding: 30rpx 24rpx 0 24rpx;
+			>.u-icon {
+				position: relative;
+				top: 2rpx;
+				margin-right: 10rpx;
+			}
+			.action {
+				font-size: 30rpx;
+				font-weight: 400;
+				color: #3894FF;
+			}
 		}
 		.content {
-			margin-top: calc(60rpx + 32px);
+			padding: 30rpx 24rpx;
 			.list {
-				max-height: calc(100vh - 60rpx - 32px);
-				background: #F2F2F2;
 				.item {
-					margin-bottom: 20rpx;
-					background: #FFFFFF;
-					&:first-child {
-						margin-top: 20rpx;
-					}
-					.top {
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+					margin-bottom: 30rpx;
+					.radio-wrap {
+						display: flex;
+						flex-direction: column;
+						align-items: center;
+						justify-content: center;
 						position: relative;
-						padding: 28rpx 24rpx;
-						.row {
-							max-width: 540rpx;
-							white-space: nowrap;
-							overflow: hidden;
-							text-overflow: ellipsis;
+						width: 52rpx;
+						.mask {
+							position: absolute;
+							top: 0;
+							left: 0;
+							right: 0;
+							bottom: 0;
+							z-index: 1;
 						}
-						.title {
+						.u-radio {}
+					}
+					.card {
+						flex: 1;
+						padding: 30rpx 40rpx;
+						background: #3894FF;
+						border-radius: 4rpx;
+						.name {
 							font-size: 30rpx;
-							font-weight: 500;
-							color: #4D4D4D;
-							line-height: 36rpx;
-							image {
-								width: 28rpx;
-								height: 30rpx;
-								margin-right: 15rpx;
-								padding: 3rpx 0;
-								vertical-align: middle;
-							}
-							text {
-								vertical-align: middle;
-							}
+							font-weight: 400;
+							color: #FFFFFF;
+							line-height: 50rpx;
 						}
 						.desc {
-							margin-top: 24rpx;
-							font-size: 28rpx;
+							font-size: 24rpx;
 							font-weight: 400;
-							color: #999999;
-							line-height: 34rpx;
+							color: #FFFFFF;
+							line-height: 44rpx;
 						}
-						.read {
-							margin-top: 24rpx;
-							font-size: 22rpx;
+						.number {
+							padding: 20rpx 0 5rpx 0;
+							font-size: 30rpx;
 							font-weight: 400;
-							color: #999999;
-							line-height: 26rpx;
-							image {
-								width: 26rpx;
-								height: 26rpx;
-								margin-right: 10rpx;
-								vertical-align: middle;
-							}
-							text {
-								vertical-align: text-bottom;
-							}
-						}
-						.abs {
-							position: absolute;
-							top: 28rpx;
-							right: 24rpx;
-							width: 140rpx;
-							height: 140rpx;
-						}
-					}
-					.bottom {
-						padding: 30rpx 0;
-						border-top: 1rpx solid #E6E6E6;
-						.btn {
-							text-align: center;
-							image {
-								display: inline-block;
-								width: 33rpx;
-								height: 31rpx;
-								margin-right: 10rpx;
-								vertical-align: middle;
-							}
-							text {
-								font-size: 28rpx;
-								font-weight: 400;
-								color: #4D4D4D;
-								line-height: 31rpx;
-								vertical-align: middle;
-							}
+							color: #FFFFFF;
+							line-height: 50rpx;
 						}
 					}
 				}
+			}
+			.add-block {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: flex-start;
+				padding: 55rpx 0;
+				background: #E6E6E6;
+				border-radius: 4rpx;
+				>.u-icon {
+					padding: 10rpx 0;
+				}
+				.btn {
+					font-size: 24rpx;
+					font-weight: 400;
+					color: #999999;
+					line-height: 44rpx;
+				}
+			}
+		}
+		.fix-btn {
+			position: fixed;
+			bottom: 125rpx;
+			width: 100%;
+			padding: 0 24rpx;
+			box-sizing: border-box;
+			.btn {
+				font-size: 30rpx;
+				font-weight: 400;
+				color: #FFFFFF;
+				line-height: 68rpx;
+				text-align: center;
+				background: #3894FF;
+				border-radius: 8rpx;
 			}
 		}
 	}

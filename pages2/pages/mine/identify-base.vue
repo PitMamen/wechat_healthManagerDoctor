@@ -202,16 +202,22 @@
 				this.needShowGetCode = true
 			}
 			this.baseData.phone = this.account.user.phone
-			this.getProf()
+			this.getIdentifyInfo()
 		},
 		onShow() {
 			this.hospitalItem = uni.getStorageSync('choose_hospital');
-			console.log('hospitalItem', this.hospitalItem)
+			console.log('onShow hospitalItem', this.hospitalItem)
 			if (this.hospitalItem) {
 				this.hospitalName = this.hospitalItem.hospitalName
 			}
 		},
 		methods: {
+			async init() {
+				// await this.getProf()
+				// await this.goChooseDept()
+				// await this.getProf()
+			},
+
 			hideKeyboard() {
 				uni.hideKeyboard();
 			},
@@ -234,6 +240,52 @@
 			},
 
 			onlyNumber() {
+
+			},
+
+			getIdentifyInfo() {
+				uni.showLoading({
+					title: '正在加载'
+				});
+				uni.$u.http.get('/account-api/accountInfo/getDoctorAuthInfo', {
+					params: {}
+				}).then(res => {
+					if (res.code == 0) {
+						let baseInfo = res.data
+						if (baseInfo.userName) { //填过实名认证信息，需要填充数据
+							this.baseData = JSON.parse(JSON.stringify(baseInfo))
+							//填充数据
+							this.hospitalItem = {
+								hospitalCode: baseInfo.hospitalCode,
+								hospitalName: baseInfo.hospitalName
+							}
+							console.log('getIdentifyInfo',JSON.stringify(this.hospitalItem))
+							this.hospitalName = baseInfo.hospitalName
+							
+							this.deptItem = {
+								departmentId: baseInfo.departmentId,
+								departmentName: baseInfo.departmentName
+							}
+							this.deptName = baseInfo.departmentName
+							
+							this.profItem = {
+								value: baseInfo.professionalTitle
+							}
+
+							this.professionalTitle = this.profItem.value
+
+						} else { //新增的实名认证信息情况，
+							// this.getProf()
+						}
+						this.getProf()
+
+					} else {
+						this.$u.toast(res.message)
+					}
+
+				}).finally(() => {
+					uni.hideLoading();
+				});
 
 			},
 

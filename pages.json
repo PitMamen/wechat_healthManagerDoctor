@@ -33,6 +33,7 @@
 				"navigationBarTitleText": "随访"
 			}
 		}
+
 	],
 	"subpackages": [{
 			"root": "pagesFace",
@@ -138,6 +139,7 @@
 				{
 					"path": "pages/mine/identify-result",
 					"style": {
+						"navigationStyle": "custom",
 						"navigationBarTitleText": "实名认证"
 					}
 				},
@@ -348,14 +350,21 @@
 					"style": {
 						"navigationBarTitleText": "记录详情"
 					}
+				},
+				{
+
+					"path": "pages/ai/index",
+					"style": {
+						"navigationBarTitleText": "智能回复",
+						"navigationBarBackgroundColor": "#ffffff"
+					}
 				}
 			]
 		},
 		{
 			"root": "pages3",
 			"name": "pages3",
-			"pages": [
-				{
+			"pages": [{
 					"path": "pages/cash/pack",
 					"style": {
 						"navigationBarTitleText": "我的钱包"
@@ -369,10 +378,50 @@
 					}
 				},
 				{
+
 					"path": "pages/cash/forgetpwd",
 					"style": {
-						
 						"navigationBarTitleText": "忘记支付密码"
+						
+					}
+				},
+				{
+					
+					"path": "pages/cash/out",
+					"style": {
+						"navigationStyle": "custom",
+						"navigationBarTitleText": "提现"
+					}
+				},
+				{
+					"path": "pages/cash/out-list",
+					"style": {
+						"navigationBarTitleText": "提现记录"
+					}
+				},
+				{
+					"path": "pages/cash/card",
+					"style": {
+						"navigationBarTitleText": "银行卡管理"
+					}
+				},
+				{
+					"path": "pages/cash/trade-list",
+					"style": {
+						"navigationBarTitleText": "交易记录"
+					}
+				},
+				{
+					"path": "pages/cash/card-add",
+					"style": {
+						"navigationBarTitleText": "新增银行卡"
+					}
+				},
+				{
+					"path": "pages/cash/info",
+					"style": {
+						"navigationBarTitleText": "详情"
+
 					}
 				}
 			]
