@@ -378,15 +378,50 @@
 					}
 				},
 				{
+
+					"path": "pages/cash/forgetpwd",
+					"style": {
+						"navigationBarTitleText": "忘记支付密码"
+						
+					}
+				},
+				{
+					
+					"path": "pages/cash/out",
+					"style": {
+						"navigationStyle": "custom",
+						"navigationBarTitleText": "提现"
+					}
+				},
+				{
+					"path": "pages/cash/out-list",
+					"style": {
+						"navigationBarTitleText": "提现记录"
+					}
+				},
+				{
 					"path": "pages/cash/card",
 					"style": {
 						"navigationBarTitleText": "银行卡管理"
 					}
 				},
 				{
+					"path": "pages/cash/trade-list",
+					"style": {
+						"navigationBarTitleText": "交易记录"
+					}
+				},
+				{
 					"path": "pages/cash/card-add",
 					"style": {
 						"navigationBarTitleText": "新增银行卡"
+					}
+				},
+				{
+					"path": "pages/cash/info",
+					"style": {
+						"navigationBarTitleText": "详情"
+
 					}
 				}
 			]

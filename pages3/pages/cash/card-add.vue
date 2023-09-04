@@ -1,33 +1,31 @@
 <template>
 	<view class="wrap">
-		<view class="top">
-			<u-icon name="grid" color="#3894FF" size="42rpx"></u-icon>
-			<view class="action" @click="management(true)" v-if="!manager">管理</view>
-			<view class="action" @click="management(false)" v-else>退出</view>
-		</view>
 		<view class="content">
-			<view class="list">
-				<view class="item" v-for="item in list" :key="item.id">
-					<view class="radio-wrap" v-if="manager">
-						<view class="mask" @click="radioClick(item)"></view>
-						<u-radio-group v-model="currentItem.id">
-							<u-radio shape="circle" :name="item.id"></u-radio>
-						</u-radio-group>
-					</view>
-					<view class="card">
-						<view class="name">{{ item.bankName }}</view>
-						<view class="desc">储蓄卡</view>
-						<view class="number">{{ item.bankCard }}</view>
-					</view>
-				</view>
+			<view class="row border">
+				<view class="name">持卡人</view>
+				<view class="value">{{ account.user.userName }}</view>
 			</view>
-			<view class="add-block" @click="goAdd()" v-if="!manager && list.length<3">
-				<u-icon name="plus" color="#999999" size="52rpx"></u-icon>
-				<view class="btn">添加银行卡</view>
+			<view class="row">
+				<view class="name">卡号</view>
+				<u--input
+					type="number"
+					color="#4D4D4D"
+					fontSize="30rpx"
+					maxlength="19"
+					border="none"
+					inputAlign="right"
+					placeholder="请输入银行卡号"
+					v-model="currentItem.bankCard"
+				></u--input>
 			</view>
+			<view class="row border">
+				<view class="name">卡类型</view>
+				<view class="value">目前仅支持储蓄卡</view>
+			</view>
+			<view class="desc">重要提示：请认真核对账号信息，否则可能导致提现失败！</view>
 		</view>
-		<view class="fix-btn" v-if="manager">
-			<view class="btn" @click="unBind()">解除绑定</view>
+		<view class="fix-btn">
+			<view class="btn" @click="bind()">保存</view>
 		</view>
 	</view>
 </template>
@@ -37,40 +35,28 @@
 		data() {
 			return {
 				flag: false,
-				manager: false,
-				list: [],
-				currentItem: {}
+				currentItem: {},
+				account: uni.getStorageSync('account')
 			}
 		},
 		onLoad() {
-			this.getList();
 		},
 		onReady() {
 		},
 		onShow() {
 		},
 		methods: {
-			getList() {
-				uni.showLoading({
-					title:'正在加载'
-				});
-				uni.$u.http.get(`/account-api/tfUserInfoHvyogo/getBankListByUserId`, {
-					params: {
-					}
-				}).then(res => {
-					uni.hideLoading();
-					this.list = res.data || [];
-				});
-			},
-			goAdd() {
-				uni.navigateTo({
-					url: '/pages3/pages/cash/card-add'
-				});
-			},
-			unBind() {
-				if (!this.currentItem.id){
+			bind() {
+				if (!this.currentItem.bankCard){
 					uni.showToast({
-						title: '请先选择需要解绑的银行卡',
+						title: '请先输入银行卡号',
+						icon: 'none'
+					});
+					return;
+				}
+				if (!/^\d{16,19}$/.test(this.currentItem.bankCard)){
+					uni.showToast({
+						title: '请输入16-19位的数字银行卡号',
 						icon: 'none'
 					});
 					return;
@@ -83,24 +69,22 @@
 					title:'正在加载'
 				});
 				uni.$u.http.post(`/account-api/tfUserInfoHvyogo/bindBankLoginUser`, {
-					bindFlag: 'unbind',
+					bindFlag: 'bind',
 					...this.currentItem
 				}).then(res => {
 					uni.hideLoading();
-					this.getList();
-					this.manager = false;
+					uni.showToast({
+						title: '保存成功',
+						icon: 'success'
+					});
+					setTimeout(() => {
+						uni.navigateBack({
+							delta: 1
+						});
+					});
 				}).finally(() => {
 					this.flag = false;
 				});
-			},
-			radioClick(item) {
-				this.currentItem = item;
-			},
-			management(manager) {
-				if (this.list.length === 0){
-					return;
-				}
-				this.manager = manager;
 			}
 		}
 	}
@@ -110,91 +94,25 @@
 	.wrap {
 		min-height: 100vh;
 		background: #F5F5F5;
-		.top {
-			display: flex;
-			align-items: center;
-			justify-content: flex-end;
-			padding: 30rpx 24rpx 0 24rpx;
-			>.u-icon {
-				position: relative;
-				top: 2rpx;
-				margin-right: 10rpx;
-			}
-			.action {
+		.content {
+			padding: 0 45rpx;
+			.row {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
 				font-size: 30rpx;
 				font-weight: 400;
-				color: #3894FF;
-			}
-		}
-		.content {
-			padding: 30rpx 24rpx;
-			.list {
-				.item {
-					display: flex;
-					align-items: center;
-					justify-content: space-between;
-					margin-bottom: 30rpx;
-					.radio-wrap {
-						display: flex;
-						flex-direction: column;
-						align-items: center;
-						justify-content: center;
-						position: relative;
-						width: 52rpx;
-						.mask {
-							position: absolute;
-							top: 0;
-							left: 0;
-							right: 0;
-							bottom: 0;
-							z-index: 1;
-						}
-						.u-radio {}
-					}
-					.card {
-						flex: 1;
-						padding: 30rpx 40rpx;
-						background: #3894FF;
-						border-radius: 4rpx;
-						.name {
-							font-size: 30rpx;
-							font-weight: 400;
-							color: #FFFFFF;
-							line-height: 50rpx;
-						}
-						.desc {
-							font-size: 24rpx;
-							font-weight: 400;
-							color: #FFFFFF;
-							line-height: 44rpx;
-						}
-						.number {
-							padding: 20rpx 0 5rpx 0;
-							font-size: 30rpx;
-							font-weight: 400;
-							color: #FFFFFF;
-							line-height: 50rpx;
-						}
-					}
+				color: #4D4D4D;
+				line-height: 110rpx;
+				&.border {
+					border-bottom: 1rpx solid #CCCCCC;
 				}
 			}
-			.add-block {
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-				justify-content: flex-start;
-				padding: 55rpx 0;
-				background: #E6E6E6;
-				border-radius: 4rpx;
-				>.u-icon {
-					padding: 10rpx 0;
-				}
-				.btn {
-					font-size: 24rpx;
-					font-weight: 400;
-					color: #999999;
-					line-height: 44rpx;
-				}
+			.desc {
+				font-size: 24rpx;
+				font-weight: 400;
+				color: #4D4D4D;
+				line-height: 84rpx;
 			}
 		}
 		.fix-btn {

@@ -17,7 +17,7 @@
 					<view class="card">
 						<view class="name">{{ item.bankName }}</view>
 						<view class="desc">储蓄卡</view>
-						<view class="number">{{ item.bankCard }}</view>
+						<view class="number">**** **** **** **** {{ item.bankCard.substring(item.bankCard.length-4, item.bankCard.length) }}</view>
 					</view>
 				</view>
 			</view>
@@ -43,11 +43,11 @@
 			}
 		},
 		onLoad() {
-			this.getList();
 		},
 		onReady() {
 		},
 		onShow() {
+			this.getList();
 		},
 		methods: {
 			getList() {
@@ -86,9 +86,15 @@
 					bindFlag: 'unbind',
 					...this.currentItem
 				}).then(res => {
-					uni.hideLoading();
-					this.getList();
 					this.manager = false;
+					uni.hideLoading();
+					uni.showToast({
+						title: '解绑成功',
+						icon: 'success'
+					});
+					setTimeout(() => {
+						this.getList();
+					}, 2000);
 				}).finally(() => {
 					this.flag = false;
 				});

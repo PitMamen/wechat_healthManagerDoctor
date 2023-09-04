@@ -13,7 +13,7 @@
 						</view>
 					</view>
 				</view>
-				<view class="view-info-card" @click="()=>{showCode=true}">
+				<view class="view-info-card" @click="showDocCode">
 					<image src="/static/img/mingpian.png"></image>
 					<!-- <view>名片</view> -->
 				</view>
@@ -79,7 +79,7 @@
 
 		<u-popup :show="showCode" mode="center" :round="4"  @close="closeCodePop" >
 			<view class="codeview">
-				<image class="code" src="https://develop.mclouds.org.cn/content-api/file/I20230829172942343GY3Q8LWPKFV9K8-QqR665518ce7f85d18a7c0759e3fe2eec8d.jpg">
+				<image class="code" :src="docCodeImg">
 				</image>
 				<view class="codeitem">
 					<image src="/static/static/images/yisheng.png" style="width: 30rpx;height: 34rpx;margin-right: 20rpx;">
@@ -105,6 +105,7 @@
 		data() {
 			return {
 				showCode:false,
+				docCodeImg:undefined,
 				numZX: 0,
 				numSF: 0,
 				listData: [],
@@ -429,6 +430,31 @@
 					}
 				});
 			},
+			
+			showDocCode(){
+				if(this.docCodeImg){
+					this.showCode=true
+					return
+				}
+				uni.$u.http.get('/wx-api/wx/qrcode/'+uni.getAccountInfoSync().miniProgram.appId+'/getDoctorQrCode', {
+					params: {
+						docUserId: this.account.user.userId,
+						forceMpCode: '',
+					}
+				}).then(res => {
+					
+					if(res.code == 0){
+						this.docCodeImg=res.data 
+						this.showCode=true
+					}else{
+						uni.showToast({
+							title:res.message
+						})
+					}
+					
+				});
+			},
+			
 
 			formatDate(date) {
 				date = new Date(date);
