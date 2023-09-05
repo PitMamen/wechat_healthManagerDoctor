@@ -8,12 +8,12 @@
 		
 		 <div 	@click="doShow(1)" class="input-code" style="margin-left: 60rpx;margin-top: 30rpx;display: flex;flex-direction: row;">
 		 			 <u-input
-					   
+					     
 		 			 	class="input"
-		 			 	type="number"
 		 			 	placeholder="请输入验证码"
 		 			 	border="none"
 						maxlength="6"
+						disabled="false"
 		 			 	v-model="verfcode"
 		 			 ></u-input>
 					 
