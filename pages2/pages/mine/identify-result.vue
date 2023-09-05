@@ -50,7 +50,7 @@
 			this.type = option.type
 			this.jumpFrom = option.jumpFrom
 			if (this.type == 2) {
-
+				this.getFailReason()
 			}
 			this.account = uni.getStorageSync('account');
 			console.log('option', option)
@@ -68,6 +68,7 @@
 				}).then(res => {
 					if (res.code == 0) {
 						this.failReason = res.data.reason || ''
+						console.log('this.failReason', this.failReason)
 					} else {
 						this.$u.toast(res.message)
 					}

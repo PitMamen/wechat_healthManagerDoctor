@@ -654,9 +654,9 @@
 			},
 
 			goResult() {
-				uni.navigateTo({
-					url: '/pages2/pages/mine/identify-result?type=1&jumpFrom=2'
-				})
+				// uni.navigateTo({
+				// 	url: '/pages2/pages/mine/identify-result?type=1&jumpFrom=2'
+				// })
 			},
 
 			goChooseHospital() {
