@@ -29,7 +29,7 @@
 						v-model="money"
 					></u--input>
 				</view>
-				<view class="card">
+				<view class="card" @click="cardClick()">
 					<view class="name">银行卡</view>
 					<view class="numbers">
 						<view class="number">中国工商银行（****6632）</view>
@@ -50,23 +50,63 @@
 				</u-radio-group>
 				<view class="agree">
 					<text>我已阅读并同意</text>
-					<text class="active">《服务条款》</text>
+					<text class="active" @click="protocolClick()">《服务条款》</text>
 				</view>
 			</view>
 		</view>
 		
 		<u-popup
-			closeable
 			mode="center"
 			:show="show1"
-			@close="close1"
-		></u-popup>
+			:safeAreaInsetBottom="false"
+		>
+			<view class="card-wrap">
+				<view class="top">选择银行卡</view>
+				<view class="middle">
+					<view class="list">
+						<view class="item">
+							<view class="name">
+								<text>中国工商银行</text>
+								<text class="type">储蓄卡</text>
+							</view>
+							<view class="numbers">
+								<view class="number">**** **** **** **** 6632</view>
+								<u-icon name="checkmark" color="#999999" size="36rpx"></u-icon>
+							</view>
+						</view>
+					</view>
+				</view>
+				<view class="bottom">
+					<view class="action">使用其他银行卡提现</view>
+					<u-icon name="plus" color="#999999" size="36rpx"></u-icon>
+				</view>
+			</view>
+		</u-popup>
 		<u-popup
 			closeable
 			mode="bottom"
 			:show="show2"
 			@close="close2"
-		></u-popup>
+		>
+			<view class="out-wrap">
+				<view class="top">收费提示</view>
+				<view class="infos">
+					<view class="row">
+						<view class="name">提现金额</view>
+						<view class="value">2300.00元</view>
+					</view>
+					<view class="row">
+						<view class="name">本次服务费</view>
+						<view class="value">12.00元</view>
+					</view>
+				</view>
+				<view class="descs">
+					<view class="title">服务费说明</view>
+					<view class="desc">按照税收法律法规的相关规定，您的所得对应需要缴纳的个人所得税以及因使用第三方支付方式所产生的手续费将由您自行承担，并从应结算的提现金额中直接扣除</view>
+				</view>
+				<view class="btn">继续提现</view>
+			</view>
+		</u-popup>
 	</view>
 </template>
 
@@ -153,6 +193,15 @@
 			},
 			close2() {
 				this.show2 = false;
+			},
+			protocolClick() {
+				uni.navigateTo({
+					url: '/pages3/pages/cash/protocol'
+				});
+			},
+			cardClick() {
+				this.show1 = true;
+				this.hideKeyboard();
 			}
 		}
 	}
@@ -169,7 +218,7 @@
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				>.u-icon {
+				.u-icon {
 					position: absolute;
 					left: 0;
 					padding: 5rpx 10rpx;
@@ -251,7 +300,7 @@
 							color: #3894FF;
 							line-height: 60rpx;
 						}
-						>.u-icon {
+						.u-icon {
 							position: relative;
 							top: 4rpx;
 						}
@@ -305,5 +354,86 @@
 				}
 			}
 		}
+	}
+	.card-wrap {
+		width: 702rpx;
+		background: #FFFFFF;
+		border-radius: 4rpx;
+		.top {
+			font-size: 30rpx;
+			font-weight: 400;
+			color: #4D4D4D;
+			line-height: 110rpx;
+			text-align: center;
+			border-bottom: 1rpx solid #E6E6E6;
+		}
+		.middle {
+			.list {
+				.item {
+					padding: 15rpx 60rpx;
+					border-bottom: 1rpx solid #E6E6E6;
+					&:last-child {
+						border-bottom: none;
+					}
+					.name {
+						font-size: 30rpx;
+						font-weight: 400;
+						color: #1A1A1A;
+						line-height: 60rpx;
+						.type {
+							margin-left: 20rpx;
+							font-size: 24rpx;
+							color: #999999;
+						}
+					}
+					.numbers {
+						display: flex;
+						align-items: center;
+						justify-content: space-between;
+						.number {
+							font-size: 24rpx;
+							font-weight: 400;
+							color: #999999;
+							line-height: 54rpx;
+						}
+						.u-icon {
+							position: relative;
+							top: 4rpx;
+						}
+					}
+				}
+			}
+		}
+		.bottom {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 50rpx 60rpx;
+			border-top: 1rpx solid #E6E6E6;
+			.action {
+				font-size: 30rpx;
+				font-weight: 400;
+				color: #1A1A1A;
+				line-height: 50rpx;
+			}
+			.u-icon {
+				position: relative;
+				top: 4rpx;
+			}
+		}
+	}
+	.out-wrap {
+		.top {}
+		.infos {
+			.row {
+				.name {}
+				.value {}
+			}
+		}
+		.descs {
+			.title {}
+			.desc {}
+		}
+		.btn {}
 	}
 </style>
