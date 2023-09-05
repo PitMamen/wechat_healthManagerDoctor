@@ -81,8 +81,8 @@
 						uni.navigateBack({
 							delta: 1
 						});
-					});
-				}).finally(() => {
+					}, 2000);
+				}).catch(err => {
 					this.flag = false;
 				});
 			}
