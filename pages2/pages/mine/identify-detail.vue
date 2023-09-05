@@ -287,6 +287,7 @@
 				showChooseHospital: false,
 				countExpert: 0,
 				countBrief: 0,
+				modifyData: undefined,
 				doctorAuthInfo: {
 					avatarUrl: "",
 
@@ -303,13 +304,7 @@
 					titleZ: ""
 				},
 				columnsHospital: [
-					[{
-						text: '湘雅二',
-						value: 1
-					}, {
-						text: '中医附一',
-						value: 2
-					}]
+					[]
 				]
 			}
 		},
@@ -333,8 +328,8 @@
 				}).then(res => {
 					if (res.code == 0) {
 						let baseInfo = res.data
-						if (baseInfo.avatarUrl) { //填过实名认证信息，需要填充数据
-
+						if (baseInfo.idcardZ) { //填过实名认证信息，需要填充数据
+							this.modifyData = res.data //modifyData有值，说明之前提交过数据需要填充
 							// avatarUrl: "",
 
 							// doctorBrief: "",
@@ -359,6 +354,47 @@
 							this.doctorAuthInfo.practiceF = baseInfo.practiceF
 							this.doctorAuthInfo.doctorBrief = baseInfo.doctorBrief
 							this.doctorAuthInfo.expertInDisease = baseInfo.expertInDisease
+
+							this.fileList1 = [{
+								url: baseInfo.avatarUrl,
+								status: 'success',
+								message: '',
+							}]
+							this.fileList2 = [{
+								url: baseInfo.idcardZ,
+								status: 'success',
+								message: '',
+							}]
+							this.fileList3 = [{
+								url: baseInfo.idcardF,
+								status: 'success',
+								message: '',
+							}]
+							this.fileList4 = [{
+								url: baseInfo.titleZ,
+								status: 'success',
+								message: '',
+							}]
+							this.fileList5 = [{
+								url: baseInfo.qualificationZ,
+								status: 'success',
+								message: '',
+							}]
+							this.fileList6 = [{
+								url: baseInfo.qualificationF,
+								status: 'success',
+								message: '',
+							}]
+							this.fileList7 = [{
+								url: baseInfo.practiceZ,
+								status: 'success',
+								message: '',
+							}]
+							this.fileList8 = [{
+								url: baseInfo.practiceF,
+								status: 'success',
+								message: '',
+							}]
 
 						} else { //新增的实名认证信息情况，
 							// this.getProf()

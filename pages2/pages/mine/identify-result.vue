@@ -20,7 +20,7 @@
 			<view v-if="type==1" style="color: #999999;font-size: 30rpx;margin: 56rpx 60rpx;">
 				您的资料已经提交，工作人员将在3-5个工作日内对您的资料进行审核！审核结果请关注短信和微信公众号消息。</view>
 			<view v-else style="color: #999999;font-size: 30rpx;margin: 56rpx 60rpx;">
-				您的资料经工作人员审核，审核结果为：不通过！不通过原因：请您修改自己的职称证书。
+				您的资料经工作人员审核，审核结果为：不通过！不通过原因：{{failReason}}。
 			</view>
 
 			<!-- 底部按钮 下一步按钮-->
@@ -42,12 +42,16 @@
 				type: 1, //1提交成功  2审核失败
 				jumpFrom: 1, //从哪里跳入标记  1我的  2提交审核  需要返回不同的页面
 				account: '',
+				failReason: '',
 
 			}
 		},
 		onLoad(option) {
 			this.type = option.type
 			this.jumpFrom = option.jumpFrom
+			if (this.type == 2) {
+
+			}
 			this.account = uni.getStorageSync('account');
 			console.log('option', option)
 			// uni.setNavigationBarStyle({
@@ -58,6 +62,20 @@
 			// })
 		},
 		methods: {
+			getFailReason() {
+				uni.$u.http.get('/account-api/accountInfo/getDoctorAuthStatus', {
+					params: {}
+				}).then(res => {
+					if (res.code == 0) {
+						this.failReason = res.data.reason || ''
+					} else {
+						this.$u.toast(res.message)
+					}
+
+				}).finally(() => {
+					uni.hideLoading();
+				});
+			},
 
 			/**
 			 * 重新返回键需要在pages.js里面配置"navigationStyle": "custom",然后重新写返回键的样式以及页面标题

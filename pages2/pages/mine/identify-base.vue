@@ -19,8 +19,8 @@
 						</view>
 						<view style="color: red;padding-top: 5rpx;">*</view>
 						<view style="margin-left: 30rpx;">
-							<u-input class="input" fontSize="28rpx" placeholder="请输入真实姓名" border="none"
-								v-model="baseData.userName" />
+							<u-input :disabled="!canModify" class="input" fontSize="28rpx" placeholder="请输入真实姓名"
+								border="none" v-model="baseData.userName" />
 						</view>
 
 
@@ -34,8 +34,8 @@
 						<view style="color: #1A1A1A;font-size: 32rpx;">身份证号</view>
 						<view style="color: red;padding-top: 5rpx;">*</view>
 						<view style="margin-left: 30rpx;">
-							<u--input type="number" class="input" fontSize="28rpx" placeholder="请输入身份证号" border="none"
-								v-model="baseData.identificationNo" />
+							<u--input :disabled="!canModify" class="input" fontSize="28rpx" placeholder="请输入身份证号"
+								border="none" v-model="baseData.identificationNo" />
 							<!-- 	<u--input v-model="baseData.identificationNo" class="input" type="number"
 								placeholder="请输入身份证号" color="#409EFF" fontSize="28rpx" border="none"
 								inputAlign="center"></u--input> -->
@@ -173,12 +173,15 @@
 					professionalTitle: "",
 					userName: ""
 				},
+				modifyData: undefined,
 				hospitalItem: undefined,
+				chooseHospital: undefined,
 				hospitalName: '',
 				deptItem: undefined,
 				deptName: '',
 				profItem: undefined,
 				professionalTitle: '',
+				canModify: true,
 				isShow: true, //是否已经点击了获取验证码 false为点击了，true为倒计时结束
 				needShowGetCode: false, //是否显示获取验证码整行布局
 				countSecond: 60,
@@ -198,26 +201,21 @@
 			uni.removeStorageSync('choose_hospital');
 			console.log('this.account', this.account)
 			//如果没有手机号，直接显示获取验证码
-			if (!this.account.user.phone) {
-				this.needShowGetCode = true
-			}
-			this.baseData.phone = this.account.user.phone
+
 			this.getIdentifyInfo()
 		},
 		onShow() {
-			this.hospitalItem = uni.getStorageSync('choose_hospital');
+			//这里要判空赋值，不然赋值空会报错
+			this.chooseHospital = uni.getStorageSync('choose_hospital');
+			if (this.chooseHospital) {
+				this.hospitalItem = JSON.parse(JSON.stringify(this.chooseHospital))
+			}
 			console.log('onShow hospitalItem', this.hospitalItem)
 			if (this.hospitalItem) {
 				this.hospitalName = this.hospitalItem.hospitalName
 			}
 		},
 		methods: {
-			async init() {
-				// await this.getProf()
-				// await this.goChooseDept()
-				// await this.getProf()
-			},
-
 			hideKeyboard() {
 				uni.hideKeyboard();
 			},
@@ -232,7 +230,12 @@
 			 * 失去焦点时，判断是否显示验证码
 			 */
 			onPhoneBlur() {
-				if (this.baseData.phone != this.account.user.phone) {
+				//没有输入手机号需要展示验证码；输入了且没有绑定过手机号需要展示验证码； 原来有电话，失焦的时候不等于原来的电话；原来有已提交过的电话，失焦的时候不等于已提交过的电话
+				if (!this.baseData.phone || (!this.account.phone && this.baseData.phone) || (this.account.phone && this
+						.baseData.phone != this
+						.account.phone) || (this
+						.modifyData && this
+						.baseData.phone != this.modifyData.phone)) {
 					this.needShowGetCode = true
 				} else {
 					this.needShowGetCode = false
@@ -253,6 +256,8 @@
 					if (res.code == 0) {
 						let baseInfo = res.data
 						if (baseInfo.userName) { //填过实名认证信息，需要填充数据
+							this.modifyData = res.data //modifyData有值，说明之前提交过数据需要填充
+							this.canModify = false
 							this.baseData = JSON.parse(JSON.stringify(baseInfo))
 							//填充数据
 							this.hospitalItem = {
@@ -274,8 +279,12 @@
 
 							this.professionalTitle = this.profItem.value
 
-						} else { //新增的实名认证信息情况，
-							// this.getProf()
+						} else { //新增的实名认证信息情况，新用户可能没有创建用户  所以取外层的phone非user里面的
+							if (!this.account.phone) {
+								this.needShowGetCode = true
+							} else {
+								this.baseData.phone = this.account.phone //新用户可能没有创建用户
+							}
 						}
 						this.getProf()
 
@@ -284,7 +293,9 @@
 					}
 
 				}).finally(() => {
-					uni.hideLoading();
+					uni.hideLoading({
+						noConflict: true
+					})
 				});
 
 			},
@@ -307,7 +318,10 @@
 					}
 
 				}).finally(() => {
-					uni.hideLoading();
+					// uni.hideLoading();
+					uni.hideLoading({ //toast 官方文档说明是因为 toast 和 loading 相关接口可以相互混用，为了避免互相干扰，可以使用noConflict进行控制
+						noConflict: true
+					})
 				});
 
 			},
@@ -357,7 +371,9 @@
 					}
 
 				}).finally(() => {
-					uni.hideLoading();
+					uni.hideLoading({
+						noConflict: true
+					})
 				});
 
 
@@ -473,7 +489,9 @@
 					}
 
 				}).finally(() => {
-					uni.hideLoading();
+					uni.hideLoading({
+						noConflict: true
+					})
 				});
 
 			},
