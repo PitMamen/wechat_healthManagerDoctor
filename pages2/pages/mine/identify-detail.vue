@@ -396,6 +396,9 @@
 								message: '',
 							}]
 
+							this.countExpert = (this.doctorAuthInfo.expertInDisease || '').length
+							this.countBrief = (this.doctorAuthInfo.doctorBrief || '').length
+
 						} else { //新增的实名认证信息情况，
 							// this.getProf()
 						}
