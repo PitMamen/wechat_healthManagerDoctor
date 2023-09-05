@@ -6,8 +6,9 @@
 		 
 		 
 		
-		 <div class="input-code" style="margin-left: 60rpx;margin-top: 30rpx;display: flex;flex-direction: row;">
+		 <div 	@click="doShow(1)" class="input-code" style="margin-left: 60rpx;margin-top: 30rpx;display: flex;flex-direction: row;">
 		 			 <u-input
+					   
 		 			 	class="input"
 		 			 	type="number"
 		 			 	placeholder="请输入验证码"
@@ -146,7 +147,7 @@
 			
 			
 			getVerfiCode() {
-				  this.doShow(1)  //呼出数字键盘
+				 
 				uni.$u.http.get(`/account-api/captcha/sms`, {
 					params: {
 						phone:this.account.phone
