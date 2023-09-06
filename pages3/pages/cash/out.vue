@@ -10,7 +10,7 @@
 		<view class="tips">
 			<view class="line line1">提现金额：</view>
 			<view class="line line2">￥{{ money || 0 }}</view>
-			<view class="line line1">本月剩余可提现金额：94999.00元</view>
+			<view class="line line1">本月剩余可提现金额：{{ info.residueRecoverSum || 0 }}元</view>
 		</view>
 		<view class="content">
 			<view class="action">
@@ -18,7 +18,7 @@
 				<view class="inputs">
 					<view class="unit">￥</view>
 					<u--input
-						type="number"
+						type="digit"
 						color="#1A1A1A"
 						fontSize="48rpx"
 						maxlength="8"
@@ -29,10 +29,14 @@
 						v-model="money"
 					></u--input>
 				</view>
-				<view class="card" @click="cardClick()">
+				<view class="card" @click="cardSelectClick()">
 					<view class="name">银行卡</view>
 					<view class="numbers">
-						<view class="number">中国工商银行（****6632）</view>
+						<view class="number" v-if="currentItem.id">
+							<text>{{ currentItem.bankName }}</text>
+							<text>（****{{ currentItem.bankCard.substring(currentItem.bankCard.length-4, currentItem.bankCard.length) }}）</text>
+						</view>
+						<view class="number" v-else>暂未绑定银行卡，点击进行绑定</view>
 						<u-icon name="arrow-right" color="#999999" size="36rpx"></u-icon>
 					</view>
 				</view>
@@ -43,7 +47,7 @@
 				<view class="line">每人每月累计提现金额小于95000.00元；</view>
 				<view class="line">单笔现金额小于等于3万，可分多次申请提现；</view>
 			</view>
-			<view class="btn" @click="cash1()">提现</view>
+			<view class="btn" @click="outSubmit()">提现</view>
 			<view class="radios">
 				<u-radio-group v-model="radio">
 					<u-radio shape="square" label=" " :name="1"></u-radio>
@@ -55,6 +59,34 @@
 			</view>
 		</view>
 		
+		<u-keyboard
+			mode="number"
+			tips="请输入6位数字密码"
+			:show="show"
+			:tooltip="false"
+			:showTips="true"
+			:showCancel="true"
+			:showConfirm="true"
+			:dotDisabled="true"
+			@close="close"
+			@change="change"
+			@cancel="cancel"
+			@confirm="confirm"
+			@backspace="backspace"
+		>
+			<view class="wrap-keyboard">
+				<view class="tipss">
+					<text>请输入6位数字密码</text>
+					<text class="close" @click="close">取消</text>
+				</view>
+				<u-code-input
+					dot
+					disabledKeyboard
+					v-model="pwd"
+					:maxlength="6"
+				></u-code-input>
+			</view>
+		</u-keyboard>
 		<u-popup
 			mode="center"
 			:show="show1"
@@ -64,19 +96,19 @@
 				<view class="top">选择银行卡</view>
 				<view class="middle">
 					<view class="list">
-						<view class="item">
+						<view class="item" v-for="item in list" :key="item.id" @click="cardItemClick(item)">
 							<view class="name">
-								<text>中国工商银行</text>
+								<text>{{ item.bankName }}</text>
 								<text class="type">储蓄卡</text>
 							</view>
 							<view class="numbers">
-								<view class="number">**** **** **** **** 6632</view>
-								<u-icon name="checkmark" color="#999999" size="36rpx"></u-icon>
+								<view class="number">**** **** **** **** {{ item.bankCard.substring(item.bankCard.length-4, item.bankCard.length) }}</view>
+								<u-icon name="checkmark" color="#999999" size="36rpx" v-if="item.id === currentItem.id"></u-icon>
 							</view>
 						</view>
 					</view>
 				</view>
-				<view class="bottom">
+				<view class="bottom" @click="cardBindClick()">
 					<view class="action">使用其他银行卡提现</view>
 					<u-icon name="plus" color="#999999" size="36rpx"></u-icon>
 				</view>
@@ -93,11 +125,11 @@
 				<view class="infos">
 					<view class="row">
 						<view class="name">提现金额</view>
-						<view class="value">2300.00元</view>
+						<view class="value">{{ money || 0 }}元</view>
 					</view>
 					<view class="row">
 						<view class="name">本次服务费</view>
-						<view class="value">12.00元</view>
+						<view class="value">{{ free || 0 }}元</view>
 					</view>
 				</view>
 				<view class="descs">
@@ -105,7 +137,7 @@
 					<view class="desc">按照税收法律法规的相关规定，您的所得对应需要缴纳的个人所得税以及因使用第三方支付方式所产生的手续费将由您自行承担，并从应结算的提现金额中直接扣除</view>
 				</view>
 				<view class="btns">
-					<view class="btn" @click="cash2()">继续提现</view>
+					<view class="btn" @click="confirmSubmit()">继续提现</view>
 				</view>
 			</view>
 		</u-popup>
@@ -118,11 +150,15 @@
 			return {
 				info: {},
 				list: [],
+				free: 0,
 				radio: 0,
 				money: '',
+				pwd: '',
 				flag: false,
+				show: false,
 				show1: false,
 				show2: false,
+				currentItem: {},
 				headerHeight: getApp().globalData.headerInfo.height,
 				statusHeight: getApp().globalData.headerInfo.statusBarHeight,
 				navigatorHeight: getApp().globalData.headerInfo.navigatorHeight
@@ -131,28 +167,90 @@
 		onLoad() {
 		},
 		onShow() {
+			this.getInfo();
+			this.getList();
 		},
 		methods: {
+			getInfo() {
+				uni.showLoading({
+					title:'正在加载'
+				});
+				uni.$u.http.get(`/medical-api/userRightsSettlement/getSettlementSumByLoginUser`, {
+					params: {
+					}
+				}).then(res => {
+					uni.hideLoading();
+					this.info = res.data || {};
+				});
+			},
 			getList() {
 				uni.showLoading({
 					title:'正在加载'
 				});
-				uni.$u.http.post(`/medical-api/userRightsSettlement/getIncomeDetailsByLoginUser`, {
+				uni.$u.http.get(`/account-api/tfUserInfoHvyogo/getBankListByUserId`, {
+					params: {
+					}
 				}).then(res => {
 					uni.hideLoading();
+					this.list = res.data || [];
+					if (this.list.length > 0){
+						this.currentItem = this.list[0];
+					}
 				});
 			},
-			bind() {
-				if (!this.currentItem.bankCard){
+			doSubmit() {
+				uni.showLoading({
+					title:'正在加载'
+				});
+				uni.$u.http.post(`/account-api/accountOrderSettlementMaster/withdrawal`, {
+					settlementSum: this.money,
+					bankNo: this.currentItem.bankCard
+				}).then(res => {
+					uni.hideLoading();
 					uni.showToast({
-						title: '请先输入银行卡号',
+						title: '提交成功',
+						icon: 'success'
+					});
+					setTimeout(() => {
+						uni.navigateTo({
+							url: '/pages3/pages/cash/out-detail'
+						});
+					}, 2000);
+				}).finally(() => {
+					this.close();
+				});
+			},
+			outSubmit() {
+				if (!this.currentItem.id){
+					uni.showModal({
+						title: '温馨提示',
+						content: '请先绑定银行卡',
+						showCancel: true,
+						success: (res) => {
+							if (res.confirm){
+								this.cardBindClick();
+							}
+						}
+					});
+					return;
+				}
+				if (!this.money){
+					uni.showToast({
+						title: '请先输入提现金额',
 						icon: 'none'
 					});
 					return;
 				}
-				if (!/^\d{16,19}$/.test(this.currentItem.bankCard)){
+				if (!/^(([1-9][0-9]*)|([0]\.[0-9]{1,2}|[1-9][0-9]*\.[0-9]{1,2}))$/.test(this.money+'') || (this.money+'')==='0.0' || (this.money+'')==='0.00'){
 					uni.showToast({
-						title: '请输入16-19位的数字银行卡号',
+						title: '提现金额需大于0，且只能保留2位小数',
+						icon: 'none'
+					});
+					return;
+				}
+				if (!this.radio){
+					uni.showToast({
+						title: '请先阅读并同意《服务条款》',
 						icon: 'none'
 					});
 					return;
@@ -164,22 +262,55 @@
 				uni.showLoading({
 					title:'正在加载'
 				});
-				uni.$u.http.post(`/account-api/tfUserInfoHvyogo/bindBankLoginUser`, {
-					bindFlag: 'bind',
-					...this.currentItem
+				uni.$u.http.post(`/account-api/accountOrderSettlementMaster/withdrawalCheck`, {
+					settlementSum: this.money,
+					bankNo: this.currentItem.bankCard
 				}).then(res => {
 					uni.hideLoading();
-					uni.showToast({
-						title: '保存成功',
-						icon: 'success'
-					});
-					setTimeout(() => {
-						uni.navigateBack({
-							delta: 1
-						});
-					}, 2000);
-				}).catch(err => {
+					this.show2 = true;
+					this.hideKeyboard();
+					this.getServices();
+				}).finally(() => {
 					this.flag = false;
+				});
+			},
+			getServices() {
+				uni.showLoading({
+					title:'正在加载'
+				});
+				uni.$u.http.post(`/account-api/accountOrderSettlementMaster/countFree`, {
+					settlementSum: this.money,
+					bankNo: this.currentItem.bankCard
+				}).then(res => {
+					uni.hideLoading();
+					this.free = res.data.free;
+				});
+			},
+			confirmSubmit() {
+				this.close2();
+				this.show = true;
+				this.hideKeyboard();
+			},
+			cardItemClick(item) {
+				this.close1();
+				this.currentItem = item;
+			},
+			cardSelectClick() {
+				if (!this.currentItem.id){
+					this.cardBindClick();
+					return;
+				}
+				this.show1 = true;
+				this.hideKeyboard();
+			},
+			cardBindClick() {
+				uni.navigateTo({
+					url: '/pages3/pages/cash/card-add'
+				});
+			},
+			protocolClick() {
+				uni.navigateTo({
+					url: '/pages3/pages/cash/protocol'
 				});
 			},
 			goBack() {
@@ -196,23 +327,49 @@
 			close2() {
 				this.show2 = false;
 			},
-			cash1() {
-				this.show2 = true;
-				this.hideKeyboard();
+			close(e) {
+				this.pwd = '';
+				this.show = false;
+				this.flag = false;
 			},
-			cash2() {
-				uni.navigateTo({
-					url: '/pages3/pages/cash/out-detail'
+			change(e) {
+				e = e + '';
+				if (this.pwd.length >= 6){
+					return;
+				}
+				this.pwd = this.pwd + e;
+				if (this.pwd.length === 6){
+					this.checkPwd();
+				}
+			},
+			cancel(e) {
+				this.close(e);
+			},
+			confirm(e) {
+				this.close(e);
+			},
+			backspace(e) {
+				if (this.pwd.length === 0){
+					return;
+				}
+				this.pwd = this.pwd.substring(0, this.pwd.length-1);
+			},
+			checkPwd() {
+				if (this.flag){
+					return;
+				}
+				this.flag = true;
+				uni.showLoading({
+					title:'正在加载'
 				});
-			},
-			protocolClick() {
-				uni.navigateTo({
-					url: '/pages3/pages/cash/protocol'
+				uni.$u.http.post(`/account-api/accountOrderSettlementMaster/checkPayPassword`, {
+					payPassword: this.pwd
+				}).then(res => {
+					uni.hideLoading();
+					this.doSubmit();
+				}).catch(err => {
+					this.flag = false;
 				});
-			},
-			cardClick() {
-				this.show1 = true;
-				this.hideKeyboard();
 			}
 		}
 	}
@@ -484,6 +641,32 @@
 				background: #3894FF;
 				border-radius: 8rpx;
 			}
+		}
+	}
+	.wrap-keyboard {
+		padding: 40rpx 24rpx;
+		background: #FFFFFF;
+		.tipss {
+			position: relative;
+			margin-bottom: 40rpx;
+			font-size: 36rpx;
+			font-weight: 500;
+			color: #1A1A1A;
+			line-height: 54rpx;
+			text-align: center;
+			.close {
+				position: absolute;
+				top: 0;
+				right: 0;
+				font-size: 30rpx;
+				font-weight: 400;
+				color: #999999;
+				line-height: 54rpx;
+			}
+		}
+		.u-code-input {
+			margin-bottom: 40rpx;
+			justify-content: center;
 		}
 	}
 </style>
