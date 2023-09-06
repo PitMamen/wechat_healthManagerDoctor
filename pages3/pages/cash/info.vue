@@ -1,37 +1,68 @@
 <template>
 	<view class="wrap">
-		<view class="head">
-			<u-search
-				placeholder="输入文章标题进行搜索"
-				v-model="value"
-				:show-action="false"
-				@change="change"
-			></u-search>
-		</view>
 		<view class="content">
-			<u-empty mode="data" style="padding-top: 300rpx;" icon="/pages2/static/img/icon_nodata.png" v-if="list.length === 0"></u-empty>
-			<scroll-view class="list" :scroll-y="true" @scrolltolower="scrolltolower" v-else>
-				<view class="item" v-for="item in list" :key="item.articleId">
-					<view class="top" @click="viewHandler(item)">
-						<view class="row title">
-							<image src="/pages2/static/static/images/group/icon_note.png"></image>
-							<text>{{ item.title || '' }}</text>
-						</view>
-						<view class="row desc">{{ item.brief || '暂无' }}</view>
-						<view class="read">
-							<image src="/pages2/static/static/images/group/icon_read.png"></image>
-							<text>{{ item.clickNum || 0 }}</text>
-						</view>
-						<image class="abs" :src="item.previewUrl"></image>
-					</view>
-					<view class="bottom">
-						<view class="btn" @click="sendHandler(item)">
-							<image src="/pages2/static/static/images/group/icon_send.png"></image>
-							<text>发送给患者</text>
-						</view>
-					</view>
+			<view class="cash">-2300.00</view>
+			<view class="status" v-if="true">提现中</view>
+			<view class="status green" v-if="false">提现成功</view>
+			<view class="status red" v-if="false">提现失败</view>
+			<view class="progress" v-if="true">
+				<view class="dot blue">
+					<view class="name">提交成功</view>
 				</view>
-			</scroll-view>
+				<view class="line blue"></view>
+				<view class="dot blue">
+					<view class="name">提现中</view>
+				</view>
+				<view class="line"></view>
+				<view class="dot">
+					<view class="name">提现成功</view>
+				</view>
+			</view>
+			<view class="progress" v-if="false">
+				<view class="dot blue">
+					<view class="name">提交成功</view>
+				</view>
+				<view class="line blue"></view>
+				<view class="dot blue">
+					<view class="name">提现中</view>
+				</view>
+				<view class="line blue"></view>
+				<view class="dot blue">
+					<view class="name">提现成功</view>
+				</view>
+			</view>
+			<view class="progress" v-if="false">
+				<view class="dot blue">
+					<view class="name">提交成功</view>
+				</view>
+				<view class="line blue"></view>
+				<view class="dot blue">
+					<view class="name">提现中</view>
+				</view>
+				<view class="line blue"></view>
+				<view class="dot red">
+					<view class="name">提现失败</view>
+				</view>
+			</view>
+			<view class="card">
+				<view class="title">明细</view>
+				<view class="row">
+					<view class="left">说明</view>
+					<view class="right">用户提现</view>
+				</view>
+				<view class="row">
+					<view class="left">时间</view>
+					<view class="right">2023.07.17 14:50</view>
+				</view>
+				<view class="row">
+					<view class="left">交易单号</view>
+					<view class="right">202307177193759500612</view>
+				</view>
+				<view class="row">
+					<view class="left">提现账户</view>
+					<view class="right">**** **** **** **** 8634</view>
+				</view>
+			</view>
 		</view>
 	</view>
 </template>
@@ -40,91 +71,16 @@
 	export default {
 		data() {
 			return {
-				flag: false,
-				total: 0,
-				pageNo: 1,
-				value: '',
-				list: []
+				currentItem: {}
 			}
 		},
 		onLoad() {
-			this.getList();
 		},
 		onReady() {
 		},
 		onShow() {
 		},
 		methods: {
-			viewHandler(item) {
-				uni.navigateTo({
-					url: `/pages2/pages/group/note-info?id=${item.articleId}&title=${item.title}`
-				});
-			},
-			sendHandler(item) {
-				const pages = getCurrentPages();
-				if (pages.length > 1){
-					const page = pages[pages.length - 1 - 1];
-					if (page.route==='pages2/pages/TUI-Chat-Group/chat' || page.route==='pages2/pages/TUI-Chat-Group2/chat'){
-						page.$vm.sendCustomMessage({
-							detail: {
-								payload: {
-									data: JSON.stringify({
-										content: item.title,
-										description: '文章卡',
-										id: item.articleId,
-										type: 'CustomArticleMessage'
-									}),
-									extension: '',
-									description: '文章卡'
-								}
-							}
-						});
-						uni.navigateBack({
-							delta: 1
-						});
-					}
-				}
-			},
-			change() {
-				this.value = this.value.trim();
-				this.pageNo = 1;
-				this.total = 0;
-				this.list = [];
-				this.getList();
-			},
-			getList() {
-				uni.showLoading({
-					title:'正在加载'
-				});
-				uni.$u.http.get(`/health-api/health/patient/allArticlesNewPage`, {
-					params: {
-						status: 2,
-						title: this.value,
-						pageSize: 10,
-						start: this.pageNo
-					}
-				}).then(res => {
-					res.data = res.data || {};
-					res.data.list = res.data.list || [];
-					res.data.total = res.data.total || 0;
-					this.total = res.data.total;
-					this.list = this.list.concat(res.data.list);
-				}).finally(() => {
-					this.flag = false;
-					uni.hideLoading();
-				});
-			},
-			scrolltolower() {
-				if (this.pageNo*10 >= this.total){
-					return;
-				}
-				if (this.flag){
-					return;
-				}
-				this.flag = true;
-				this.pageNo ++;
-				this.getList();
-			}
 		}
 	}
 </script>
@@ -133,102 +89,98 @@
 	.wrap {
 		min-height: 100vh;
 		background: #FFFFFF;
-		.head {
-			position: fixed;
-			top: 0;
-			width: 100%;
-			padding: 30rpx 24rpx;
-			z-index: 1;
-			background: #FFFFFF;
-			box-sizing: border-box;
-		}
 		.content {
-			margin-top: calc(60rpx + 32px);
-			.list {
-				max-height: calc(100vh - 60rpx - 32px);
-				background: #F2F2F2;
-				.item {
-					margin-bottom: 20rpx;
-					background: #FFFFFF;
-					&:first-child {
-						margin-top: 20rpx;
-					}
-					.top {
-						position: relative;
-						padding: 28rpx 24rpx;
-						.row {
-							max-width: 540rpx;
-							white-space: nowrap;
-							overflow: hidden;
-							text-overflow: ellipsis;
-						}
-						.title {
-							font-size: 30rpx;
-							font-weight: 500;
-							color: #4D4D4D;
-							line-height: 36rpx;
-							image {
-								width: 28rpx;
-								height: 30rpx;
-								margin-right: 15rpx;
-								padding: 3rpx 0;
-								vertical-align: middle;
-							}
-							text {
-								vertical-align: middle;
-							}
-						}
-						.desc {
-							margin-top: 24rpx;
-							font-size: 28rpx;
-							font-weight: 400;
-							color: #999999;
-							line-height: 34rpx;
-						}
-						.read {
-							margin-top: 24rpx;
-							font-size: 22rpx;
-							font-weight: 400;
-							color: #999999;
-							line-height: 26rpx;
-							image {
-								width: 26rpx;
-								height: 26rpx;
-								margin-right: 10rpx;
-								vertical-align: middle;
-							}
-							text {
-								vertical-align: text-bottom;
-							}
-						}
-						.abs {
-							position: absolute;
-							top: 28rpx;
-							right: 24rpx;
-							width: 140rpx;
-							height: 140rpx;
+			padding: 40rpx 24rpx;
+			.cash {
+				font-size: 48rpx;
+				font-weight: 500;
+				color: #1A1A1A;
+				line-height: 88rpx;
+				text-align: center;
+			}
+			.status {
+				font-size: 30rpx;
+				font-weight: 400;
+				color: #CD9F11;
+				line-height: 70rpx;
+				text-align: center;
+				&.green {
+					color: #5DB600;
+				}
+				&.red {
+					color: #FF3838;
+				}
+			}
+			.progress {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 20rpx 0 60rpx 0;
+				.dot {
+					position: relative;
+					width: 24rpx;
+					height: 24rpx;
+					background: #CCCCCC;
+					border-radius: 50%;
+					&.blue {
+						background: #3894FF;
+						.name {
+							color: #3894FF;
 						}
 					}
-					.bottom {
-						padding: 30rpx 0;
-						border-top: 1rpx solid #E6E6E6;
-						.btn {
-							text-align: center;
-							image {
-								display: inline-block;
-								width: 33rpx;
-								height: 31rpx;
-								margin-right: 10rpx;
-								vertical-align: middle;
-							}
-							text {
-								font-size: 28rpx;
-								font-weight: 400;
-								color: #4D4D4D;
-								line-height: 31rpx;
-								vertical-align: middle;
-							}
+					&.red {
+						background: #FF3838;
+						.name {
+							color: #FF3838;
 						}
+					}
+					.name {
+						position: absolute;
+						display: inline-block;
+						left: 50%;
+						bottom: -50rpx;
+						transform: translateX(-50%);
+						font-size: 24rpx;
+						font-weight: 400;
+						color: #999999;
+						line-height: 44rpx;
+						white-space: nowrap;
+					}
+				}
+				.line {
+					width: 230rpx;
+					height: 2rpx;
+					background: #E6E6E6;
+					&.blue {
+						background: #3894FF;
+					}
+				}
+			}
+			.card {
+				margin-top: 40rpx;
+				padding: 10rpx 30rpx 30rpx 30rpx;
+				background: #FFFFFF;
+				box-shadow: 0rpx 2rpx 6rpx 0rpx rgba(77,77,77,0.35);
+				border-radius: 4rpx;
+				.title {
+					font-size: 30rpx;
+					font-weight: 400;
+					color: #1A1A1A;
+					line-height: 70rpx;
+				}
+				.row {
+					display: flex;
+					align-items: center;
+					justify-content: flex-start;
+					font-size: 24rpx;
+					font-weight: 400;
+					color: #999999;
+					line-height: 44rpx;
+					.left {
+						width: 155rpx;
+					}
+					.right {
+						flex: 1;
 					}
 				}
 			}

@@ -397,6 +397,12 @@
 					}
 				},
 				{
+					"path": "pages/cash/out-detail",
+					"style": {
+						"navigationBarTitleText": "提现详情"
+					}
+				},
+				{
 					"path": "pages/cash/card",
 					"style": {
 						"navigationBarTitleText": "银行卡管理"
@@ -479,5 +485,4 @@
 			"query": "" //启动参数，在页面的onLoad函数里面得到
 		}]
 	}
-
 }

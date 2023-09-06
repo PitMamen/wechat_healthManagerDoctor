@@ -43,7 +43,7 @@
 				<view class="line">每人每月累计提现金额小于95000.00元；</view>
 				<view class="line">单笔现金额小于等于3万，可分多次申请提现；</view>
 			</view>
-			<view class="btn" @click="bind()">提现</view>
+			<view class="btn" @click="cash1()">提现</view>
 			<view class="radios">
 				<u-radio-group v-model="radio">
 					<u-radio shape="square" label=" " :name="1"></u-radio>
@@ -104,7 +104,9 @@
 					<view class="title">服务费说明</view>
 					<view class="desc">按照税收法律法规的相关规定，您的所得对应需要缴纳的个人所得税以及因使用第三方支付方式所产生的手续费将由您自行承担，并从应结算的提现金额中直接扣除</view>
 				</view>
-				<view class="btn">继续提现</view>
+				<view class="btns">
+					<view class="btn" @click="cash2()">继续提现</view>
+				</view>
 			</view>
 		</u-popup>
 	</view>
@@ -193,6 +195,15 @@
 			},
 			close2() {
 				this.show2 = false;
+			},
+			cash1() {
+				this.show2 = true;
+				this.hideKeyboard();
+			},
+			cash2() {
+				uni.navigateTo({
+					url: '/pages3/pages/cash/out-detail'
+				});
 			},
 			protocolClick() {
 				uni.navigateTo({
@@ -423,17 +434,56 @@
 		}
 	}
 	.out-wrap {
-		.top {}
+		background: #FFFFFF;
+		border-radius: 4rpx;
+		.top {
+			font-size: 30rpx;
+			font-weight: 500;
+			color: #1A1A1A;
+			line-height: 110rpx;
+			text-align: center;
+			border-bottom: 1rpx solid #E6E6E6;
+		}
 		.infos {
+			margin: 0 24rpx;
+			padding: 15rpx 0;
+			border-bottom: 1rpx solid #E6E6E6;
 			.row {
-				.name {}
-				.value {}
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				font-size: 30rpx;
+				font-weight: 400;
+				color: #1A1A1A;
+				line-height: 60rpx;
 			}
 		}
 		.descs {
-			.title {}
-			.desc {}
+			padding: 10rpx 24rpx;
+			.title {
+				font-size: 28rpx;
+				font-weight: 400;
+				color: #1A1A1A;
+				line-height: 68rpx;
+			}
+			.desc {
+				font-size: 24rpx;
+				font-weight: 400;
+				color: #999999;
+				line-height: 44rpx;
+			}
 		}
-		.btn {}
+		.btns {
+			padding: 40rpx 24rpx;
+			.btn {
+				font-size: 30rpx;
+				font-weight: 400;
+				color: #FFFFFF;
+				line-height: 68rpx;
+				text-align: center;
+				background: #3894FF;
+				border-radius: 8rpx;
+			}
+		}
 	}
 </style>
