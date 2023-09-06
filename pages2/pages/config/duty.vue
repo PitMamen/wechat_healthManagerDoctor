@@ -19,7 +19,7 @@
 				<view class="item" v-for="item in list" :key="item.id">
 					<view class="left">{{ weekNameMap[item.weekDay+''] || '' }}</view>
 					<view class="right">
-						<view class="row">
+						<view class="row" @click="showPicker(item, 1)">
 							<view class="value">
 								<text>接诊人数：</text>
 								<text class="black">{{ item.receiveUserCount || 12 }}人</text>
@@ -29,10 +29,9 @@
 								name="arrow-right"
 								color="#1A1A1A"
 								size="18"
-								@click="showPicker(item, 1)"
 							></u-icon>
 						</view>
-						<view class="row">
+						<view class="row" @click="showPicker(item, 2)">
 							<view class="value">
 								<text>接诊时间段：</text>
 								<text class="black">{{ item.receiveStartTime || '09:00' }}～{{ item.receiveEndTime || '21:00' }}</text>
@@ -42,7 +41,6 @@
 								name="arrow-right"
 								color="#1A1A1A"
 								size="18"
-								@click="showPicker(item, 2)"
 							></u-icon>
 						</view>
 					</view>
