@@ -123,7 +123,9 @@
 			//检查详情
 			jcxq: null,
 			//检验详情
-			jyxq: null
+			jyxq: null,
+			//聊天列表上下文
+			chatListForAI:[]
 		},
 		methods: {
 			// TODO:
