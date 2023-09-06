@@ -6,13 +6,14 @@
 		 
 		 
 		
-		 <div class="input-code" style="margin-left: 60rpx;margin-top: 30rpx;display: flex;flex-direction: row;">
+		 <div 	@click="doShow(1)" class="input-code" style="margin-left: 60rpx;margin-top: 30rpx;display: flex;flex-direction: row;">
 		 			 <u-input
+					     
 		 			 	class="input"
-		 			 	type="number"
 		 			 	placeholder="请输入验证码"
 		 			 	border="none"
-							maxlength="6"
+						maxlength="6"
+						disabled="false"
 		 			 	v-model="verfcode"
 		 			 ></u-input>
 					 
@@ -48,12 +49,12 @@
 		  
 		  <div 	@click="doShow(2)" class="input-code" style="margin-left: 60rpx;margin-top: 30rpx;display: flex;flex-direction: row;">
 		  			 <u-input
-					 readonly
+					    readonly
 		  			 	class="input"
 		  			 	type="password"
 		  			 	placeholder="请输入新密码"
 		  			 	border="none"
-							maxlength="6"
+						maxlength="6"
 						v-model="newPassword"
 					
 		  			 	
@@ -146,7 +147,7 @@
 			
 			
 			getVerfiCode() {
-				  this.doShow(1)  //呼出数字键盘
+				 
 				uni.$u.http.get(`/account-api/captcha/sms`, {
 					params: {
 						phone:this.account.phone
@@ -162,9 +163,13 @@
 					 }
 				
 					
-				}).catch(err => {
-					uni.hideLoading();
+				}).finally(() => {
+					setTimeout(() => {
+					    uni.hideLoading();
+					}, 1000)
+					
 				});
+				
 				
 				this.showText = false
 				    var interval = setInterval(() => {
