@@ -11,7 +11,7 @@
 			<textarea class="textview" maxlength="-1" focus @input="bindInput" :value="value" auto-height />
 		</view>
 
-		<button type="primary" class="button" @click="sendTextMessage">发 送</button>
+		<button type="primary" class="button" @click="sendTextMessage" :disabled="!completion">发 送</button>
 	</view>
 </template>
 
@@ -27,13 +27,15 @@
 				patientUserId: '',
 				chatListForAI: [],
 				patientText: '',
-				value: ''
+				value: '',
+				completion:false 
 			}
 		},
 		onLoad(options) {
 			this.account = uni.getStorageSync('account');
 			this.patientUserId = options.patientUserId
 			this.conversation = options.conversation
+			this.completion=false
 			var chatList = app.globalData.chatListForAI;
 			console.log(chatList)
 			var chatListForAI = []
@@ -75,8 +77,16 @@
 				}
 
 			})
+			
 			this.chatListForAI = chatListForAI
 			console.log(this.chatListForAI)
+			if(!this.patientText || this.patientText.length===0){
+				uni.showToast({
+					title: '未找到患者文字消息,无法生成推荐回答',
+					icon:'none'
+				})
+				return
+			}
 			this.connectWebSocket()
 		},
 		onUnload() {
@@ -143,6 +153,7 @@
 							uni.showToast({
 								title: '生成完毕'
 							})
+							that.completion=true
 						}
 					}
 				})
