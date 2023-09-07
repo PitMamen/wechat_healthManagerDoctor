@@ -1,66 +1,66 @@
 <template>
 	<view class="wrap">
 		<view class="content">
-			<view class="cash">-2300.00</view>
-			<view class="status" v-if="true">提现中</view>
-			<view class="status green" v-if="false">提现成功</view>
-			<view class="status red" v-if="false">提现失败</view>
-			<view class="progress" v-if="true">
-				<view class="dot blue">
-					<view class="name">提交成功</view>
+			<view class="cash">{{ info.settlement_sum || 0 }}</view>
+			<view class="status" :class="{red: info.status==='提现失败' || info.status==='失败', green: info.status==='提现成功' || info.status==='成功'}">{{ info.status }}</view>
+			<block v-if="options.types === '提'">
+				<view class="progress" v-if="info.status === '提现中'">
+					<view class="dot blue">
+						<view class="name">提交成功</view>
+					</view>
+					<view class="line blue"></view>
+					<view class="dot blue">
+						<view class="name">提现中</view>
+					</view>
+					<view class="line"></view>
+					<view class="dot">
+						<view class="name">提现成功</view>
+					</view>
 				</view>
-				<view class="line blue"></view>
-				<view class="dot blue">
-					<view class="name">提现中</view>
+				<view class="progress" v-if="info.status === '提现成功'">
+					<view class="dot blue">
+						<view class="name">提交成功</view>
+					</view>
+					<view class="line blue"></view>
+					<view class="dot blue">
+						<view class="name">提现中</view>
+					</view>
+					<view class="line blue"></view>
+					<view class="dot blue">
+						<view class="name">提现成功</view>
+					</view>
 				</view>
-				<view class="line"></view>
-				<view class="dot">
-					<view class="name">提现成功</view>
+				<view class="progress" v-if="info.status === '提现失败'">
+					<view class="dot blue">
+						<view class="name">提交成功</view>
+					</view>
+					<view class="line blue"></view>
+					<view class="dot blue">
+						<view class="name">提现中</view>
+					</view>
+					<view class="line blue"></view>
+					<view class="dot red">
+						<view class="name">提现失败</view>
+					</view>
 				</view>
-			</view>
-			<view class="progress" v-if="false">
-				<view class="dot blue">
-					<view class="name">提交成功</view>
-				</view>
-				<view class="line blue"></view>
-				<view class="dot blue">
-					<view class="name">提现中</view>
-				</view>
-				<view class="line blue"></view>
-				<view class="dot blue">
-					<view class="name">提现成功</view>
-				</view>
-			</view>
-			<view class="progress" v-if="false">
-				<view class="dot blue">
-					<view class="name">提交成功</view>
-				</view>
-				<view class="line blue"></view>
-				<view class="dot blue">
-					<view class="name">提现中</view>
-				</view>
-				<view class="line blue"></view>
-				<view class="dot red">
-					<view class="name">提现失败</view>
-				</view>
-			</view>
+			</block>
 			<view class="card">
 				<view class="title">明细</view>
 				<view class="row">
 					<view class="left">说明</view>
-					<view class="right">用户提现</view>
+					<view class="right">{{ info.order_type_name }}</view>
 				</view>
 				<view class="row">
 					<view class="left">时间</view>
-					<view class="right">2023.07.17 14:50</view>
+					<view class="right">{{ info.create_time }}</view>
 				</view>
-				<view class="row">
+				<view class="row" v-if="info.order_id">
 					<view class="left">交易单号</view>
-					<view class="right">202307177193759500612</view>
+					<view class="right">{{ info.order_id }}</view>
 				</view>
-				<view class="row">
+				<view class="row" v-if="info.bank_no">
 					<view class="left">提现账户</view>
-					<view class="right">**** **** **** **** 8634</view>
+					<view class="right">**** **** **** **** {{ info.bank_no.substring(info.bank_no.length-4, info.bank_no.length) }}</view>
 				</view>
 			</view>
 		</view>
@@ -71,16 +71,30 @@
 	export default {
 		data() {
 			return {
-				currentItem: {}
+				options: {},
+				info: {}
 			}
 		},
-		onLoad() {
+		onLoad(options) {
+			this.options = options;
+			this.getInfo();
 		},
 		onReady() {
 		},
 		onShow() {
 		},
 		methods: {
+			getInfo() {
+				uni.showLoading({
+					title:'正在加载'
+				});
+				uni.$u.http.post(`/account-api/accountOrderSettlementMaster/getWithdrawalRecordDetail`, {
+					...this.options
+				}).then(res => {
+					uni.hideLoading();
+					this.info = res.data || {};
+				});
+			}
 		}
 	}
 </script>
