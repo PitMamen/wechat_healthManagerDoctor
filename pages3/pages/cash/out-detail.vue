@@ -6,7 +6,7 @@
 				<view class="desc">提现说明</view>
 				<view class="card">
 					<view class="title">本次提款合计金额为</view>
-					<view class="money">1300<text class="unit">元</text></view>
+					<view class="money">{{ info.settlementSum || 0 }}<text class="unit">元</text></view>
 					<view class="msg">本次提款分1笔到账，请注意查收</view>
 				</view>
 			</view>
@@ -16,13 +16,13 @@
 						<image src="/pages3/static/static/images/out-detail/2.png"></image>
 						<view class="block">
 							<view class="name">提现</view>
-							<view class="time">2023年07月17日 14:50</view>
+							<view class="time">{{ info.createTime }}</view>
 						</view>
 					</view>
 					<view class="right">
 						<view class="block">
-							<view class="money">-1300</view>
-							<view class="status">成功</view>
+							<view class="money">{{ info.settlementSum || 0 }}</view>
+							<view class="status">{{ info.settlementStatusStr }}</view>
 						</view>
 						<u-icon name="arrow-right" color="#1A1A1A" size="36rpx"></u-icon>
 					</view>
@@ -40,6 +40,7 @@
 			}
 		},
 		onLoad() {
+			this.info = uni.getStorageSync('cashItem');
 		},
 		onReady() {
 		},
@@ -48,7 +49,7 @@
 		methods: {
 			itemClick() {
 				uni.navigateTo({
-					url: '/pages3/pages/cash/info'
+					url: `/pages3/pages/cash/out-info?id=${this.info.id}&types=提`
 				});
 			}
 		}

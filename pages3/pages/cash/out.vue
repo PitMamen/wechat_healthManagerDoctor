@@ -8,8 +8,8 @@
 			</view>
 		</view>
 		<view class="tips">
-			<view class="line line1">提现金额：</view>
-			<view class="line line2">￥{{ money || 0 }}</view>
+			<view class="line line1">钱包余额：</view>
+			<view class="line line2">￥{{ info.settlementSum || 0 }}</view>
 			<view class="line line1">本月剩余可提现金额：{{ info.residueRecoverSum || 0 }}元</view>
 		</view>
 		<view class="content">
@@ -198,6 +198,18 @@
 					}
 				});
 			},
+			getServices() {
+				uni.showLoading({
+					title:'正在加载'
+				});
+				uni.$u.http.post(`/account-api/accountOrderSettlementMaster/countFree`, {
+					settlementSum: this.money,
+					bankNo: this.currentItem.bankCard
+				}).then(res => {
+					uni.hideLoading();
+					this.free = res.data.free;
+				});
+			},
 			doSubmit() {
 				uni.showLoading({
 					title:'正在加载'
@@ -211,6 +223,7 @@
 						title: '提交成功',
 						icon: 'success'
 					});
+					uni.setStorageSync('cashItem', res.data);
 					setTimeout(() => {
 						uni.navigateTo({
 							url: '/pages3/pages/cash/out-detail'
@@ -272,18 +285,6 @@
 					this.getServices();
 				}).finally(() => {
 					this.flag = false;
-				});
-			},
-			getServices() {
-				uni.showLoading({
-					title:'正在加载'
-				});
-				uni.$u.http.post(`/account-api/accountOrderSettlementMaster/countFree`, {
-					settlementSum: this.money,
-					bankNo: this.currentItem.bankCard
-				}).then(res => {
-					uni.hideLoading();
-					this.free = res.data.free;
 				});
 			},
 			confirmSubmit() {
