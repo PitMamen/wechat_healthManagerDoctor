@@ -186,7 +186,7 @@
 
 
 			<!-- 擅长领域 -->
-			<view style="display: flex;flex-direction: row;margin-left: 24rpx;">
+			<view style="display: flex;flex-direction: row;margin-left: 24rpx;margin-right: 24rpx;">
 				<view style="color: #4D4D4D;font-size: 30rpx;flex: 1;">擅长领域（选填）</view>
 				<view>{{countExpert}}/300</view>
 			</view>
@@ -202,7 +202,7 @@
 
 
 			<!-- 个人简介 -->
-			<view style="display: flex;flex-direction: row;margin-left: 24rpx;">
+			<view style="display: flex;flex-direction: row;margin-left: 24rpx;margin-right: 24rpx;">
 				<view style="color: #4D4D4D;font-size: 30rpx;flex: 1;">个人简介（选填）</view>
 				<view>{{countBrief}}/1000</view>
 			</view>

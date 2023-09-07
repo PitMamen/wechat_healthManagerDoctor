@@ -15,7 +15,7 @@
 			<view class="info-item">
 				<view class="info-item-content">
 					<view style="flex: 1;display: flex;flex-direction: row;">
-						<view style="color: #1A1A1A;font-size: 32rpx;">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名
+						<view style="color: #1A1A1A;font-size: 32rpx;width: 135rpx;">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名
 						</view>
 						<view style="color: red;padding-top: 5rpx;">*</view>
 						<view style="margin-left: 30rpx;">
@@ -31,7 +31,7 @@
 			<view class="info-item">
 				<view class="info-item-content">
 					<view style="flex: 1;display: flex;flex-direction: row;">
-						<view style="color: #1A1A1A;font-size: 32rpx;">身份证号</view>
+						<view style="color: #1A1A1A;font-size: 32rpx;width: 135rpx;">身份证号</view>
 						<view style="color: red;padding-top: 5rpx;">*</view>
 						<view style="margin-left: 30rpx;">
 							<u--input :disabled="!canModify" class="input" fontSize="28rpx" placeholder="请输入身份证号"
@@ -48,7 +48,7 @@
 			<view class="info-item">
 				<view class="info-item-content">
 					<view style="flex: 1;display: flex;flex-direction: row;">
-						<view style="color: #1A1A1A;font-size: 32rpx;">手&nbsp;&nbsp;机&nbsp;&nbsp;号</view>
+						<view style="color: #1A1A1A;font-size: 32rpx;width: 135rpx;">手&nbsp;&nbsp;机&nbsp;&nbsp;号</view>
 						<view style="color: red;padding-top: 5rpx;">*</view>
 						<view style="margin-left: 30rpx;">
 							<u-input class="input" @input="onlyNumber" fontSize="28rpx" type="number"
@@ -61,7 +61,7 @@
 			<view class="info-item" v-if="needShowGetCode">
 				<view class="info-item-content">
 					<view style="flex: 1;display: flex;flex-direction: row;">
-						<view style="color: #1A1A1A;font-size: 32rpx;">校&nbsp;&nbsp;验&nbsp;&nbsp;码</view>
+						<view style="color: #1A1A1A;font-size: 32rpx;width: 135rpx;">校&nbsp;&nbsp;验&nbsp;&nbsp;码</view>
 						<view style="color: red;padding-top: 5rpx;">*</view>
 						<view style="margin-left: 30rpx;">
 							<u-input class="input" fontSize="28rpx" type="number" placeholder="请输入校验码" border="none"
@@ -82,7 +82,7 @@
 			<view class="info-item">
 				<view class="info-item-content">
 					<view style="flex: 1;display: flex;flex-direction: row;" @click="goChooseHospital">
-						<view style="color: #1A1A1A;font-size: 32rpx;">所在医院</view>
+						<view style="color: #1A1A1A;font-size: 32rpx;width: 135rpx;">所在医院</view>
 						<view style="color: red;padding-top: 5rpx;">*</view>
 						<view style="margin-left: 30rpx;color: #999;font-size: 28rpx;padding-top: 5rpx;"
 							v-if="!hospitalName">请选择</view>
@@ -101,7 +101,7 @@
 			<view class="info-item">
 				<view class="info-item-content">
 					<view style="flex: 1;display: flex;flex-direction: row;" @click="goChooseDept">
-						<view style="color: #1A1A1A;font-size: 32rpx;">科&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;室
+						<view style="color: #1A1A1A;font-size: 32rpx;width: 135rpx;">科&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;室
 						</view>
 						<view style="color: red;padding-top: 5rpx;">*</view>
 						<view style="margin-left: 30rpx;color: #999;font-size: 28rpx;padding-top: 5rpx;"
@@ -120,7 +120,7 @@
 			<view class="info-item">
 				<view class="info-item-content">
 					<view style="flex: 1;display: flex;flex-direction: row;" @click="goChoosePro">
-						<view style="color: #1A1A1A;font-size: 32rpx;">职&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称
+						<view style="color: #1A1A1A;font-size: 32rpx;width: 135rpx;">职&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称
 						</view>
 						<view style="color: red;padding-top: 5rpx;">*</view>
 						<view style="margin-left: 30rpx;color: #999;font-size: 28rpx;padding-top: 5rpx;"
@@ -230,9 +230,16 @@
 			 * 失去焦点时，判断是否显示验证码
 			 */
 			onPhoneBlur() {
+				// //没有输入手机号需要展示验证码；输入了且没有绑定过手机号需要展示验证码； 原来有电话，失焦的时候不等于原来的电话；原来有已提交过的电话，失焦的时候不等于已提交过的电话
+				// if (!this.baseData.phone || (!this.account.phone && this.baseData.phone) || (this.account.phone && this
+				// 		.baseData.phone != this.account.phone) || (this.modifyData && this.baseData.phone != this.modifyData.phone)) {
+				// 	this.needShowGetCode = true
+				// } else {
+				// 	this.needShowGetCode = false
+				// }
+				
 				//没有输入手机号需要展示验证码；输入了且没有绑定过手机号需要展示验证码； 原来有电话，失焦的时候不等于原来的电话；原来有已提交过的电话，失焦的时候不等于已提交过的电话
-				if (!this.baseData.phone || (!this.account.phone && this.baseData.phone) || (this.account.phone && this
-						.baseData.phone != this.account.phone) || (this.modifyData && this.baseData.phone != this.modifyData.phone)) {
+				if (!this.baseData.phone || (this.modifyData && this.baseData.phone != this.modifyData.phone)) {
 					this.needShowGetCode = true
 				} else {
 					this.needShowGetCode = false
@@ -276,11 +283,11 @@
 
 							this.professionalTitle = this.profItem.value
 
-						} else { //新增的实名认证信息情况，新用户可能没有创建用户  所以取外层的phone非user里面的
-							if (!this.account.phone) {
+						} else { //新增的实名认证信息情况，直接取baseInfo的phone
+							if (!baseInfo.phone) {
 								this.needShowGetCode = true
 							} else {
-								this.baseData.phone = this.account.phone //新用户可能没有创建用户
+								this.baseData.phone = baseInfo.phone //新用户可能没有创建用户
 							}
 						}
 						this.getProf()

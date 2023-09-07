@@ -5,6 +5,7 @@
 				<image @click="goInfoPage" :src="account.user.avatarUrl || '/static/static/images/header.png'"
 					mode="aspectFill"></image>
 				<view class="view-info-personal">
+					<!-- <view style="font-size: 42rpx;color: #1A1A1A;" @click="goIdentify">{{account.user.userName}}</view> -->
 					<view style="font-size: 42rpx;color: #1A1A1A;">{{account.user.userName}}</view>
 					<view class="info-personal">
 						<view style="font-size: 30rpx;color: #4D4D4D">{{account.user.departmentName}}</view>
@@ -77,12 +78,13 @@
 		<u-empty mode="data" style="padding-top: 300rpx;" v-if="listData.length === 0"
 			icon="/static/img/icon_nodata.png"></u-empty>
 
-		<u-popup :show="showCode" mode="center" :round="4"  @close="closeCodePop" >
+		<u-popup :show="showCode" mode="center" :round="4" @close="closeCodePop">
 			<view class="codeview">
 				<image class="code" :src="docCodeImg">
 				</image>
 				<view class="codeitem">
-					<image src="/static/static/images/yisheng.png" style="width: 30rpx;height: 34rpx;margin-right: 20rpx;">
+					<image src="/static/static/images/yisheng.png"
+						style="width: 30rpx;height: 34rpx;margin-right: 20rpx;">
 					</image>
 					<text>{{account.user.userName}}</text>
 				</view>
@@ -104,8 +106,8 @@
 	export default {
 		data() {
 			return {
-				showCode:false,
-				docCodeImg:undefined,
+				showCode: false,
+				docCodeImg: undefined,
 				numZX: 0,
 				numSF: 0,
 				listData: [],
@@ -144,19 +146,19 @@
 				// nearMsg: '[患者发起的图文&电话&视频咨询]'
 				nearMsg: ''
 			})
-			
-			
-			if(this.account && this.account.accountId && this.account.bindStatus == 0){
-				
+
+
+			if (this.account && this.account.accountId && this.account.bindStatus == 0) {
+
 				this.getNum();
-				
+
 				setTimeout(() => {
 					this.$refs.caCheck.check();
 				});
 			}
-			
-            this.refreshBindStatus();
-		
+
+			this.refreshBindStatus();
+
 		},
 		methods: {
 			//个人信息页
@@ -196,50 +198,50 @@
 					uni.hideLoading();
 				});
 			},
-			
-			refreshBindStatus(){
+
+			refreshBindStatus() {
 				uni.$u.http.get('/account-api/accountInfo/getDoctorAuthStatus', {
 					params: {}
 				}).then(res => {
 					if (res.code == 0) {
-						this.account.bindStatus =res.data.bindStatus
+						this.account.bindStatus = res.data.bindStatus
 					} else {
 						this.$u.toast(res.message)
 					}
-				
+
 				}).finally(() => {
 					uni.hideLoading();
 				});
 			},
 			//获取健康咨询数量
 			getNum() {
-				
+
 				uni.showLoading({
 					title: '请求中'
 				});
 				//权益使用待接诊数量查询
 				uni.$u.http.post('/medical-api/rightsUse/qryRightsUsingCountByDoc', {
-					docId: this.account.user.userId
-				}).then(res => {
-					uni.hideLoading()
-					this.$set(this.listData[1], 'unreadCount', res.data.TextNum + res.data.TelNum + res.data
-						// this.$set(this.listData[0], 'unreadCount', res.data.TextNum + res.data.TelNum + res.data
-						.VedioNum)
+						docId: this.account.user.userId
+					}).then(res => {
+						uni.hideLoading()
+						this.$set(this.listData[1], 'unreadCount', res.data.TextNum + res.data.TelNum + res.data
+							// this.$set(this.listData[0], 'unreadCount', res.data.TextNum + res.data.TelNum + res.data
+							.VedioNum)
 
-					//本院复诊的数量也从这里来
-					this.$set(this.listData[0], 'unreadCount', res.data.appointNum)
-					this.$set(this.listData[0], 'nearMsg', '患者发起的复诊续方')
+						//本院复诊的数量也从这里来
+						this.$set(this.listData[0], 'unreadCount', res.data.appointNum)
+						this.$set(this.listData[0], 'nearMsg', '患者发起的复诊续方')
 
-					// this.listData[1].unreadCount = res.data.TextNum + res.data.TelNum + res.data.VedioNum
-					console.log('this.listData[0]', JSON.stringify(this.listData[1]))
-					//互联网咨询不显示了
+						// this.listData[1].unreadCount = res.data.TextNum + res.data.TelNum + res.data.VedioNum
+						console.log('this.listData[0]', JSON.stringify(this.listData[1]))
+						//互联网咨询不显示了
 
-					this.getChatList()
-					// this.getnumZX()
-				})
-				.catch(() => {
-					uni.hideLoading()
-				});
+						this.getChatList()
+						// this.getnumZX()
+					})
+					.catch(() => {
+						uni.hideLoading()
+					});
 			},
 
 			//获取互联网咨询数量  最初的湘雅二的咨询数据
@@ -299,21 +301,21 @@
 				});
 			},
 
-			closeCodePop(){
-				this.showCode=false
+			closeCodePop() {
+				this.showCode = false
 			},
 			/**
 			 * 这里也是只有图文咨询聊天用group，其他的三种都用group2
 			 * @param {Object} index
 			 */
 			onItemClick(index) {
-				
-				if(!this.account || !this.account.accountId || this.account.bindStatus !== 0){
+
+				if (!this.account || !this.account.accountId || this.account.bindStatus !== 0) {
 					//如果没有账号 或者 没有认证
 					this.goIdentify()
 					return
 				}
-				
+
 				//互联网咨询不显示了
 				if (index == 0) {
 					uni.navigateTo({
@@ -430,31 +432,31 @@
 					}
 				});
 			},
-			
-			showDocCode(){
-				if(this.docCodeImg){
-					this.showCode=true
+
+			showDocCode() {
+				if (this.docCodeImg) {
+					this.showCode = true
 					return
 				}
-				uni.$u.http.get('/wx-api/wx/qrcode/'+uni.getAccountInfoSync().miniProgram.appId+'/getDoctorQrCode', {
+				uni.$u.http.get('/wx-api/wx/qrcode/' + uni.getAccountInfoSync().miniProgram.appId + '/getDoctorQrCode', {
 					params: {
 						docUserId: this.account.user.userId,
 						forceMpCode: '',
 					}
 				}).then(res => {
-					
-					if(res.code == 0){
-						this.docCodeImg=res.data 
-						this.showCode=true
-					}else{
+
+					if (res.code == 0) {
+						this.docCodeImg = res.data
+						this.showCode = true
+					} else {
 						uni.showToast({
-							title:res.message
+							title: res.message
 						})
 					}
-					
+
 				});
 			},
-			
+
 
 			formatDate(date) {
 				date = new Date(date);
@@ -493,27 +495,27 @@
 </script>
 
 <style lang="scss">
-	.codeview{
+	.codeview {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		width: 620rpx;
 		padding-top: 100rpx;
 		padding-bottom: 32rpx;
-		
+
 		.code {
 			width: 316rpx;
 			height: 316rpx;
 			margin-bottom: 32rpx;
-			
+
 		}
-		
+
 		text {
 			font-size: 30rpx;
 			color: #1A1A1A;
 		}
-		
-		.codeitem{
+
+		.codeitem {
 			display: flex;
 			flex-direction: row;
 			align-items: center;
@@ -521,7 +523,8 @@
 			margin-bottom: 30rpx;
 		}
 	}
-	.identyView{
+
+	.identyView {
 		width: 690rpx;
 		margin-left: 30rpx;
 		height: 208rpx;
@@ -530,15 +533,16 @@
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		
-		.identyitem{
+
+		.identyitem {
 			display: flex;
-			flex-direction: column;		
+			flex-direction: column;
 			font-size: 32rpx;
 			margin-left: 30rpx;
 			color: #FFFFFF;
 		}
-		.identyright{
+
+		.identyright {
 			width: 150rpx;
 			height: 68rpx;
 			background: #FFFFFF;
@@ -546,13 +550,14 @@
 			font-size: 28rpx;
 			color: #3894FF;
 			display: flex;
-			flex-direction: row;	
+			flex-direction: row;
 			align-items: center;
 			justify-content: center;
 			margin-left: auto;
 			margin-right: 30rpx;
 		}
 	}
+
 	.uni-tabbar .uni-tabbar-border {
 		height: 3px !important;
 	}
