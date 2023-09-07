@@ -15,7 +15,8 @@
 			<view class="info-item">
 				<view class="info-item-content">
 					<view style="flex: 1;display: flex;flex-direction: row;">
-						<view style="color: #1A1A1A;font-size: 32rpx;width: 135rpx;">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名
+						<view style="color: #1A1A1A;font-size: 32rpx;width: 135rpx;">
+							姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名
 						</view>
 						<view style="color: red;padding-top: 5rpx;">*</view>
 						<view style="margin-left: 30rpx;">
@@ -101,7 +102,8 @@
 			<view class="info-item">
 				<view class="info-item-content">
 					<view style="flex: 1;display: flex;flex-direction: row;" @click="goChooseDept">
-						<view style="color: #1A1A1A;font-size: 32rpx;width: 135rpx;">科&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;室
+						<view style="color: #1A1A1A;font-size: 32rpx;width: 135rpx;">
+							科&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;室
 						</view>
 						<view style="color: red;padding-top: 5rpx;">*</view>
 						<view style="margin-left: 30rpx;color: #999;font-size: 28rpx;padding-top: 5rpx;"
@@ -120,7 +122,8 @@
 			<view class="info-item">
 				<view class="info-item-content">
 					<view style="flex: 1;display: flex;flex-direction: row;" @click="goChoosePro">
-						<view style="color: #1A1A1A;font-size: 32rpx;width: 135rpx;">职&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称
+						<view style="color: #1A1A1A;font-size: 32rpx;width: 135rpx;">
+							职&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称
 						</view>
 						<view style="color: red;padding-top: 5rpx;">*</view>
 						<view style="margin-left: 30rpx;color: #999;font-size: 28rpx;padding-top: 5rpx;"
@@ -237,7 +240,7 @@
 				// } else {
 				// 	this.needShowGetCode = false
 				// }
-				
+
 				//没有输入手机号需要展示验证码；输入了且没有绑定过手机号需要展示验证码； 原来有电话，失焦的时候不等于原来的电话；原来有已提交过的电话，失焦的时候不等于已提交过的电话
 				if (!this.baseData.phone || (this.modifyData && this.baseData.phone != this.modifyData.phone)) {
 					this.needShowGetCode = true
@@ -259,8 +262,8 @@
 				}).then(res => {
 					if (res.code == 0) {
 						let baseInfo = res.data
+						this.modifyData = JSON.parse(JSON.stringify(baseInfo)) //modifyData有值，说明之前提交过数据需要填充
 						if (baseInfo.userName) { //填过实名认证信息，需要填充数据
-							this.modifyData = res.data //modifyData有值，说明之前提交过数据需要填充
 							this.canModify = false
 							this.baseData = JSON.parse(JSON.stringify(baseInfo))
 							//填充数据
