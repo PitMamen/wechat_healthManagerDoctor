@@ -230,9 +230,16 @@
 			 * 失去焦点时，判断是否显示验证码
 			 */
 			onPhoneBlur() {
+				// //没有输入手机号需要展示验证码；输入了且没有绑定过手机号需要展示验证码； 原来有电话，失焦的时候不等于原来的电话；原来有已提交过的电话，失焦的时候不等于已提交过的电话
+				// if (!this.baseData.phone || (!this.account.phone && this.baseData.phone) || (this.account.phone && this
+				// 		.baseData.phone != this.account.phone) || (this.modifyData && this.baseData.phone != this.modifyData.phone)) {
+				// 	this.needShowGetCode = true
+				// } else {
+				// 	this.needShowGetCode = false
+				// }
+				
 				//没有输入手机号需要展示验证码；输入了且没有绑定过手机号需要展示验证码； 原来有电话，失焦的时候不等于原来的电话；原来有已提交过的电话，失焦的时候不等于已提交过的电话
-				if (!this.baseData.phone || (!this.account.phone && this.baseData.phone) || (this.account.phone && this
-						.baseData.phone != this.account.phone) || (this.modifyData && this.baseData.phone != this.modifyData.phone)) {
+				if (!this.baseData.phone || (this.modifyData && this.baseData.phone != this.modifyData.phone)) {
 					this.needShowGetCode = true
 				} else {
 					this.needShowGetCode = false
