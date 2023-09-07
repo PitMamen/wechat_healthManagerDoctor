@@ -526,7 +526,8 @@
 
 	.identyView {
 		width: 690rpx;
-		margin-left: 30rpx;
+		margin-top: 30rpx;
+		margin-left: 20rpx;
 		height: 208rpx;
 		background: #3894FF;
 		border-radius: 4rpx;
