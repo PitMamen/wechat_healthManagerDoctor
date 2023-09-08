@@ -9,12 +9,7 @@
 				"navigationBarTitleText": "登录"
 			}
 		},
-		{
-			"path": "pages/login/protocol",
-			"style": {
-				"navigationBarTitleText": "互联网医院用户协议"
-			}
-		},
+		
 		{
 			"path": "pages/work/workshop",
 			"style": {
@@ -439,6 +434,12 @@
 					"style": {
 						"navigationBarTitleText": "服务条款"
 					}
+				},
+				{
+					"path": "pages/login/protocol",
+					"style": {
+						"navigationBarTitleText": "互联网医院用户协议"
+					}
 				}
 			]
 		}
@@ -446,7 +447,7 @@
 	"preloadRule": {
 		"pages/work/workshop": {
 			"network": "all",
-			"packages": ["pages2", "pages3"]
+			"packages": ["pages2"]
 		}
 	},
 	"plugins": {},
