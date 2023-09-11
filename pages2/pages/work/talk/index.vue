@@ -72,9 +72,9 @@
 						<view v-if="item.status ==3"
 							style="color: #409EFF;background-color: white;border:1rpx solid  #409EFF ;border-radius: 30rpx;padding: 12rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
 							@click.stop="goPopEnd(item,index)">结束问诊</view>
-						<view v-if="item.status ==3"
+						<view v-if="item.status ==3 && item.diagnosisFlag.value===1"
 							style="color: white;background-color: #409EFF;border-radius: 30rpx;padding: 12rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
-							@click.stop="goChufang(item,index)" v-if="item.diagnosisFlag.value === 1">开具处方</view>
+							@click.stop="goChufang(item,index)">开具处方</view>
 						<view v-if="item.status ==3"
 							style="color: white;background-color: #409EFF;border-radius: 30rpx;padding: 12rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
 							@click.stop="goChatClick(item,index)">进入诊室</view>
@@ -149,9 +149,9 @@
 						<view v-if="item.status ==3"
 							style="color: #409EFF;background-color: white;border:1rpx solid  #409EFF ;border-radius: 30rpx;padding: 12rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
 							@click.stop="goPopEnd(item,index)">结束问诊</view>
-						<view v-if="item.status ==3"
+						<view v-if="item.status ==3 && item.diagnosisFlag.value===1"
 							style="color: white;background-color: #409EFF;border-radius: 30rpx;padding: 12rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
-							@click.stop="goChufang(item,index)" v-if="item.diagnosisFlag.value === 1">开具处方</view>
+							@click.stop="goChufang(item,index)">开具处方</view>
 						<view v-if="item.status ==3"
 							style="color: white;background-color: #409EFF;border-radius: 30rpx;padding: 12rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
 							@click.stop="goCall(item,index)">拨打电话</view>
@@ -223,9 +223,9 @@
 						<view v-if="item.status ==3"
 							style="color: #409EFF;background-color: white;border:1rpx solid  #409EFF ;border-radius: 30rpx;padding: 12rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
 							@click.stop="goPopEnd(item,index)">结束问诊</view>
-						<view v-if="item.status ==3"
+						<view v-if="item.status ==3 && item.diagnosisFlag.value===1"
 							style="color: white;background-color: #409EFF;border-radius: 30rpx;padding: 12rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
-							@click.stop="goChufang(item,index)" v-if="item.diagnosisFlag.value === 1">开具处方</view>
+							@click.stop="goChufang(item,index)">开具处方</view>
 						<view v-if="item.status ==3"
 							style="color: white;background-color: #409EFF;border-radius: 30rpx;padding: 12rpx 43rpx 11rpx 43rpx;margin-right: 20rpx;"
 							@click.stop="goCallVideo(item,index)">发起视频</view>
