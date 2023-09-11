@@ -58,7 +58,6 @@
 				</view>
 			</view>
 		</view>
-		
 		<u-keyboard
 			mode="number"
 			tips="请输入6位数字密码"
