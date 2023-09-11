@@ -105,6 +105,7 @@
 					url: '/pages3/pages/cash/trade-list'
 				});
 			},
+			
 			goCashPwd() {
 				
 				// 跳转支付密码管理

@@ -8,8 +8,9 @@
 			<view class="content" v-if="broadClassify === 2">
 				<view class="item-rate">
 					<view class="word">总体评价</view>
-					<view class="rate">						
+					<view class="rate"  style="margin-left: 90rpx;">						
 						<u-rate
+						   
 							:count="5"
 							:value="info.allAppraise"
 							size="18"
@@ -23,8 +24,9 @@
 				</view>
 				<view class="item-rate">
 					<view class="word">医生评价</view>
-					<view class="rate">						
+					<view class="rate"  style="margin-left: 90rpx;">						
 						<u-rate
+						 
 							:count="5"
 							:value="info.doctorAppraise"
 							size="18"
@@ -124,7 +126,7 @@
 export default {
 	data() {
 		return {
-			broadClassify: '',
+			broadClassify: '',    //2 专科  1 在线咨询 
 			show: false,
 			info: {}
 		};
@@ -137,7 +139,10 @@ export default {
 	methods: {
 		open(id, broadClassify) {
 			this.broadClassify = broadClassify;
+			
+			console.log("ZZZZ:",this.broadClassify)
 			this.show = true;
+			
 			this.getInfo(id);
 		},
 		close() {
@@ -148,7 +153,27 @@ export default {
 				title:'正在加载'
 			});
 			uni.$u.http.post(`/medical-api/tfUserAppraise/getAppraiseByOrderId/${id}`).then(res => {
+				console.log("BBBB:",res.data)
 				this.info = res.data || {};
+				if(this.info.doctorAllAppraise==null){
+					this.info.doctorAllAppraise = 0
+				}
+				if(this.info.serviceMass==null){
+					this.info.serviceMass=0
+				}
+				if(this.info.serviceManner==null){
+					this.info.serviceManner=0
+				}
+				if(this.info.systemUse==null){
+					this.info.systemUse=0
+				}
+				
+				// console.log("EEEE:",this.info.doctorAllAppraise,this.info.serviceMass,this.info.serviceManner,this.info.systemUse)
+				
+				
+				
+				
+				
 			}).finally(() => {
 				uni.hideLoading();
 			});

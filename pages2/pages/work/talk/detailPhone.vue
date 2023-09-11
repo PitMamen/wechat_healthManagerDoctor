@@ -220,8 +220,9 @@
 		},
 		onLoad(options) {
 			this.passItem = JSON.parse(decodeURIComponent(options.item));
+			
 			// 咨询状态(2:待接诊 3:接诊中 9:已完成)   2待接诊3问诊中4已结束5已拒诊
-			console.log('this.passItem ', this.passItem)
+			console.log('this.passItem1 ', this.passItem)
 			this.rightsId = this.passItem.rightsId
 			uni.setStorageSync('timeDate', '');
 			this.checkRate();
@@ -656,7 +657,7 @@
 					});
 			},
 			viewRateHandler() {
-				this.$refs.TUIViewRate.open(this.passItem.orderId);
+				this.$refs.TUIViewRate.open(this.passItem.orderId,this.passItem.broadClassify);
 			}
 		}
 	}

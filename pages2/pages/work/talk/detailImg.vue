@@ -632,7 +632,7 @@
 					});
 			},
 			viewRateHandler() {
-				this.$refs.TUIViewRate.open(this.passItem.orderId);
+				this.$refs.TUIViewRate.open(this.passItem.orderId,this.passItem.broadClassify);
 			}
 		}
 	}
