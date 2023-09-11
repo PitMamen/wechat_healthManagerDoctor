@@ -25,7 +25,7 @@
 				uni.$u.http.post('/health-api/article/getContract', {
 					// hospitalCode: '444885559',//湘雅二
 					hospitalCode: '430000009',//雅医互联网医院
-					categoryId: 'CP_10003'
+					categoryId: 'hv_001'
 				}).then(res => {
 					uni.hideLoading();
 					this.content = res.data.content || ''
