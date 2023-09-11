@@ -1,33 +1,31 @@
 <template>
 	<view class="wrap">
-		<view class="head">
-			<u-search
-				placeholder="输入文章标题进行搜索"
-				v-model="value"
-				:show-action="false"
-				@change="change"
-			></u-search>
-		</view>
 		<view class="content">
-			<u-empty mode="data" style="padding-top: 300rpx;" icon="/pages2/static/img/icon_nodata.png" v-if="list.length === 0"></u-empty>
+			<u-empty mode="data" icon="/pages2/static/img/icon_nodata.png" v-if="total === 0"></u-empty>
 			<scroll-view class="list" :scroll-y="true" @scrolltolower="scrolltolower" v-else>
-				<view class="item" v-for="item in list" :key="item.articleId">
-					<view class="top" @click="viewHandler(item)">
-						<view class="row title">
-							<image src="/pages2/static/static/images/group/icon_note.png"></image>
-							<text>{{ item.title || '' }}</text>
+				<view class="item" v-for="item in list" :key="item.id">
+					<view class="date" v-if="item.isDate">{{ item.key.replace('-', '年') }}月</view>
+					<view class="nodate" @click="itemClick(item)" v-else>
+						<view class="left" :class="{red: item.types==='退', green: item.types==='提'}">
+							<view class="type">{{ item.types }}</view>
 						</view>
-						<view class="row desc">{{ item.brief || '暂无' }}</view>
-						<view class="read">
-							<image src="/pages2/static/static/images/group/icon_read.png"></image>
-							<text>{{ item.clickNum || 0 }}</text>
-						</view>
-						<image class="abs" :src="item.previewUrl"></image>
-					</view>
-					<view class="bottom">
-						<view class="btn" @click="sendHandler(item)">
-							<image src="/pages2/static/static/images/group/icon_send.png"></image>
-							<text>发送给患者</text>
+						<view class="right">
+							<view class="row">
+								<view class="name bold">提现金额</view>
+								<view class="value bold">￥{{ item.settlement_sum }}</view>
+							</view>
+							<view class="row">
+								<view class="name">服务费</view>
+								<view class="value">{{ item.manager_sum }}</view>
+							</view>
+							<view class="row">
+								<view class="name">到账余额</view>
+								<view class="value">{{ item.can_sum }}</view>
+							</view>
+							<view class="row">
+								<view class="name">{{ item.create_time_month }}</view>
+								<view class="value status" :class="{red: item.status==='提现失败', green: item.status==='提现成功'}">{{ item.status }}</view>
+							</view>
 						</view>
 					</view>
 				</view>
@@ -41,10 +39,10 @@
 		data() {
 			return {
 				flag: false,
+				list: [],
 				total: 0,
 				pageNo: 1,
-				value: '',
-				list: []
+				pageSize: 20
 			}
 		},
 		onLoad() {
@@ -55,67 +53,40 @@
 		onShow() {
 		},
 		methods: {
-			viewHandler(item) {
-				uni.navigateTo({
-					url: `/pages2/pages/group/note-info?id=${item.articleId}&title=${item.title}`
-				});
-			},
-			sendHandler(item) {
-				const pages = getCurrentPages();
-				if (pages.length > 1){
-					const page = pages[pages.length - 1 - 1];
-					if (page.route==='pages2/pages/TUI-Chat-Group/chat' || page.route==='pages2/pages/TUI-Chat-Group2/chat'){
-						page.$vm.sendCustomMessage({
-							detail: {
-								payload: {
-									data: JSON.stringify({
-										content: item.title,
-										description: '文章卡',
-										id: item.articleId,
-										type: 'CustomArticleMessage'
-									}),
-									extension: '',
-									description: '文章卡'
-								}
-							}
-						});
-						uni.navigateBack({
-							delta: 1
-						});
-					}
-				}
-			},
-			change() {
-				this.value = this.value.trim();
-				this.pageNo = 1;
-				this.total = 0;
-				this.list = [];
-				this.getList();
-			},
 			getList() {
 				uni.showLoading({
 					title:'正在加载'
 				});
-				uni.$u.http.get(`/health-api/health/patient/allArticlesNewPage`, {
-					params: {
-						status: 2,
-						title: this.value,
-						pageSize: 10,
-						start: this.pageNo
-					}
+				uni.$u.http.post(`/account-api/accountOrderSettlementMaster/getWithdrawalRecord`, {
+					pageNo: this.pageNo,
+					pageSize: this.pageSize
 				}).then(res => {
-					res.data = res.data || {};
-					res.data.list = res.data.list || [];
-					res.data.total = res.data.total || 0;
+					uni.hideLoading();
 					this.total = res.data.total;
-					this.list = this.list.concat(res.data.list);
+					this.geneList(res.data.records);
 				}).finally(() => {
 					this.flag = false;
-					uni.hideLoading();
 				});
 			},
+			geneList(records) {
+				let list_ = [];
+				Object.keys(records).forEach(key => {
+					const value = records[key];
+					const index = this.list.findIndex(item => {
+						return item.isDate && item.key===key;
+					});
+					if (index < 0){
+						list_.push({
+							key,
+							isDate: true
+						});
+					}
+					list_ = list_.concat(value);
+				});
+				this.list = this.list.concat(list_);
+			},
 			scrolltolower() {
-				if (this.pageNo*10 >= this.total){
+				if (this.pageNo*this.pageSize >= this.total){
 					return;
 				}
 				if (this.flag){
@@ -124,6 +95,11 @@
 				this.flag = true;
 				this.pageNo ++;
 				this.getList();
+			},
+			itemClick(item) {
+				uni.navigateTo({
+					url: `/pages3/pages/cash/out-info?id=${item.id}&types=${item.types}`
+				});
 			}
 		}
 	}
@@ -133,100 +109,104 @@
 	.wrap {
 		min-height: 100vh;
 		background: #FFFFFF;
-		.head {
-			position: fixed;
-			top: 0;
-			width: 100%;
-			padding: 30rpx 24rpx;
-			z-index: 1;
-			background: #FFFFFF;
-			box-sizing: border-box;
-		}
 		.content {
-			margin-top: calc(60rpx + 32px);
+			.u-empty {
+				padding-top: 300rpx;
+			}
 			.list {
-				max-height: calc(100vh - 60rpx - 32px);
-				background: #F2F2F2;
+				max-height: 100vh;
+				overflow-y: auto;
 				.item {
-					margin-bottom: 20rpx;
-					background: #FFFFFF;
-					&:first-child {
-						margin-top: 20rpx;
+					padding: 0 24rpx;
+					.date {
+						padding-top: 20rpx;
+						font-size: 30rpx;
+						font-weight: 400;
+						color: #1A1A1A;
+						line-height: 50rpx;
 					}
-					.top {
-						position: relative;
-						padding: 28rpx 24rpx;
-						.row {
-							max-width: 540rpx;
-							white-space: nowrap;
-							overflow: hidden;
-							text-overflow: ellipsis;
-						}
-						.title {
-							font-size: 30rpx;
-							font-weight: 500;
-							color: #4D4D4D;
-							line-height: 36rpx;
-							image {
-								width: 28rpx;
-								height: 30rpx;
-								margin-right: 15rpx;
-								padding: 3rpx 0;
-								vertical-align: middle;
-							}
-							text {
-								vertical-align: middle;
-							}
-						}
-						.desc {
-							margin-top: 24rpx;
-							font-size: 28rpx;
-							font-weight: 400;
-							color: #999999;
-							line-height: 34rpx;
-						}
-						.read {
-							margin-top: 24rpx;
-							font-size: 22rpx;
-							font-weight: 400;
-							color: #999999;
-							line-height: 26rpx;
-							image {
-								width: 26rpx;
-								height: 26rpx;
-								margin-right: 10rpx;
-								vertical-align: middle;
-							}
-							text {
-								vertical-align: text-bottom;
-							}
-						}
-						.abs {
-							position: absolute;
-							top: 28rpx;
-							right: 24rpx;
-							width: 140rpx;
-							height: 140rpx;
-						}
-					}
-					.bottom {
+					.nodate {
+						display: flex;
+						align-items: flex-start;
+						justify-content: space-between;
 						padding: 30rpx 0;
-						border-top: 1rpx solid #E6E6E6;
-						.btn {
-							text-align: center;
-							image {
-								display: inline-block;
-								width: 33rpx;
-								height: 31rpx;
-								margin-right: 10rpx;
-								vertical-align: middle;
+						border-bottom: 1rpx solid #E6E6E6;
+						.left {
+							width: 88rpx;
+							height: 88rpx;
+							margin-right: 20rpx;
+							background: #F0B90C;
+							border-radius: 50%;
+							&.green {
+								background: #5DB600;
 							}
-							text {
-								font-size: 28rpx;
+							&.red {
+								background: #FF3838;
+							}
+							.type {
+								font-size: 32rpx;
 								font-weight: 400;
-								color: #4D4D4D;
-								line-height: 31rpx;
-								vertical-align: middle;
+								color: #FFFFFF;
+								line-height: 88rpx;
+								text-align: center;
+							}
+						}
+						.right {
+							flex: 1;
+							.row {
+								display: flex;
+								align-items: center;
+								justify-content: space-between;
+								.name {
+									font-size: 24rpx;
+									font-weight: 400;
+									color: #999999;
+									line-height: 44rpx;
+									&.bold {
+										font-size: 30rpx;
+										color: #1A1A1A;
+										line-height: 50rpx;
+									}
+								}
+								.value {
+									font-size: 24rpx;
+									font-weight: 400;
+									color: #999999;
+									line-height: 44rpx;
+									&.bold {
+										font-size: 30rpx;
+										color: #1A1A1A;
+										line-height: 50rpx;
+									}
+									&.green {
+										color: #5DB600 !important;
+									}
+									&.red {
+										color: #FF3838 !important;
+									}
+									&.yellow {
+										color: #CD9F11 !important;
+									}
+									&.status {
+										width: 110rpx;
+										font-size: 22rpx;
+										font-weight: 400;
+										color: #CD9F11;
+										line-height: 38rpx;
+										text-align: center;
+										background: #FFF5D6;
+										border: 1rpx solid #CD9F11;
+										border-radius: 2rpx;
+										&.green {
+											background: #F5FFEA;
+											border: 1rpx solid #5DB600;
+										}
+										&.red {
+											background: #FFECEC;
+											border: 1rpx solid #FF3838;
+										}
+									}
+								}
 							}
 						}
 					}

@@ -10,32 +10,17 @@
 	// #endif
 	
 	import Vue from 'vue'
-	// #ifdef H5
-	import TIM from 'tim-js-sdk';
-	import TRTCCalling from 'trtc-calling-js'
-	import TIMUploadPlugin from 'tim-upload-plugin'
-	logger.error(' TUIKit 暂不支持 H5 / web');
-	// #endif
 
-	// #ifdef APP-PLUS
-	import Aegis from 'aegis-weex-sdk';
-	// #endif
+	
 
-	// #ifdef MP-WEIXIN
-	import Aegis from 'aegis-mp-sdk';
-	// #endif
+	
 
-	// #ifdef H5
-	import Aegis from 'aegis-web-sdk';
-	// #endif
+	
 
 	import logger from './utils/logger'; // app.js
 
-	const aegis = new Aegis({
-		id: 'iHWefAYqKznuxWjLnr', // 项目key
-		reportApiSpeed: true, // 接口测速
-	});
-	uni.$aegis = aegis
+
+	uni.$aegis = {reportEvent:function(){}}
 	// 首先需要通过 uni.requireNativePlugin("ModuleName") 获取 module
 	// #ifdef APP-PLUS
 	const TUICalling = uni.requireNativePlugin('TUICallingUniPlugin-TUICallingModule');
@@ -81,11 +66,6 @@
 			});
 			// #endif
 
-			// #ifdef H5
-			uni.$TUIKit.registerPlugin({
-				'tim-upload-plugin': TIMUploadPlugin
-			})
-			// #endif
 			Vue.prototype.$bus = new Vue() // event Bus 用于无关系组件间的通信。
 			
 			// 将原生插件挂载在 uni 上

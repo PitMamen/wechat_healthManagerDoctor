@@ -8,7 +8,7 @@
 				<view>智能AI助手根据您和患者对话生成推荐回答</view>
 
 			</view>
-			<textarea class="textview" maxlength="-1" focus @input="bindInput" :value="value" auto-height />
+			<textarea class="textview" maxlength="-1"  @input="bindInput" :value="value" auto-height />
 		</view>
 
 		<button type="primary" class="button" @click="sendTextMessage" :disabled="!completion">发 送</button>
@@ -45,7 +45,7 @@
 
 
 
-				if (item.type == 'TIMTextElem') { //目前只针对文本消息
+				if (item.type == 'TIMTextElem' && item.nick.indexOf('助手') == -1) { //目前只针对文本消息 并且踢出
 
 					if (item.from == this.patientUserId) {
 						this.patientText = item.payload.text
@@ -53,18 +53,15 @@
 
 					var from = ''
 					var to = ''
-					if (item.nick.indexOf('助手') != -1) {
-						from = 'assistant'
-						to = 'patient'
-					} else {
+					
 						if (item.flow == 'out') {
-							from = 'doctor'
-							to = 'patient'
-						} else {
-							from = 'patient'
+							from = 'assistant'
 							to = 'doctor'
+						} else {
+							from = 'doctor'
+							to = 'assistant'
 						}
-					}
+					
 
 					chatListForAI.push({
 						time: item.time,

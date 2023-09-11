@@ -354,7 +354,7 @@
 			},
 			onCheckClick() {
 				uni.navigateTo({
-					url: '/pages/login/protocol'
+					url: '/pages3/pages/login/protocol'
 				});
 			},
 			// 忘记密码
