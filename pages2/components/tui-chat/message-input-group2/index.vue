@@ -561,8 +561,14 @@ export default {
 					});
 					break;
 				case '5':
+					//通知message-list-group2 页面保存聊天消息 供AI页面生成智能回答
+					uni.$emit('AIANSWER', {
+						msg: ''
+					})
+				
+					const taskItem = uni.getStorageSync('taskItem');
 					uni.navigateTo({
-						url: '/pages2/pages/ai/index'
+						url: '/pages2/pages/ai/index?patientUserId='+taskItem.userId+'&conversation='+this.getToAccount()
 					
 					})
 					break;

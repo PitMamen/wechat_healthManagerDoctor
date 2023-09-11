@@ -9,12 +9,7 @@
 				"navigationBarTitleText": "登录"
 			}
 		},
-		{
-			"path": "pages/login/protocol",
-			"style": {
-				"navigationBarTitleText": "互联网医院用户协议"
-			}
-		},
+		
 		{
 			"path": "pages/work/workshop",
 			"style": {
@@ -378,15 +373,12 @@
 					}
 				},
 				{
-
 					"path": "pages/cash/forgetpwd",
 					"style": {
 						"navigationBarTitleText": "忘记支付密码"
-						
 					}
 				},
 				{
-					
 					"path": "pages/cash/out",
 					"style": {
 						"navigationStyle": "custom",
@@ -397,6 +389,12 @@
 					"path": "pages/cash/out-list",
 					"style": {
 						"navigationBarTitleText": "提现记录"
+					}
+				},
+				{
+					"path": "pages/cash/out-detail",
+					"style": {
+						"navigationBarTitleText": "提现详情"
 					}
 				},
 				{
@@ -418,10 +416,29 @@
 					}
 				},
 				{
-					"path": "pages/cash/info",
+					"path": "pages/cash/out-info",
 					"style": {
 						"navigationBarTitleText": "详情"
 
+					}
+				},
+				{
+					"path": "pages/cash/trade-info",
+					"style": {
+						"navigationBarTitleText": "详情"
+				
+					}
+				},
+				{
+					"path": "pages/cash/protocol",
+					"style": {
+						"navigationBarTitleText": "服务条款"
+					}
+				},
+				{
+					"path": "pages/login/protocol",
+					"style": {
+						"navigationBarTitleText": "互联网医院用户协议"
 					}
 				}
 			]
@@ -430,22 +447,19 @@
 	"preloadRule": {
 		"pages/work/workshop": {
 			"network": "all",
-			"packages": ["pages2", "pages3"]
+			"packages": ["pages2"]
 		}
 	},
 	"plugins": {},
 	"tabBar": {
-		// "borderStyle":"#F7F7FA",
 		"selectedColor": "#00A1FF",
 		"list": [{
-				// "pagePath": "pages/tab/tab1",
 				"pagePath": "pages/work/workshop",
 				"iconPath": "static/img/tab_home.png",
 				"selectedIconPath": "static/img/tab_home_checked.png",
 				"text": "工作室"
 			},
 			{
-				// "pagePath": "pages/tab/tab2",
 				"pagePath": "pages/follow/current-follow-list",
 				"iconPath": "static/img/tab_sf.png",
 				"selectedIconPath": "static/img/tab_sf_checked.png",
@@ -476,5 +490,4 @@
 			"query": "" //启动参数，在页面的onLoad函数里面得到
 		}]
 	}
-
 }
