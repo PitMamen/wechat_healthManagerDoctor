@@ -124,8 +124,8 @@
 				<view class="top">收费提示</view>
 				<view class="infos">
 					<view class="row">
-						<view class="name">提现金额</view>
-						<view class="value">{{ money || 0 }}元</view>
+						<view class="name">到账金额</view>
+						<view class="value">{{ settlementSum || 0 }}元</view>
 					</view>
 					<view class="row">
 						<view class="name">本次服务费</view>
@@ -159,6 +159,7 @@
 				show1: false,
 				show2: false,
 				currentItem: {},
+                settlementSum: 0,
 				headerHeight: getApp().globalData.headerInfo.height,
 				statusHeight: getApp().globalData.headerInfo.statusBarHeight,
 				navigatorHeight: getApp().globalData.headerInfo.navigatorHeight
@@ -208,6 +209,7 @@
 				}).then(res => {
 					uni.hideLoading();
 					this.free = res.data.free;
+                    this.settlementSum = res.data.settlementSum;
 				});
 			},
 			doSubmit() {
