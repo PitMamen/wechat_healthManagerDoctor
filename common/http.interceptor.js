@@ -1,4 +1,4 @@
-import { baseURL } from '@/config/config';
+import { baseURL,showDataLog } from '@/config/config';
 const install = (Vue, vm) => {
 	Vue.prototype.$u.http.setConfig((config) => {
 		/* config 为默认全局配置*/
@@ -27,6 +27,10 @@ const install = (Vue, vm) => {
 	Vue.prototype.$u.http.interceptors.response.use((response) => {
 		const code = response.data.code
 		let success = response.data.success
+		if (showDataLog) {
+			console.log('*********url',response.config.fullPath)
+			console.log('*********data',response.data)
+		}
 		if (code === 200) {
 			success = true
 		}

@@ -122,6 +122,14 @@ export default {
 		uni.$TUIKit.on(uni.$TUIKitEvent.SDK_READY, this.readyHandler);
 		uni.$TUIKit.on(uni.$TUIKitEvent.MESSAGE_RECEIVED, this.$onMessageReceived, this);
 		uni.$TUIKit.on(uni.$TUIKitEvent.MESSAGE_READ_BY_PEER, this.$onMessageReadByPeer, this);
+		
+		let that=this
+		uni.$on('AIANSWER',function(data){
+			//跳转智能回复前 页面保存聊天消息 供AI页面生成智能回答
+				console.log('监听到事件来自 AIANSWER ' );
+				getApp().globalData.chatListForAI=that.messageList
+		})
+		
 	},
 
 	destroyed() {

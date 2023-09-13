@@ -9,12 +9,7 @@
 				"navigationBarTitleText": "登录"
 			}
 		},
-		{
-			"path": "pages/login/protocol",
-			"style": {
-				"navigationBarTitleText": "互联网医院用户协议"
-			}
-		},
+		
 		{
 			"path": "pages/work/workshop",
 			"style": {
@@ -33,6 +28,7 @@
 				"navigationBarTitleText": "随访"
 			}
 		}
+
 	],
 	"subpackages": [{
 			"root": "pagesFace",
@@ -121,6 +117,31 @@
 					"path": "pages/mine/info",
 					"style": {
 						"navigationBarTitleText": "个人信息"
+					}
+				},
+				{
+					"path": "pages/mine/identify-base",
+					"style": {
+						"navigationBarTitleText": "实名认证"
+					}
+				},
+				{
+					"path": "pages/mine/identify-detail",
+					"style": {
+						"navigationBarTitleText": "实名认证"
+					}
+				},
+				{
+					"path": "pages/mine/identify-result",
+					"style": {
+						"navigationStyle": "custom",
+						"navigationBarTitleText": "实名认证"
+					}
+				},
+				{
+					"path": "pages/mine/search-hospital",
+					"style": {
+						"navigationBarTitleText": "选择医院"
 					}
 				},
 				{
@@ -324,6 +345,101 @@
 					"style": {
 						"navigationBarTitleText": "记录详情"
 					}
+				},
+				{
+
+					"path": "pages/ai/index",
+					"style": {
+						"navigationBarTitleText": "智能回复",
+						"navigationBarBackgroundColor": "#ffffff"
+					}
+				}
+			]
+		},
+		{
+			"root": "pages3",
+			"name": "pages3",
+			"pages": [{
+					"path": "pages/cash/pack",
+					"style": {
+						"navigationBarTitleText": "我的钱包"
+					}
+				},
+				{
+					"path": "pages/cash/detail",
+					"style": {
+						"navigationStyle": "custom",
+						"navigationBarTitleText": "收入明细"
+					}
+				},
+				{
+					"path": "pages/cash/forgetpwd",
+					"style": {
+						"navigationBarTitleText": "忘记支付密码"
+					}
+				},
+				{
+					"path": "pages/cash/out",
+					"style": {
+						"navigationStyle": "custom",
+						"navigationBarTitleText": "提现"
+					}
+				},
+				{
+					"path": "pages/cash/out-list",
+					"style": {
+						"navigationBarTitleText": "提现记录"
+					}
+				},
+				{
+					"path": "pages/cash/out-detail",
+					"style": {
+						"navigationBarTitleText": "提现详情"
+					}
+				},
+				{
+					"path": "pages/cash/card",
+					"style": {
+						"navigationBarTitleText": "银行卡管理"
+					}
+				},
+				{
+					"path": "pages/cash/trade-list",
+					"style": {
+						"navigationBarTitleText": "交易记录"
+					}
+				},
+				{
+					"path": "pages/cash/card-add",
+					"style": {
+						"navigationBarTitleText": "新增银行卡"
+					}
+				},
+				{
+					"path": "pages/cash/out-info",
+					"style": {
+						"navigationBarTitleText": "详情"
+
+					}
+				},
+				{
+					"path": "pages/cash/trade-info",
+					"style": {
+						"navigationBarTitleText": "详情"
+				
+					}
+				},
+				{
+					"path": "pages/cash/protocol",
+					"style": {
+						"navigationBarTitleText": "服务条款"
+					}
+				},
+				{
+					"path": "pages/login/protocol",
+					"style": {
+						"navigationBarTitleText": "互联网医院用户协议"
+					}
 				}
 			]
 		}
@@ -336,17 +452,14 @@
 	},
 	"plugins": {},
 	"tabBar": {
-		// "borderStyle":"#F7F7FA",
 		"selectedColor": "#00A1FF",
 		"list": [{
-				// "pagePath": "pages/tab/tab1",
 				"pagePath": "pages/work/workshop",
 				"iconPath": "static/img/tab_home.png",
 				"selectedIconPath": "static/img/tab_home_checked.png",
 				"text": "工作室"
 			},
 			{
-				// "pagePath": "pages/tab/tab2",
 				"pagePath": "pages/follow/current-follow-list",
 				"iconPath": "static/img/tab_sf.png",
 				"selectedIconPath": "static/img/tab_sf_checked.png",
@@ -377,5 +490,4 @@
 			"query": "" //启动参数，在页面的onLoad函数里面得到
 		}]
 	}
-
 }

@@ -3,6 +3,9 @@ import App from './App';
 import httpInterceptor from '@/common/http.interceptor.js'
 
 import uView from "uview-ui"
+// import CryptoJS  from "@/node_modules/crypto-js/crypto-js"  
+ 
+ 
 Vue.use(uView)
 
 

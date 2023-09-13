@@ -338,6 +338,7 @@
 				});
 			},
 			showComments(item) {
+				console.log("FFFF:",item)
 				this.$refs.TUIViewRate.open(item.orderId);
 			},
 			goChatHistory(item) {

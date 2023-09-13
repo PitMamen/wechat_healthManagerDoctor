@@ -2,7 +2,7 @@
 
 
 	<view class="content">
-		<u-sticky style="top:0">
+		<u-sticky style="top:0"  v-if="account && account.accountId && account.bindStatus == 0">
 			<view class="topselect" @click="popWindowShow=true">
 
 				<image src="/static/static/images/icon_shaixuan.png"
@@ -11,12 +11,23 @@
 			</view>
 			<view style="width: 100%;height: 1rpx;background-color: #eeeeee;"></view>
 		</u-sticky>
+		
+		<view class="identyView" v-else @click="goIdentify">
+			<view class="identyitem">
+				<view>您可以进行实名认证</view>
+				<view style="margin-top: 33rpx;font-size: 28rpx;color: #AED3FF;">实名认证通过后可以使用更多功能</view>
+			</view>
+			<view class="identyright">
+				<view>实名认证</view>
+			</view>
+		</view>
+		
 		<view v-if="taskList.length>0" class="carditem" v-for="(item, index) in taskList" :key="index">
 
 			<view class="histitem">
 
 				<image
-					:src="item.sex=='男'?'/static/static/images/follow_icon_nan.png':'/static/static/images/follow_icon_nv.png'"
+					:src="item.sex=='男'?'https://hmg.mclouds.org.cn/content-api/file/F20230901104620552ZAFKPPDHICNEOX-follow_icon_nan.png':'https://hmg.mclouds.org.cn/content-api/file/F20230901104637129JKWMLVJEEVJFVF-follow_icon_nv.png'"
 					style="width: 82rpx;height: 82rpx;"></image>
 				<view style="flex:1; display: flex; flex-direction: column;margin-left: 21rpx;">
 					<view style="color: #1A1A1A;font-size: 30rpx;">{{item.userName}}</view>
@@ -145,6 +156,9 @@
 	export default {
 		data() {
 			return {
+				account: {
+					user: {}
+				},
 				status: 'loadmore',
 				noData: false,
 				popWindowShow: false,
@@ -251,6 +265,7 @@
 		},
 		onShow() {
 			this.getData(true)
+			this.refreshBindStatus();
 		},
 		onUnload() {
 			//取消监听
@@ -319,7 +334,52 @@
 			// 		})
 			// 	})
 			// },
+			/**
+			 * auditStatus  0待完善/1审核中/2审核通过/3审核不通过
+			 * 1、3有单独两个页面展示；0为提交一个页面为待完善，直接进基础页面；2审核通过后就没有入口看不见了
+			 */
+			goIdentify() {
+				uni.$u.http.get('/account-api/accountInfo/getDoctorAuthStatus', {
+					params: {}
+				}).then(res => {
+					if (res.code == 0) {
+						if (res.data.auditStatus == 1) { //审核中
+							uni.navigateTo({
+								url: '/pages2/pages/mine/identify-result?type=1&jumpFrom=1'
+							})
+						} else if (res.data.auditStatus == 3) { //审核不通过
+							uni.navigateTo({
+								url: '/pages2/pages/mine/identify-result?type=2&jumpFrom=1'
+							})
+						} else { // 0待完善   进去后查询数据来确定填充信息还是完全的新增
+							uni.navigateTo({
+								url: '/pages2/pages/mine/identify-base'
+							})
+						}
 
+					} else {
+						this.$u.toast(res.message)
+					}
+
+				}).finally(() => {
+					uni.hideLoading();
+				});
+			},
+			
+			refreshBindStatus(){
+				uni.$u.http.get('/account-api/accountInfo/getDoctorAuthStatus', {
+					params: {}
+				}).then(res => {
+					if (res.code == 0) {
+						this.account.bindStatus =res.data.bindStatus
+					} else {
+						this.$u.toast(res.message)
+					}
+				
+				}).finally(() => {
+					uni.hideLoading();
+				});
+			},
 			goCall(phone, recordId, item) {
 				debugger
 				console.log('goCall 1')
@@ -691,6 +751,39 @@
 </script>
 
 <style lang="scss">
+	.identyView{
+		width: 690rpx;
+		margin-left: 30rpx;
+		margin-top: 20rpx;
+		height: 208rpx;
+		background: #3894FF;
+		border-radius: 4rpx;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		
+		.identyitem{
+			display: flex;
+			flex-direction: column;		
+			font-size: 32rpx;
+			margin-left: 30rpx;
+			color: #FFFFFF;
+		}
+		.identyright{
+			width: 150rpx;
+			height: 68rpx;
+			background: #FFFFFF;
+			border-radius: 34rpx;
+			font-size: 28rpx;
+			color: #3894FF;
+			display: flex;
+			flex-direction: row;	
+			align-items: center;
+			justify-content: center;
+			margin-left: auto;
+			margin-right: 30rpx;
+		}
+	}
 	.uni-tabbar .uni-tabbar-border {
 		height: 3px !important;
 	}

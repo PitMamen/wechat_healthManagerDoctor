@@ -171,6 +171,10 @@ export default {
 				{
 					name: '推荐套餐',
 					key: '0'
+				},
+				{
+					name: '智能回复',
+					key: '5'
 				}
 			],
 			messageData: {},
@@ -556,7 +560,18 @@ export default {
 						displayMedicalFolder: true
 					});
 					break;
-
+				case '5':
+					//通知message-list-group2 页面保存聊天消息 供AI页面生成智能回答
+					uni.$emit('AIANSWER', {
+						msg: ''
+					})
+				
+					const taskItem = uni.getStorageSync('taskItem');
+					uni.navigateTo({
+						url: '/pages2/pages/ai/index?patientUserId='+taskItem.userId+'&conversation='+this.getToAccount()
+					
+					})
+					break;
 				default:
 					break;
 			}

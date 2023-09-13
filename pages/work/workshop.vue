@@ -1,10 +1,11 @@
 <template>
 	<view class="wrap">
-		<u-sticky style="top:0;background-color: white;">
+		<u-sticky style="top:0;background-color: white;" v-if="account && account.accountId && account.bindStatus == 0">
 			<view class="view-info">
 				<image @click="goInfoPage" :src="account.user.avatarUrl || '/static/static/images/header.png'"
 					mode="aspectFill"></image>
 				<view class="view-info-personal">
+					<!-- <view style="font-size: 42rpx;color: #1A1A1A;" @click="goIdentify">{{account.user.userName}}</view> -->
 					<view style="font-size: 42rpx;color: #1A1A1A;">{{account.user.userName}}</view>
 					<view class="info-personal">
 						<view style="font-size: 30rpx;color: #4D4D4D">{{account.user.departmentName}}</view>
@@ -13,7 +14,7 @@
 						</view>
 					</view>
 				</view>
-				<view class="view-info-card">
+				<view class="view-info-card" @click="showDocCode">
 					<image src="/static/img/mingpian.png"></image>
 					<!-- <view>名片</view> -->
 				</view>
@@ -25,6 +26,15 @@
 			</view>
 
 		</u-sticky>
+		<view class="identyView" v-else @click="goIdentify">
+			<view class="identyitem">
+				<view>您可以进行实名认证</view>
+				<view style="margin-top: 33rpx;font-size: 28rpx;color: #AED3FF;">实名认证通过后可以使用更多功能</view>
+			</view>
+			<view class="identyright">
+				<view>实名认证</view>
+			</view>
+		</view>
 
 		<!-- 这里 uview不能用 -->
 		<!-- <u-divider text=""></u-divider> -->
@@ -68,6 +78,24 @@
 		<u-empty mode="data" style="padding-top: 300rpx;" v-if="listData.length === 0"
 			icon="/static/img/icon_nodata.png"></u-empty>
 
+		<u-popup :show="showCode" mode="center" :round="4" @close="closeCodePop">
+			<view class="codeview">
+				<image class="code" :src="docCodeImg">
+				</image>
+				<view class="codeitem">
+					<image src="/static/static/images/yisheng.png"
+						style="width: 30rpx;height: 34rpx;margin-right: 20rpx;">
+					</image>
+					<text>{{account.user.userName}}</text>
+				</view>
+				<view class="codeitem">
+					<text>{{account.user.professionalTitle}}</text>
+					<view style="margin-left: 20rpx;margin-right: 20rpx;">|</view>
+					<text>{{account.user.departmentName}}</text>
+				</view>
+				<text style="color: #3894FF;">让患者微信扫一扫添加</text>
+			</view>
+		</u-popup>
 		<ca-check ref="caCheck" />
 	</view>
 </template>
@@ -78,6 +106,8 @@
 	export default {
 		data() {
 			return {
+				showCode: false,
+				docCodeImg: undefined,
 				numZX: 0,
 				numSF: 0,
 				listData: [],
@@ -116,11 +146,19 @@
 				// nearMsg: '[患者发起的图文&电话&视频咨询]'
 				nearMsg: ''
 			})
-			this.getNum();
 
-			setTimeout(() => {
-				this.$refs.caCheck.check();
-			});
+
+			if (this.account && this.account.accountId && this.account.bindStatus == 0) {
+
+				this.getNum();
+
+				setTimeout(() => {
+					this.$refs.caCheck.check();
+				});
+			}
+
+			this.refreshBindStatus();
+
 		},
 		methods: {
 			//个人信息页
@@ -129,31 +167,81 @@
 					url: '/pages2/pages/mine/info'
 				})
 			},
+			/**
+			 * auditStatus  0待完善/1审核中/2审核通过/3审核不通过
+			 * 1、3有单独两个页面展示；0为提交一个页面为待完善，直接进基础页面；2审核通过后就没有入口看不见了
+			 */
+			goIdentify() {
+				uni.$u.http.get('/account-api/accountInfo/getDoctorAuthStatus', {
+					params: {}
+				}).then(res => {
+					if (res.code == 0) {
+						if (res.data.auditStatus == 1) { //审核中
+							uni.navigateTo({
+								url: '/pages2/pages/mine/identify-result?type=1&jumpFrom=1'
+							})
+						} else if (res.data.auditStatus == 3) { //审核不通过
+							uni.navigateTo({
+								url: '/pages2/pages/mine/identify-result?type=2&jumpFrom=1'
+							})
+						} else { // 0待完善   进去后查询数据来确定填充信息还是完全的新增
+							uni.navigateTo({
+								url: '/pages2/pages/mine/identify-base'
+							})
+						}
+
+					} else {
+						this.$u.toast(res.message)
+					}
+
+				}).finally(() => {
+					uni.hideLoading();
+				});
+			},
+
+			refreshBindStatus() {
+				uni.$u.http.get('/account-api/accountInfo/getDoctorAuthStatus', {
+					params: {}
+				}).then(res => {
+					if (res.code == 0) {
+						this.account.bindStatus = res.data.bindStatus
+					} else {
+						this.$u.toast(res.message)
+					}
+
+				}).finally(() => {
+					uni.hideLoading();
+				});
+			},
 			//获取健康咨询数量
 			getNum() {
+
 				uni.showLoading({
 					title: '请求中'
 				});
 				//权益使用待接诊数量查询
 				uni.$u.http.post('/medical-api/rightsUse/qryRightsUsingCountByDoc', {
-					docId: this.account.user.userId
-				}).then(res => {
-					// debugger
-					this.$set(this.listData[1], 'unreadCount', res.data.TextNum + res.data.TelNum + res.data
-						// this.$set(this.listData[0], 'unreadCount', res.data.TextNum + res.data.TelNum + res.data
-						.VedioNum)
+						docId: this.account.user.userId
+					}).then(res => {
+						uni.hideLoading()
+						this.$set(this.listData[1], 'unreadCount', res.data.TextNum + res.data.TelNum + res.data
+							// this.$set(this.listData[0], 'unreadCount', res.data.TextNum + res.data.TelNum + res.data
+							.VedioNum)
 
-					//本院复诊的数量也从这里来
-					this.$set(this.listData[0], 'unreadCount', res.data.appointNum)
-					this.$set(this.listData[0], 'nearMsg', '患者发起的复诊续方')
+						//本院复诊的数量也从这里来
+						this.$set(this.listData[0], 'unreadCount', res.data.appointNum)
+						this.$set(this.listData[0], 'nearMsg', '患者发起的复诊续方')
 
-					// this.listData[1].unreadCount = res.data.TextNum + res.data.TelNum + res.data.VedioNum
-					console.log('this.listData[0]', JSON.stringify(this.listData[1]))
-					//互联网咨询不显示了
+						// this.listData[1].unreadCount = res.data.TextNum + res.data.TelNum + res.data.VedioNum
+						console.log('this.listData[0]', JSON.stringify(this.listData[1]))
+						//互联网咨询不显示了
 
-					this.getChatList()
-					// this.getnumZX()
-				});
+						this.getChatList()
+						// this.getnumZX()
+					})
+					.catch(() => {
+						uni.hideLoading()
+					});
 			},
 
 			//获取互联网咨询数量  最初的湘雅二的咨询数据
@@ -213,12 +301,21 @@
 				});
 			},
 
-
+			closeCodePop() {
+				this.showCode = false
+			},
 			/**
 			 * 这里也是只有图文咨询聊天用group，其他的三种都用group2
 			 * @param {Object} index
 			 */
 			onItemClick(index) {
+
+				if (!this.account || !this.account.accountId || this.account.bindStatus !== 0) {
+					//如果没有账号 或者 没有认证
+					this.goIdentify()
+					return
+				}
+
 				//互联网咨询不显示了
 				if (index == 0) {
 					uni.navigateTo({
@@ -322,7 +419,7 @@
 				}).then(res => {
 					// res.data = res.data || {};
 					// rightsName createTime
-					if (res.data) {
+					if (res.data && res.data.length > 0) {
 						//互联网咨询不显示了
 						// this.$set(this.listData[1], 'nearMsg', res.data[0].serviceItemName ? ('患者发起的' + res.data[0]
 						this.$set(this.listData[1], 'nearMsg', res.data[0].broadClassifyName ? ('患者发起的' + res.data[
@@ -335,6 +432,31 @@
 					}
 				});
 			},
+
+			showDocCode() {
+				if (this.docCodeImg) {
+					this.showCode = true
+					return
+				}
+				uni.$u.http.get('/wx-api/wx/qrcode/' + uni.getAccountInfoSync().miniProgram.appId + '/getDoctorQrCode', {
+					params: {
+						docUserId: this.account.user.userId,
+						forceMpCode: '',
+					}
+				}).then(res => {
+
+					if (res.code == 0) {
+						this.docCodeImg = res.data
+						this.showCode = true
+					} else {
+						uni.showToast({
+							title: res.message
+						})
+					}
+
+				});
+			},
+
 
 			formatDate(date) {
 				date = new Date(date);
@@ -373,6 +495,70 @@
 </script>
 
 <style lang="scss">
+	.codeview {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 620rpx;
+		padding-top: 100rpx;
+		padding-bottom: 32rpx;
+
+		.code {
+			width: 316rpx;
+			height: 316rpx;
+			margin-bottom: 32rpx;
+
+		}
+
+		text {
+			font-size: 30rpx;
+			color: #1A1A1A;
+		}
+
+		.codeitem {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			justify-content: center;
+			margin-bottom: 30rpx;
+		}
+	}
+
+	.identyView {
+		width: 690rpx;
+		margin-top: 20rpx;
+		margin-left: 30rpx;
+		height: 208rpx;
+		background: #3894FF;
+		border-radius: 4rpx;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+
+		.identyitem {
+			display: flex;
+			flex-direction: column;
+			font-size: 32rpx;
+			margin-left: 30rpx;
+			color: #FFFFFF;
+		}
+
+		.identyright {
+			width: 150rpx;
+			height: 68rpx;
+			background: #FFFFFF;
+			border-radius: 34rpx;
+			font-size: 28rpx;
+			color: #3894FF;
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			justify-content: center;
+			margin-left: auto;
+			margin-right: 30rpx;
+		}
+	}
+
 	.uni-tabbar .uni-tabbar-border {
 		height: 3px !important;
 	}
