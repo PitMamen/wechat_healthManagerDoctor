@@ -19,6 +19,7 @@
 </template>
 
 <script>
+	import { SocketUrl } from '@/config/config';
 	const app = getApp();
 	export default {
 		data() {
@@ -99,7 +100,7 @@
 				uni.closeSocket()
 
 				uni.connectSocket({
-					url: `ws://192.168.1.121:8091/webSocket/${ this.account.user.userId}`,
+					url: SocketUrl+ this.account.user.userId,
 					success(res) {
 						console.log('连接成功', res)
 					}
