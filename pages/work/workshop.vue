@@ -438,7 +438,8 @@
 					this.showCode = true
 					return
 				}
-				uni.$u.http.get('/wx-api/wx/qrcode/' + uni.getAccountInfoSync().miniProgram.appId + '/getDoctorQrCode', {
+				// uni.$u.http.get('/wx-api/wx/qrcode/' + uni.getAccountInfoSync().miniProgram.appId + '/getDoctorQrCode', {
+				uni.$u.http.get('/wx-api/wx/qrcode/wx2f945858177df980/getDoctorQrCode', {
 					params: {
 						docUserId: this.account.user.userId,
 						forceMpCode: '',
