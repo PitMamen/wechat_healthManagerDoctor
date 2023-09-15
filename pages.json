@@ -452,6 +452,18 @@
 					"style": {
 						"navigationBarTitleText": "互联网医院用户协议"
 					}
+				},
+				{
+					"path": "pages/record/tags",
+					"style": {
+						"navigationBarTitleText": "设置分组"
+					}
+				},
+				{
+					"path": "pages/record/choose-patient",
+					"style": {
+						"navigationBarTitleText": "添加患者"
+					}
 				}
 			]
 		}

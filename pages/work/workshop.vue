@@ -8,7 +8,7 @@
 					<!-- <view style="font-size: 42rpx;color: #1A1A1A;" @click="goIdentify">{{account.user.userName}}</view> -->
 					<view style="font-size: 42rpx;color: #1A1A1A;">{{account.user.userName}}</view>
 					<view class="info-personal">
-						<view style="font-size: 30rpx;color: #4D4D4D">{{account.user.departmentName}}</view>
+						<view style="font-size: 30rpx;color: #4D4D4D" @click="goTestCode">{{account.user.departmentName}}</view>
 						<view style="font-size: 30rpx;color: #4D4D4D;margin-left: 30rpx;">
 							{{account.user.professionalTitle}}
 						</view>
@@ -167,6 +167,14 @@
 					url: '/pages2/pages/mine/info'
 				})
 			},
+			
+			goTestCode() {
+				uni.navigateTo({
+					url: '/pages3/pages/record/choose-patient'
+				})
+			},
+			
+			
 			/**
 			 * auditStatus  0待完善/1审核中/2审核通过/3审核不通过
 			 * 1、3有单独两个页面展示；0为提交一个页面为待完善，直接进基础页面；2审核通过后就没有入口看不见了

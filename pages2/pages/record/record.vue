@@ -1,6 +1,7 @@
 <template>
-	<scroll-view 
-		:style="selectTag==0?'background-color: #F5F5F5;height:100vh':'background-color: #FFFFFF;height:100vh' " scroll-y="true">
+	<scroll-view
+		:style="selectTag==0?'background-color: #F5F5F5;height:100vh':'background-color: #FFFFFF;height:100vh' "
+		scroll-y="true">
 
 		<view class="page">
 			<u-sticky style="top:0">
@@ -17,7 +18,18 @@
 			</u-sticky>
 			<!-- 基本信息 -->
 			<view v-if="selectTag==0">
+				<view class="patient-tags" @click="goEditTags">
+					<view style="font-size: 30rpx;margin-top: 10rpx;">分组：</view>
+					<view class="tags-wrap">
+						<view class="tags-item" v-for="(item, index) in tagsData" :key="index">{{item.name}}</view>
+					</view>
+					<view style="margin-top: 2rpx;">
+						<u-icon name="edit-pen" size="50rpx"></u-icon>
+					</view>
+					<!-- <u-icon name="plus-circle" color="#409EFF" size="36rpx"></u-icon> -->
+				</view>
 				<view class="base-info2">
+
 
 
 					<view class="base-card">
@@ -173,7 +185,7 @@
 						<u-col class="rol-r" span="5">{{item.reportTime}}</u-col>
 					</u-row>
 				</view>
-					<view style="height: 80px;"></view>
+				<view style="height: 80px;"></view>
 			</block>
 			<!-- 检验资料 -->
 			<view v-if="selectTag==4">
@@ -237,6 +249,28 @@
 				jyList: [], //检验资料
 
 				selectTag: 0,
+				tagsData: [{
+						name: '基本信息',
+						id: 1
+					},
+					{
+						name: '发热热',
+						id: 2
+					}, {
+						name: '发热fr热',
+						id: 2
+					}, {
+						name: '发热wq热',
+						id: 2
+					},
+					{
+						name: '发dd热热',
+						id: 2
+					}, {
+						name: '个人各个',
+						id: 3
+					}
+				],
 
 				list1: [{
 						name: '基本信息',
@@ -308,6 +342,15 @@
 
 				}
 			},
+
+			goEditTags() {
+				//TODO 编辑患者标签
+				uni.navigateTo({
+					url: '/pages3/pages/record/tags'
+				});
+
+			},
+
 			//类型确定
 			typeConfirm(e) {
 				this.$data.showType = false
@@ -372,7 +415,7 @@
 			},
 			//跳转检查详情
 			goInspectionPage(item) {
-				
+
 				uni.navigateTo({
 					url: '/pages2/pages/record/check?reportId=' + item.reportId + '&userId=' + this.userId +
 						'&name=' + this.baseInfo.userName + '&title=' + item.name + '&reportTime=' + item
@@ -387,7 +430,7 @@
 						.reportTime,
 				})
 			},
-			
+
 			//请求基本信息
 			healthRecordUserInfo() {
 
@@ -406,7 +449,7 @@
 						bloodType: res.data.bloodType || '',
 						ismarry: res.data.ismarry || '',
 						havechild: res.data.havechild || '',
-						userName:res.data.name || ''
+						userName: res.data.name || ''
 					}
 					//1"已生育", 2"未生育",3"备孕期",4"怀孕期"
 					if (baseInfo.havechild == 1) {
@@ -483,11 +526,11 @@
 						var jcList = []
 						var jyList = []
 						res.data.forEach(item => {
-							if(item.reportTime && item.reportTime.length > 10){
+							if (item.reportTime && item.reportTime.length > 10) {
 								item.reportTime = item.reportTime.substring(0, 10)
 							}
-							
-							
+
+
 							//检查：Check，检验： Exam
 							if (item.reportType == 'Check') {
 								item.reportName = '检查'
@@ -500,7 +543,7 @@
 						})
 						this.$data.jcList = jcList
 						this.$data.jyList = jyList
-						
+
 						console.log(this.$data.jyList)
 					})
 			},
