@@ -170,7 +170,7 @@
 			</view>
 		</view>
 
-		<!-- 	<view class="v-items" @click="goIdentify">
+		<!-- <view class="v-items" @click="goIdentify">
 			<image src="/static/static/images/mine-srrz.png"
 				style="float: left;width: 56rpx;height: 56rpx;margin-left: 2vw;">
 			</image>
@@ -182,21 +182,21 @@
 				<u-icon name="arrow-right" color="#333"
 					style="width: 10px;height: 10px;float: right;margin-right: 10px;margin-top: 6.5px;"></u-icon>
 			</view>
-		</view>
+		</view> -->
 
-		<view class="v-items" @click="goMyCertificate">
+		<view class="v-items" @click="gocfmode">
 			<image src="/static/static/images/mine-wdzj.png"
 				style="float: left;width: 56rpx;height: 56rpx;margin-left: 2vw;">
 			</image>
 			
-			<view style="margin-left: 10px;font-size: 30rpx;flex: 1;">我的证件</view>
+			<view style="margin-left: 10px;font-size: 30rpx;flex: 1;">处方模板</view>
 			
 			<view style="display: flex;flex-direction: row;">
 				
 				<u-icon name="arrow-right" color="#333"
 					style="width: 10px;height: 10px;float: right;margin-right: 10px;margin-top: 6.5px;"></u-icon>
 			</view>
-		</view> -->
+		</view>
 	</view>
 </template>
 
@@ -380,6 +380,16 @@
 					return
 				}
 			},
+			//处方模板
+			gocfmode(){
+				if (!this.checkAuth()) {
+					return
+				}
+				uni.navigateTo({
+					url: '/pages2/pages/chufang2/mode-list'
+				})
+			},
+			
 			getShowCa() {
 
 				uni.$u.http.get(`/info-api/sysConfigData/getConfig/CA_AUTH_FLAG`).then(res => {

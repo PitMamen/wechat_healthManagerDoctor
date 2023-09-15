@@ -353,6 +353,18 @@
 						"navigationBarTitleText": "智能回复",
 						"navigationBarBackgroundColor": "#ffffff"
 					}
+				},
+				{
+					"path": "pages/chufang2/mode-edit",
+					"style": {
+						"navigationBarTitleText": "模板编辑"
+					}
+				},
+				{
+					"path": "pages/chufang2/mode-list",
+					"style": {
+						"navigationBarTitleText": "处方模板"
+					}
 				}
 			]
 		},
