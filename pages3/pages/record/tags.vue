@@ -17,7 +17,7 @@
 		<view style="flex: 1;"></view>
 
 		<view style="height: 20rpx;"></view>
-		<view class="wrap-submit" >
+		<view class="wrap-submit">
 			<view class="btn-sub">保存</view>
 		</view>
 	</view>
@@ -67,8 +67,8 @@
 						num: 1,
 						id: 3
 					},
-				
-				
+
+
 				],
 			}
 		},
@@ -106,6 +106,7 @@
 		display: flex;
 		flex-direction: column;
 		background: #F5F5F5;
+		box-sizing: border-box;
 		padding: 30rpx 24rpx;
 
 		.content {
@@ -118,7 +119,7 @@
 			.tags-item {
 				padding: 43rpx 0;
 				display: flex;
-		
+
 				flex-direction: row;
 				border-bottom: 1rpx #E6E6E6 solid;
 				align-items: center;

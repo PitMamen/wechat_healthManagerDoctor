@@ -446,6 +446,12 @@
 					"style": {
 						"navigationBarTitleText": "设置分组"
 					}
+				},
+				{
+					"path": "pages/record/choose-patient",
+					"style": {
+						"navigationBarTitleText": "添加患者"
+					}
 				}
 			]
 		}
