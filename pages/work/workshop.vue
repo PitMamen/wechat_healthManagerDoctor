@@ -333,7 +333,7 @@
 				} else
 				if (index == 1) {
 					uni.navigateTo({
-						url: '/pages2/pages/work/talk/index'
+						url: '/pages2/pages/work/treat'
 					})
 					// } else if (this.listData[index].broadClassify == 4) {
 				} else if (this.listData[index].serviceItemType == '101') {
