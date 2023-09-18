@@ -470,6 +470,26 @@
 					"style": {
 						"navigationBarTitleText": "添加患者"
 					}
+				},
+				{
+					"path": "pages/group/list",
+					"style": {
+						"navigationBarTitleText": "患者标签"
+					}
+				},
+				{
+					"path" : "pages/group/add",
+					"style" : {
+						"navigationBarTitleText": "患者标签"
+					}
+            
+				},
+				{
+					"path" : "pages/group/edit",
+					"style" : {
+						"navigationBarTitleText": "患者标签"
+					}
+            
 				}
 			]
 		}
