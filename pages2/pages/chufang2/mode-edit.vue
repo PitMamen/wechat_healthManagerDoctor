@@ -67,11 +67,11 @@
 			<view style="height: 150rpx;"></view>
 
 		</view>
-		
-		
+
+
 
 		<view v-if="id" class="fix">
-			
+
 			<view class="del-btn" @click="deleteMode()">删除模板</view>
 			<view class="save-btn" @click="submit()">保 存</view>
 		</view>
@@ -192,7 +192,7 @@
 						})
 					})
 
-					
+
 					var info = {
 						prescriptionInstruction: '',
 						preType: this.options.preType,
@@ -229,11 +229,9 @@
 					this.$set(this.info, 'medicalOrdersCaseList', this.info.medicalOrdersCaseList);
 				}
 			},
-			
-			deleteMode(){
-				
-			},
-			
+
+
+
 			ypAdd() {
 				uni.setStorageSync('cf-info', this.info);
 				uni.navigateTo({
@@ -316,7 +314,33 @@
 				this.pwd = this.pwd.substring(0, this.pwd.length - 1);
 			},
 
+			//删除模板
+			deleteMode() {
+				if(!this.id){
+					return
+				}
+				uni.showLoading({
+					title: '删除中'
+				});
+				uni.$u.http.get('/medical-api/medical/delMedicalTempById', {
+					params: {
+						id: this.id
+					}
+				}).then(res => {
+					
+					uni.hideLoading();
+					uni.removeStorageSync('cf-info');
+					uni.showToast({
+						title: '删除成功',
+						icon: 'success'
+					});
+					setTimeout(()=>{
+						uni.navigateBack()
+					},1500)
+				});
 
+			
+			},
 
 
 			convert() {
@@ -351,10 +375,10 @@
 					}),
 					templateType: this.options.preType
 				}
-				if(this.id){
-					reqData.id=this.id
+				if (this.id) {
+					reqData.id = this.id
 				}
-				
+
 				return reqData;
 			},
 
@@ -392,6 +416,9 @@
 						title: '保存成功',
 						icon: 'success'
 					});
+					setTimeout(()=>{
+						uni.navigateBack()
+					},1500)
 				}).finally(() => {
 					this.show = false;
 					this.flag = false;
@@ -405,33 +432,34 @@
 	page {
 		background: #F5F5F5;
 	}
-	.fix {
-			position: fixed;
-			bottom: 0;
-			left: 0;
-			width: 750rpx;
-			padding: 25rpx 0;
-			background: #F5F5F5;
-			display: flex;
-			flex-direction: row;
-			justify-content: space-between;
-			align-items: center;
-			
 
-			.del-btn {
-				margin-left: 30rpx;
-				width: 214rpx;
-				font-size: 30rpx;
-				font-weight: 400;
-				color: #409EFF;
-				line-height: 70rpx;
-				text-align: center;
-				background: #ffffff;
-				border-radius: 10rpx;
-				border: 1rpx solid #409EFF ;
-			}
-			
-			.save-btn {
+	.fix {
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		width: 750rpx;
+		padding: 25rpx 0;
+		background: #F5F5F5;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+
+
+		.del-btn {
+			margin-left: 30rpx;
+			width: 214rpx;
+			font-size: 30rpx;
+			font-weight: 400;
+			color: #409EFF;
+			line-height: 70rpx;
+			text-align: center;
+			background: #ffffff;
+			border-radius: 10rpx;
+			border: 1rpx solid #409EFF;
+		}
+
+		.save-btn {
 			width: 410rpx;
 			font-size: 30rpx;
 			font-weight: 400;
@@ -441,10 +469,10 @@
 			background: #409EFF;
 			border-radius: 10rpx;
 			margin-right: 30rpx;
-			border: 1rpx solid #409EFF ;
-			}
-			
-			.save-btn2 {
+			border: 1rpx solid #409EFF;
+		}
+
+		.save-btn2 {
 			margin-left: 30rpx;
 			width: 690rpx;
 			font-size: 30rpx;
@@ -455,9 +483,10 @@
 			background: #409EFF;
 			border-radius: 10rpx;
 			margin-right: 30rpx;
-			border: 1rpx solid #409EFF ;
-			}
+			border: 1rpx solid #409EFF;
 		}
+	}
+
 	.button {
 		position: fixed;
 
@@ -778,7 +807,7 @@
 			}
 		}
 
-		
+
 
 		.wrap-keyboard {
 			padding: 40rpx 24rpx;
