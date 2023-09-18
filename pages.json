@@ -260,7 +260,7 @@
 					}
 				},
 				{
-					"path": "pages/work/order",
+					"path": "pages/work/treat",
 					"style": {
 						"navigationBarTitleText": "问诊"
 					}
