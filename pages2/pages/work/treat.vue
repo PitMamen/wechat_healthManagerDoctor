@@ -3,22 +3,19 @@
 		<view class="head">
 			<view class="tab">
 				<view class="item" :class="{active: tab===1}" @click="tabClick(1)">
-					<view>本院复诊</view>
+					<view>全部</view>
 				</view>
 				<view class="item" :class="{active: tab===2}" @click="tabClick(2)">
-					<view>健康咨询</view>
+					<view>待接诊</view>
+				</view>
+				<view class="item" :class="{active: tab===3}" @click="tabClick(3)">
+					<view>接诊中</view>
+				</view>
+				<view class="item" :class="{active: tab===4}" @click="tabClick(4)">
+					<view>已结束</view>
 				</view>
 			</view>
-			<view class="filter">
-				<view class="item" @click="show1 = true; hideKeyboard();" v-if="tab === 2">
-					<view class="name">{{text1 || '请选择类别'}}</view>
-					<u-icon name="arrow-down" color="#1A1A1A" size="36rpx"></u-icon>
-				</view>
-				<view class="item" @click="show2 = true; hideKeyboard();">
-					<view class="name">{{text2 || '请选择状态'}}</view>
-					<u-icon name="arrow-down" color="#1A1A1A" size="36rpx"></u-icon>
-				</view>
-			</view>
+			<view class="filter"></view>
 		</view>
 		<view class="content">
 			<u-empty mode="data" style="padding-top: 500rpx;" icon="/pages2/static/img/icon_nodata.png" v-if="list.length === 0"></u-empty>
@@ -130,8 +127,6 @@
 		
 		<tuicall ref="TUICall"></tuicall>
 		<TUI-view-rate ref="TUIViewRate" />
-		<u-picker :show="show1" :columns="list1" @cancel="cancel1" @confirm="confirm1"></u-picker>
-		<u-picker :show="show2" :columns="list2" @cancel="cancel2" @confirm="confirm2"></u-picker>
 		<u-modal
 			title="温馨提示"
 			confirmText="确定"
@@ -178,6 +173,7 @@
 	export default {
 		data() {
 			return {
+				options: {},
 				serviceItemType: '',
 				broadClassify: 4,
 				status: '',
@@ -186,22 +182,8 @@
 				flag: false,
 				total: 0,
 				pageNo: 1,
+				pageSize: 10,
 				list: [],
-				
-				show1: false,
-				show2: false,
-				text1: '',
-				text2: '',
-				list1: [[
-					{text: '图文咨询',value: 101},
-					{text: '电话咨询',value: 102},
-					{text: '视频咨询',value: 103}
-				]],
-				list2: [[
-					{text: '待接诊',value: 2},
-					{text: '问诊中',value: 3},
-					{text: '已结束',value: 9}
-				]],
 				
 				choseOne: null,
 				showEnd: false,
@@ -215,7 +197,8 @@
 		},
 		computed: {
 		},
-		onLoad() {
+		onLoad(options) {
+			this.options = options;
 			this.getList();
 		},
 		onReady() {
@@ -233,7 +216,7 @@
 					broadClassify: this.broadClassify,
 					status: this.status,
 					pageNo: this.pageNo,
-					pageSize: 10
+					pageSize: this.pageSize
 				}).then(res => {
 					uni.hideLoading();
 					this.total = res.data.totalRows;
@@ -243,7 +226,7 @@
 				});
 			},
 			scrolltolower() {
-				if (this.pageNo*10 >= this.total){
+				if (this.pageNo*this.pageSize >= this.total){
 					return;
 				}
 				if (this.flag){
@@ -275,16 +258,11 @@
 				this.serviceItemType = '';
 				this.broadClassify = '';
 				this.status = '';
-				
-				this.text1 = '';
-				this.text2 = '';
 				this.tab = tab;
-				
 				this.resetPage();
 				if (this.tab === 1){
 					this.broadClassify = 4;
 				}
-				
 				this.getList();
 			},
 			tabClick(tab) {
@@ -338,7 +316,6 @@
 				});
 			},
 			showComments(item) {
-				console.log("FFFF:",item)
 				this.$refs.TUIViewRate.open(item.orderId);
 			},
 			goChatHistory(item) {
@@ -399,6 +376,10 @@
 						tradeId: id
 					}
 				}).then(res => {});
+			},
+			refreshAllData() {
+				this.resetPage();
+				this.getList();
 			},
 			goRefuse() {
 				uni.showLoading({
@@ -466,33 +447,6 @@
 				oMin < 10 ? (oMin = '0' + oMin) : oMin;
 				oSen < 10 ? (oSen = '0' + oSen) : oSen;
 				return `${myyear}-${mymonth}-${myweekday} ${oHour}:${oMin}:${oSen}`;
-			},
-			refreshAllData() {
-				this.resetPage();
-				this.getList();
-			},
-			
-			cancel1() {
-				this.show1 = false;
-			},
-			cancel2() {
-				this.show2 = false;
-			},
-			confirm1(e) {
-				this.cancel1();
-				this.text1 = e.value[0].text;
-				this.serviceItemType = e.value[0].value;
-				
-				this.resetPage();
-				this.getList();
-			},
-			confirm2(e) {
-				this.cancel2();
-				this.text2 = e.value[0].text;
-				this.status = e.value[0].value;
-				
-				this.resetPage();
-				this.getList();
 			}
 		}
 	}
@@ -526,26 +480,6 @@
 				}
 			}
 			.filter {
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				.item {
-					display: flex;
-					align-items: center;
-					justify-content: center;
-					flex: 1;
-					.name {
-						font-size: 30rpx;
-						font-weight: 400;
-						color: #4D4D4D;
-						line-height: 80rpx;
-					}
-					>.u-icon {
-						position: relative;
-						top: 2rpx;
-						margin-left: 2rpx;
-					}
-				}
 			}
 		}
 		.content {
