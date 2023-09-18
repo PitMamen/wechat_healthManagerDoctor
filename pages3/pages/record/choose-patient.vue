@@ -17,8 +17,7 @@
 
 
 		<view style="display: flex;flex-direction: column;flex: 1;" v-if="patientList.length === 0">
-			<u-empty mode="data" icon="/pages2/static/img/icon_nodata.png"></u-empty>
-
+			<u-empty mode="data" icon="/static/img/icon_nodata.png"></u-empty>
 			<view
 				style="display: flex;flex-direction: row;align-items: center;justify-content: center;margin-top: 20rpx;">
 
