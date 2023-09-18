@@ -260,6 +260,12 @@
 					}
 				},
 				{
+					"path": "pages/work/order",
+					"style": {
+						"navigationBarTitleText": "问诊"
+					}
+				},
+				{
 					"path": "pages/work/search",
 					"style": {
 						"navigationBarTitleText": "搜索"
