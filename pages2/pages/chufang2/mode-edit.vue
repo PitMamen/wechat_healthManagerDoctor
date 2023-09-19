@@ -420,6 +420,7 @@
 						uni.navigateBack()
 					},1500)
 				}).finally(() => {
+					uni.hideLoading();
 					this.show = false;
 					this.flag = false;
 				});
