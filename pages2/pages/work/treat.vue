@@ -1,5 +1,6 @@
 <template>
 	<view class="wrap">
+		<view class="mask"></view>
 		<view class="head">
 			<view class="tab">
 				<view class="item" :class="{active: tab===1}" @click="tabClick(1)">
@@ -15,7 +16,35 @@
 					<view>已结束</view>
 				</view>
 			</view>
-			<view class="filter"></view>
+			<view class="filter">
+				<view class="left">
+					<view class="btns">
+						<view class="btn">图文问诊</view>
+						<view class="btn">复诊续方</view>
+						<view class="btn">电话问诊</view>
+					</view>
+				</view>
+				<view class="right">
+					<image src="/pages2/static/static/images/treat/filter.png"></image>
+					<view class="name">筛选</view>
+					<view class="dot">2</view>
+				</view>
+				<view class="choose">
+					<view class="up">
+						<view class="title">问诊类型</view>
+						<view class="list">
+							<view class="item">图文问诊</view>
+							<view class="item">电话问诊</view>
+							<view class="item">视频问诊</view>
+							<view class="item">复诊续方</view>
+						</view>
+					</view>
+					<view class="down">
+						<view class="btn">重置</view>
+						<view class="btn confirm">确认</view>
+					</view>
+				</view>
+			</view>
 		</view>
 		<view class="content">
 			<u-empty mode="data" style="padding-top: 500rpx;" icon="/pages2/static/img/icon_nodata.png" v-if="list.length === 0"></u-empty>
@@ -64,6 +93,7 @@
 						</view>
 					</view>
 					<view class="bottom" v-if="item.broadClassify === 4">
+						<view class="remark-abs inner">院内结算</view>
 						<block v-if="item.status === 2">
 							<view class="btn btn2" @click.stop="onTextRefuse(item)">拒诊</view>
 							<view class="btn btn1" @click.stop="onTextGoOn(item)">接诊</view>
@@ -79,6 +109,7 @@
 						</block>
 					</view>
 					<view class="bottom" v-else-if="item.serviceItemType === 101">
+						<view class="remark-abs">雅医结算</view>
 						<block v-if="item.status === 2">
 							<view class="btn btn2" @click.stop="onTextRefuse(item)">拒诊</view>
 							<view class="btn btn1" @click.stop="onTextGoOn(item)">接诊</view>
@@ -94,6 +125,7 @@
 						</block>
 					</view>
 					<view class="bottom" v-else-if="item.serviceItemType === 102">
+						<view class="remark-abs">雅医结算</view>
 						<block v-if="item.status === 2">
 							<view class="btn btn2" @click.stop="onTextRefuse(item)">拒诊</view>
 							<view class="btn btn1" @click.stop="onTextGoOn(item)">接诊</view>
@@ -108,6 +140,7 @@
 						</block>
 					</view>
 					<view class="bottom" v-else-if="item.serviceItemType === 103">
+						<view class="remark-abs">雅医结算</view>
 						<block v-if="item.status === 2">
 							<view class="btn btn2" @click.stop="onTextRefuse(item)">拒诊</view>
 							<view class="btn btn1" @click.stop="onTextGoOn(item)">接诊</view>
@@ -199,11 +232,11 @@
 		},
 		onLoad(options) {
 			this.options = options;
-			this.getList();
 		},
 		onReady() {
 		},
 		onShow() {
+			this.getList();
 		},
 		methods: {
 			getList() {
@@ -463,8 +496,8 @@
 				align-items: center;
 				justify-content: space-between;
 				border-bottom: 1rpx solid #E6E6E6;
+				padding: 0 24rpx;
 				.item {
-					flex: 1;
 					font-size: 30rpx;
 					font-weight: 400;
 					color: #999999;
@@ -480,6 +513,79 @@
 				}
 			}
 			.filter {
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 20rpx 24rpx;
+				.left {
+					.btns {
+						display: flex;
+						align-items: center;
+						justify-content: flex-start;
+						.btn {
+							width: 120rpx;
+							margin-right: 20rpx;
+							font-size: 24rpx;
+							font-weight: 400;
+							color: #4D4D4D;
+							line-height: 42rpx;
+							text-align: center;
+							background: #F5F5F5;
+							border-radius: 21rpx;
+							border: 1rpx solid transparent;
+							&.active {
+								color: #3894FF;
+								border: 1rpx solid #3894FF;
+							}
+						}
+					}
+				}
+				.right {
+					display: flex;
+					align-items: center;
+					justify-content: flex-end;
+					image {
+						width: 34rpx;
+						height: 34rpx;
+						margin-right: 10rpx;
+					}
+					.name {
+						font-size: 28rpx;
+						font-weight: 400;
+						color: #999999;
+						line-height: 42rpx;
+					}
+					.dot {
+						position: relative;
+						top: -14rpx;
+						left: -8rpx;
+						width: 28rpx;
+						height: 28rpx;
+						font-size: 24rpx;
+						font-weight: 400;
+						color: #FFFFFF;
+						line-height: 28rpx;
+						text-align: center;
+						background: #3894FF;
+						border-radius: 50%;
+					}
+				}
+				.choose {
+					.up {
+						.title {}
+						.list {
+							.item {
+								&.active {}
+							}
+						}
+					}
+					.down {
+						.btn {
+							&.confirm {}
+						}
+					}
+				}
 			}
 		}
 		.content {
@@ -556,10 +662,27 @@
 						}
 					}
 					.bottom {
+						position: relative;
 						display: flex;
 						align-items: center;
 						justify-content: flex-end;
 						padding-bottom: 10rpx;
+						.remark-abs {
+							position: absolute;
+							top: 5rpx;
+							left: 0rpx;
+							width: 120rpx;
+							font-size: 24rpx;
+							font-weight: 400;
+							color: #FFFFFF;
+							line-height: 45rpx;
+							text-align: center;
+							background: #6796F2;
+							border-radius: 4rpx;
+							&.inner {
+								background: #3FC1A5;
+							}
+						}
 						.btn {
 							margin-left: 30rpx;
 							width: 148rpx;
