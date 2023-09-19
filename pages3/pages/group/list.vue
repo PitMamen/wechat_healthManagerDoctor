@@ -4,10 +4,10 @@
 			<view class="tags-item" :class="{notStyle: index==tagsData.length-1}" v-for="(item, index) in tagsData"
 				:key="index" @click="onItemTap(item)">
 				
-				<view>{{item.name}}</view>
+				<view>{{item.tagsName}}</view>
 				
 				<view style="display: flex;flex-direction: row;">
-					<view>{{item.num}}人</view>
+					<view>{{item.count}}人</view>
 					<u-icon name="arrow-right" color="#333"
 						style="width: 10px;height: 10px;float: right;margin-left: 10px;margin-top: 6.5px;"></u-icon>
 				</view>
@@ -29,56 +29,30 @@
 		data() {
 			return {
 				info: {},
-				tagsData: [{
-						name: '基本信息',
-						isChecked: false,
-						num: 1,
-						id: 1
-					},
-					{
-						name: '发热热',
-						isChecked: false,
-						num: 1,
-						id: 2
-					}, {
-						name: '发热fr热',
-						isChecked: true,
-						num: 1,
-						id: 3
-					},
-					{
-						name: '发热热',
-						isChecked: false,
-						num: 1,
-						id: 2
-					}, {
-						name: '发热fr热',
-						isChecked: true,
-						num: 1,
-						id: 3
-					},
-					{
-						name: '发热热',
-						isChecked: false,
-						num: 1,
-						id: 2
-					}, {
-						name: '发热fr热',
-						isChecked: true,
-						num: 1,
-						id: 3
-					},
-
-
-				],
+				tagsData: [],
 			}
 		},
 		onLoad() {
 			this.info = uni.getStorageSync('cashItem');
 		},
 		onReady() {},
-		onShow() {},
+		onShow() {
+			this.getList()
+		},
 		methods: {
+			getList() {
+				uni.$u.http.post('/account-api/tdUserTags/getUserTagsDoctor', 
+				{
+					"pageNo": 1,
+					"pageSize": 99999,
+				}
+				).then(res => {
+					this.tagsData = res.data.records || [];
+					
+					
+				});
+			
+			},
 			btnClick() {
 				uni.navigateTo({
 					url: './add'
@@ -88,7 +62,7 @@
 			
 			onItemTap(item) {
 				uni.navigateTo({
-					url: './edit'
+					url: './edit?tagsName='+item.tagsName+'&id='+item.id
 				});
 			}
 		}

@@ -11,7 +11,7 @@
 					maxlength="15"
 					placeholder="请输入标签名称，不超过15个字符"
 					border="none"
-					v-model="loginData.password"
+					v-model="tagTitle"
 				>
 					
 				</u-input>
@@ -30,11 +30,43 @@
 	export default {
 		data() {
 			return {
-				
+				tagTitle:''
 			}
 		},
 		methods: {
+			btnClick() {
+				
+				if(!this.tagTitle){
+					uni.showToast({
+						title: '请填写标签名称',
+						icon: 'none'
+					});
+					return
+				}
+				uni.showLoading({
+					title: '正在加载'
+				});
+				uni.$u.http.post('/account-api/tdUserTags/addUserTagsDoctor', 
+				{
+					"tagsName": this.tagTitle,
+					
+				}
+				).then(res => {
+					
+					uni.showToast({
+						title: '保存成功',
+						icon: 'success'
+					});
+					setTimeout(()=>{
+						uni.navigateBack()
+					},1500)
+					
+				}).finally(() => {
+					uni.hideLoading();
+					
+				});;
 			
+			},
 		}
 	}
 </script>
