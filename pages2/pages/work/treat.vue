@@ -1,6 +1,5 @@
 <template>
 	<view class="wrap">
-		<view class="mask"></view>
 		<view class="head">
 			<view class="tab">
 				<view class="item" :class="{active: tab===1}" @click="tabClick(1)">
@@ -10,39 +9,41 @@
 					<view>待接诊</view>
 				</view>
 				<view class="item" :class="{active: tab===3}" @click="tabClick(3)">
-					<view>接诊中</view>
+					<view>问诊中</view>
 				</view>
 				<view class="item" :class="{active: tab===4}" @click="tabClick(4)">
 					<view>已结束</view>
 				</view>
 			</view>
-			<view class="filter">
+			<view class="filter" v-if="tab===1">
 				<view class="left">
 					<view class="btns">
-						<view class="btn">图文问诊</view>
-						<view class="btn">复诊续方</view>
-						<view class="btn">电话问诊</view>
+						<view class="btn active" v-if="serviceItemType===101">图文问诊</view>
+						<view class="btn active" v-if="serviceItemType===102">电话问诊</view>
+						<view class="btn active" v-if="serviceItemType===103">视频问诊</view>
+						<view class="btn active" v-if="broadClassify===4">复诊续方</view>
 					</view>
 				</view>
-				<view class="right">
+				<view class="right" @click="chooseOpen()">
 					<image src="/pages2/static/static/images/treat/filter.png"></image>
 					<view class="name">筛选</view>
-					<view class="dot">2</view>
+					<view class="dot" v-if="serviceItemType||broadClassify">1</view>
 				</view>
-				<view class="choose">
+				<view class="choose-abs" v-if="showChoose">
 					<view class="up">
 						<view class="title">问诊类型</view>
 						<view class="list">
-							<view class="item">图文问诊</view>
-							<view class="item">电话问诊</view>
-							<view class="item">视频问诊</view>
-							<view class="item">复诊续方</view>
+							<view class="item" :class="{active: serviceItemType_===101}" @click="chooseItemClick(101, '')">图文问诊</view>
+							<view class="item" :class="{active: serviceItemType_===102}" @click="chooseItemClick(102, '')">电话问诊</view>
+							<view class="item" :class="{active: serviceItemType_===103}" @click="chooseItemClick(103, '')">视频问诊</view>
+							<view class="item" :class="{active: broadClassify_===4}" @click="chooseItemClick('', 4)">复诊续方</view>
 						</view>
 					</view>
 					<view class="down">
-						<view class="btn">重置</view>
-						<view class="btn confirm">确认</view>
+						<view class="btn" @click="chooseReset()">重置</view>
+						<view class="btn confirm" @click="chooseConfirm()">确认</view>
 					</view>
+					<view class="mask" @click="chooseClose()"></view>
 				</view>
 			</view>
 		</view>
@@ -206,10 +207,11 @@
 	export default {
 		data() {
 			return {
-				options: {},
+				serviceItemType_: '',
 				serviceItemType: '',
-				broadClassify: 4,
-				status: '',
+				broadClassify_: '',
+				broadClassify: '',
+				showChoose: false,
 				tab: 1,
 				
 				flag: false,
@@ -231,7 +233,7 @@
 		computed: {
 		},
 		onLoad(options) {
-			this.options = options;
+			this.tab = options.tab||1;
 		},
 		onReady() {
 		},
@@ -244,12 +246,12 @@
 					title:'正在加载'
 				});
 				uni.$u.http.post(`/medical-api/rightsUse/qryRightsUseRecordPageByDoc`, {
+					serviceItemType: this.tab===1 ? this.serviceItemType : '',
+					broadClassify: this.tab===1 ? this.broadClassify : '',
 					docId: uni.getStorageSync('account').user.userId,
-					serviceItemType: this.serviceItemType,
-					broadClassify: this.broadClassify,
-					status: this.status,
-					pageNo: this.pageNo,
-					pageSize: this.pageSize
+					status: ['', '', 2, 3, 9][this.tab],
+					pageSize: this.pageSize,
+					pageNo: this.pageNo
 				}).then(res => {
 					uni.hideLoading();
 					this.total = res.data.totalRows;
@@ -288,14 +290,8 @@
 				this.list = [];
 			},
 			changeTab(tab) {
-				this.serviceItemType = '';
-				this.broadClassify = '';
-				this.status = '';
 				this.tab = tab;
 				this.resetPage();
-				if (this.tab === 1){
-					this.broadClassify = 4;
-				}
 				this.getList();
 			},
 			tabClick(tab) {
@@ -319,6 +315,32 @@
 				uni.navigateTo({
 					url: `/pages2/pages/work/talk/${pageName}?item=${encodeURIComponent(JSON.stringify(item))}`
 				});
+			},
+			chooseItemClick(type, classify) {
+				this.serviceItemType_ = type;
+				this.broadClassify_ = classify;
+			},
+			chooseOpen() {
+				this.showChoose = true;
+			},
+			chooseClose() {
+				this.showChoose = false;
+			},
+			chooseReset() {
+				this.serviceItemType_ = '';
+				this.serviceItemType = '';
+				this.broadClassify_ = '';
+				this.broadClassify = '';
+				this.chooseClose();
+				this.resetPage();
+				this.getList();
+			},
+			chooseConfirm() {
+				this.serviceItemType = this.serviceItemType_;
+				this.broadClassify = this.broadClassify_;
+				this.chooseClose();
+				this.resetPage();
+				this.getList();
 			},
 			
 			onTextRefuse(item) {
@@ -518,7 +540,9 @@
 				align-items: center;
 				justify-content: space-between;
 				padding: 20rpx 24rpx;
+				z-index: 10;
 				.left {
+					height: 44rpx;
 					.btns {
 						display: flex;
 						align-items: center;
@@ -571,26 +595,80 @@
 						border-radius: 50%;
 					}
 				}
-				.choose {
+				.choose-abs {
+					position: absolute;
+					top: 84rpx;
+					left: 0;
+					right: 0;
+					background: #FFFFFF;
 					.up {
-						.title {}
+						padding: 20rpx 24rpx 350rpx 24rpx;
+						.title {
+							padding-left: 20rpx;
+							font-size: 30rpx;
+							font-weight: 400;
+							color: #4D4D4D;
+							line-height: 38rpx;
+							border-left: 6rpx solid #3894FF;
+						}
 						.list {
+							display: flex;
+							align-items: center;
+							justify-content: flex-start;
+							margin-top: 30rpx;
 							.item {
-								&.active {}
+								width: 120rpx;
+								margin-right: 20rpx;
+								font-size: 24rpx;
+								font-weight: 400;
+								color: #4D4D4D;
+								line-height: 42rpx;
+								text-align: center;
+								background: #F5F5F5;
+								border-radius: 21rpx;
+								border: 1rpx solid transparent;
+								&.active {
+									color: #3894FF;
+									border: 1rpx solid #3894FF;
+								}
 							}
 						}
 					}
 					.down {
+						display: flex;
+						align-items: center;
+						justify-content: space-between;
 						.btn {
-							&.confirm {}
+							flex: 1;
+							font-size: 30rpx;
+							font-weight: 400;
+							color: #1A1A1A;
+							line-height: 80rpx;
+							text-align: center;
+							border-top: 1rpx solid #E6E6E6;
+							&.confirm {
+								color: #FFFFFF;
+								background: #3894FF;
+								border-top: 1rpx solid transparent;
+							}
 						}
+					}
+					.mask {
+						position: fixed;
+						top: 735rpx;
+						left: 0;
+						right: 0;
+						bottom: 0;
+						background: #000000;
+						opacity: 0.3;
+						z-index: 10;
 					}
 				}
 			}
 		}
 		.content {
 			.list {
-				max-height: calc(100vh - 170rpx);
+				max-height: calc(100vh - 100rpx);
 				padding: 30rpx 24rpx;
 				box-sizing: border-box;
 				.item {
