@@ -1,6 +1,6 @@
 <template>
 	<view class="wrap">
-		<u-sticky>
+		<u-sticky v-if="account && account.accountId && account.bindStatus == 0">
 			<view class="wrap-search">
 				<image @click="showMenuBtn()" src="/static/static/images/icon_dot.png" style="width: 36rpx;height: 36rpx;margin-left: 10rpx;">
 				</image>
@@ -15,7 +15,15 @@
 			</view>
 		</u-sticky>
 
-
+		<view class="identyView" v-else @click="goIdentify">
+			<view class="identyitem">
+				<view>您可以进行实名认证</view>
+				<view style="margin-top: 33rpx;font-size: 28rpx;color: #AED3FF;">实名认证通过后可以使用更多功能</view>
+			</view>
+			<view class="identyright">
+				<view>实名认证</view>
+			</view>
+		</view>
 		<view style="height: 20rpx;background: #F5F5F5;"></view>
 
 
@@ -101,7 +109,7 @@
 		</u-overlay>
 
 		<!-- 筛选弹窗，做了页面顶部一样搜索顶部结构 -->
-		<u-overlay :show="showMenu"    :opacity="0">
+		<u-overlay :show="showMenu"    :opacity="0"  @click="showMenu = false">
 			<view style="height: 100vh;" >
 				<view class="wrap-search" style="background-color: white;">
 					<image @click="showMenuBtn()" src="/static/static/images/icon_dot.png"
@@ -158,6 +166,9 @@
 	export default {
 		data() {
 			return {
+				account: {
+					user: {}
+				},
 				overlay:false,
 				info: {},
 				patientList: [],
@@ -181,7 +192,7 @@
 			}
 		},
 		onLoad() {
-			this.info = uni.getStorageSync('cashItem');
+			this.account = uni.getStorageSync('account');
 			this.getTagList()
 			this.getData(true)
 		},
@@ -318,6 +329,10 @@
 			//点击患者标签
 			onHZPQclick(){
 				this.showMenu=false
+				
+				uni.navigateTo({
+					url: '/pages3/pages/group/list'
+				})
 			},
 			//点击群发消息
 			onQFXXclick(){
@@ -380,7 +395,45 @@
 				console.log('onItemTap Before', JSON.stringify(item))
 				item.isChecked = !item.isChecked
 				console.log('onItemTap After', JSON.stringify(item))
-			}
+			},
+			goIdentify() {
+				uni.$u.http.get('/account-api/accountInfo/getDoctorAuthStatus', {
+					params: {}
+				}).then(res => {
+					if (res.code == 0) {
+						if (res.data.auditStatus == 1) { //审核中
+							uni.navigateTo({
+								url: '/pages2/pages/mine/identify-result?type=1&jumpFrom=1'
+							})
+						} else if (res.data.auditStatus == 3) { //审核不通过
+							uni.navigateTo({
+								url: '/pages2/pages/mine/identify-result?type=2&jumpFrom=1'
+							})
+						} else { // 0待完善   进去后查询数据来确定填充信息还是完全的新增
+							uni.navigateTo({
+								url: '/pages2/pages/mine/identify-base'
+							})
+						}
+			
+					} else {
+						this.$u.toast(res.message)
+					}
+			
+				}).finally(() => {
+					uni.hideLoading();
+				});
+			},
+			
+			//检验是否认证
+			checkAuth() {
+				if (!this.account || !this.account.accountId || this.account.bindStatus !== 0) {
+					//如果没有账号 或者 没有认证
+					this.goIdentify()
+					return false
+				} else {
+					return true
+				}
+			},
 		}
 	}
 </script>
@@ -389,11 +442,44 @@
 	page{
 		background: #fff;
 	}
-	
+	.identyView{
+		width: 690rpx;
+		margin-left: 30rpx;
+		margin-top: 20rpx;
+		height: 208rpx;
+		background: #3894FF;
+		border-radius: 4rpx;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		
+		.identyitem{
+			display: flex;
+			flex-direction: column;		
+			font-size: 32rpx;
+			margin-left: 30rpx;
+			color: #FFFFFF;
+		}
+		.identyright{
+			width: 150rpx;
+			height: 68rpx;
+			background: #FFFFFF;
+			border-radius: 34rpx;
+			font-size: 28rpx;
+			color: #3894FF;
+			display: flex;
+			flex-direction: row;	
+			align-items: center;
+			justify-content: center;
+			margin-left: auto;
+			margin-right: 30rpx;
+		}
+	}
 	.wrap {
 		
 		display: flex;
 		flex-direction: column;
+		
 		
 
 		.wrap-search {
