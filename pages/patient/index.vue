@@ -337,6 +337,9 @@
 			//点击群发消息
 			onQFXXclick(){
 				this.showMenu=false
+				uni.navigateTo({
+					url: '/pages3/pages/record/mass'
+				})
 			},
 			//点击健康宣教
 			onJKXJclick(){

@@ -496,6 +496,20 @@
 						"navigationBarTitleText": "患者标签"
 					}
             
+				},
+				{
+					"path" : "pages/record/mass",
+					"style" : {
+						"navigationBarTitleText": "群发消息"
+					}
+            
+				},
+				{
+					"path" : "pages/record/message-text",
+					"style" : {
+						"navigationBarTitleText": "编辑消息"
+					}
+            
 				}
 			]
 		}

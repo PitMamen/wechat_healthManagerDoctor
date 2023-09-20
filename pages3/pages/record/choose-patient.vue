@@ -217,6 +217,7 @@
 	export default {
 		data() {
 			return {
+				options:'',
 				info: {},
 				patientList: [],
 				// patientList: [],
@@ -277,7 +278,8 @@
 		/**
 		 * 整体的选中逻辑是，任何一种筛选条件都展示新的列表，勾选或全选都去重添加到已选或者删除已选
 		 */
-		onLoad() {
+		onLoad(options) {
+			this.options=options
 			this.info = uni.getStorageSync('cashItem');
 			this.getTagsList()
 		},
@@ -483,6 +485,13 @@
 				uni.setStorageSync('cache_chose_patients', this.patientListChose);
 				//TODO 处理跳转
 				uni.$u.toast('下一步');
+				if(this.options.type=='TextMessage'){
+					//发送文字消息
+					uni.navigateTo({
+						url:'./message-text'
+					})
+				}
+				
 			},
 		}
 	}
