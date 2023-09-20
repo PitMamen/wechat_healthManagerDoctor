@@ -4,10 +4,10 @@
 			<view class="tags-item" :class="{notStyle: index==tagsData.length-1}" v-for="(item, index) in tagsData"
 				:key="index" @click="onItemTap(item)">
 				
-				<view>{{item.tags_name}}</view>
+				<view>消息消息消息消息</view>
 				
 				<view style="display: flex;flex-direction: row;">
-					<view>{{item.co}}人</view>
+					
 					<u-icon name="arrow-right" color="#333"
 						style="width: 10px;height: 10px;float: right;margin-left: 10px;margin-top: 6.5px;"></u-icon>
 				</view>
@@ -19,7 +19,7 @@
 
 		<view style="height: 20rpx;"></view>
 		<view class="wrap-submit" @click="btnClick">
-			<view class="btn-sub">新建标签</view>
+			<view class="btn-sub">新建群发</view>
 		</view>
 	</view>
 </template>
@@ -55,7 +55,7 @@
 			},
 			btnClick() {
 				uni.navigateTo({
-					url: './add'
+					url: './choose-patient?type=TextMessage'
 				});
 			},
 

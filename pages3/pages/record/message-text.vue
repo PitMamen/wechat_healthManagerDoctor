@@ -3,13 +3,13 @@
 		<view class="titlewrap">
 			<view class="titleview">
 				<view class="titletag"></view>
-				<view class="title">标签名称</view>
+				<view class="title">消息内容</view>
 			</view>
 			<view class="inputview">
 				<u-input
 					class="input"
 					maxlength="15"
-					placeholder="请输入标签名称，不超过15个字符"
+					placeholder="请输入您的内容"
 					border="none"
 					v-model="tagTitle"
 				>
@@ -21,7 +21,7 @@
 		</view>
 		
 		<view class="wrap-submit" @click="btnClick">
-			<view class="btn-sub">保 存</view>
+			<view class="btn-sub">发 送</view>
 		</view>
 	</view>
 </template>
