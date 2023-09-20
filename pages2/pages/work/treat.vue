@@ -49,7 +49,7 @@
 		</view>
 		<view class="content">
 			<u-empty mode="data" style="padding-top: 500rpx;" icon="/pages2/static/img/icon_nodata.png" v-if="list.length === 0"></u-empty>
-			<scroll-view class="list" :scroll-y="true" @scrolltolower="scrolltolower" v-else>
+			<scroll-view class="list" :class="{all: tab===1}" :scroll-y="true" @scrolltolower="scrolltolower" v-else>
 				<view class="item" v-for="item in list" :key="item.id" @click="itemClick(item)">
 					<view class="top">
 						<view class="left">
@@ -233,7 +233,7 @@
 		computed: {
 		},
 		onLoad(options) {
-			this.tab = options.tab||1;
+			this.tab = options.tab || 1;
 		},
 		onReady() {
 		},
@@ -250,6 +250,7 @@
 					broadClassify: this.tab===1 ? this.broadClassify : '',
 					docId: uni.getStorageSync('account').user.userId,
 					status: ['', '', 2, 3, 9][this.tab],
+					flag: this.tab!==1 ? 1 : '',
 					pageSize: this.pageSize,
 					pageNo: this.pageNo
 				}).then(res => {
@@ -668,9 +669,12 @@
 		}
 		.content {
 			.list {
-				max-height: calc(100vh - 100rpx);
+				max-height: calc(100vh - 95rpx);
 				padding: 30rpx 24rpx;
 				box-sizing: border-box;
+				&.all {
+					max-height: calc(100vh - 178rpx);
+				}
 				.item {
 					margin-bottom: 30rpx;
 					padding: 20rpx 30rpx;

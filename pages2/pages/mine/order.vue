@@ -550,7 +550,7 @@
 		}
 		.content {
 			.list {
-				max-height: calc(100vh - 170rpx);
+				max-height: calc(100vh - 174rpx);
 				padding: 30rpx 24rpx;
 				box-sizing: border-box;
 				.item {
