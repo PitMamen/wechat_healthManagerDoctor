@@ -1,698 +1,439 @@
 <template>
 	<view class="wrap">
-		<u-sticky style="top:0;background-color: white;" v-if="account && account.accountId && account.bindStatus == 0">
-			<view class="view-info">
-				<image @click="goInfoPage" :src="account.user.avatarUrl || '/static/static/images/header.png'"
-					mode="aspectFill"></image>
-				<view class="view-info-personal">
-					<!-- <view style="font-size: 42rpx;color: #1A1A1A;" @click="goIdentify">{{account.user.userName}}</view> -->
-					<view style="font-size: 42rpx;color: #1A1A1A;">{{account.user.userName}}</view>
-					<view class="info-personal">
-						<view style="font-size: 30rpx;color: #4D4D4D" @click="goTestCode">{{account.user.departmentName}}</view>
-						<view style="font-size: 30rpx;color: #4D4D4D;margin-left: 30rpx;">
-							{{account.user.professionalTitle}}
+		<view class="headers">
+			<view class="status" :style="{height: statusHeight + 'px'}"></view>
+			<view class="navigator" :style="{height: navigatorHeight + 'px'}">
+				<view class="title">工作室</view>
+			</view>
+		</view>
+		<view class="infos">
+			<view class="left">
+				<image :src="account.user.avatarUrl||'/static/static/images/header.png'" mode="aspectFill"></image>
+				<view class="desc">
+					<view class="name">刘医生的诊室</view>
+					<view class="welcome">欢迎您，张医生</view>
+				</view>
+			</view>
+			<view class="right">
+				<view class="btn">随诊码</view>
+				<view class="btn">名片</view>
+			</view>
+		</view>
+		<view class="contents">
+			<view class="auth">
+				<view class="title">您可以进行实名认证</view>
+				<view class="desc">实名认证通过后可以使用更多功能</view>
+				<view class="btn">实名认证</view>
+			</view>
+			<view class="card" v-if="false">
+				<view class="up">
+					<view class="item">
+						<view class="num">12</view>
+						<view class="action">
+							<view class="name">抢单池</view>
+							<u-icon name="arrow-right" color="#999999" size="30rpx"></u-icon>
+						</view>
+					</view>
+					<view class="item">
+						<view class="num">12</view>
+						<view class="action">
+							<view class="name">待接诊</view>
+							<u-icon name="arrow-right" color="#999999" size="30rpx"></u-icon>
+						</view>
+					</view>
+					<view class="item">
+						<view class="num">12</view>
+						<view class="action">
+							<view class="name">问诊中</view>
+							<u-icon name="arrow-right" color="#999999" size="30rpx"></u-icon>
 						</view>
 					</view>
 				</view>
-				<view class="view-info-card" @click="showDocCode">
-					<image src="/static/img/mingpian.png"></image>
-					<!-- <view>名片</view> -->
+				<view class="down">
+					<view class="btn">问诊设置</view>
+					<view class="btn">处方签名</view>
 				</view>
 			</view>
-			<view style="margin-left: 30rpx;margin-right: 30rpx;">
-				<u-search @search="goSearch()" disabled @click="goSearch()" inputAlign="left" placeholder="搜索"
-					v-model="keyword" :show-action="false" input-align="center">
-				</u-search>
-			</view>
-
-		</u-sticky>
-		<view class="identyView" v-else @click="goIdentify">
-			<view class="identyitem">
-				<view>您可以进行实名认证</view>
-				<view style="margin-top: 33rpx;font-size: 28rpx;color: #AED3FF;">实名认证通过后可以使用更多功能</view>
-			</view>
-			<view class="identyright">
-				<view>实名认证</view>
-			</view>
-		</view>
-
-		<!-- 这里 uview不能用 -->
-		<!-- <u-divider text=""></u-divider> -->
-		<view style="height: 1px; background-color: #E6E6E6;margin-top: 20rpx;margin-bottom: 20rpx;"></view>
-
-		<view class="view-list" v-for="(item, index) in listData" @click="onItemClick(index)" :key="index">
-			<view class="view-info-list">
-				<view class="v-num">
-					<image mode="aspectFit" style="width: 90rpx;height: 90rpx;margin-bottom: 25rpx;float: left;"
-						:src="item.headUrl"></image>
-					<view class="v-num-wrap" v-if="item.unreadCount > 0">
-						<view class="num">{{ item.unreadCount }}</view>
-					</view>
-
+			<view class="apps">
+				<view class="mask"></view>
+				<view class="item">
+					<image src="/static/static/images/index/app1.png"></image>
+					<view class="name">处方模版</view>
 				</view>
-				<view class="view-info-personal-list">
-					<view class="info-personal-list">
-						<view class="left-whole">
-							<view style="font-size: 31rpx;color: #1A1A1A;">{{item.userName}}</view>
-							<view v-show="item.type== 1"
-								style="font-size: 20rpx;color: #DE7311;margin-left: 30rpx;background-color: #FFF6E6;border-radius: 4rpx;height: 30rpx;padding: 0 12rpx">
-								应用</view>
-							<view v-show="item.type== 2"
-								style="font-size: 20rpx;color: #DE7311;margin-left: 30rpx;background-color: #FBE9E9;border-radius: 4rpx;height: 30rpx;padding: 0 12rpx">
-								患者</view>
+				<view class="item">
+					<image src="/static/static/images/index/app2.png"></image>
+					<view class="name">电话随访</view>
+				</view>
+				<view class="item">
+					<image src="/static/static/images/index/app3.png"></image>
+					<view class="name">我的团队</view>
+				</view>
+				<view class="item">
+					<image src="/static/static/images/index/app4.png"></image>
+					<view class="name">药品字典</view>
+				</view>
+				<view class="item">
+					<image src="/static/static/images/index/app5.png"></image>
+					<view class="name">知识宝典</view>
+				</view>
+			</view>
+			<view class="notes">
+				<view class="tabs">
+					<view class="tab active">操作手册</view>
+					<view class="tab">管理制度</view>
+					<view class="tab">奖励政策</view>
+					<view class="tab">问诊技巧</view>
+				</view>
+				<view class="note">
+					<u-empty mode="data" icon="/pages2/static/img/icon_nodata.png" v-if="list.length === 0"></u-empty>
+					<scroll-view class="list" :scroll-y="true" @scrolltolower="scrolltolower" v-else>
+						<view class="item" v-for="item in list" :key="item.id">
+							<view class="left">
+								<view class="title">如何高效开具处方</view>
+								<view class="date">2021-06-18</view>
+							</view>
+							<view class="right">
+								<image :src="'/static/static/images/header.png'" mode="aspectFill"></image>
+							</view>
 						</view>
-
-						<view style="font-size: 24rpx;color: #999999;float: right;">{{item.lastMsgTime}}</view>
-						<!-- 						<view style="font-size: 24rpx;color: #999999" v-if="item.type== 2">{{item.lastMsgTime}}</view> -->
-					</view>
-					<view
-						style="font-size: 28rpx;color: #999999;margin-top: 5rpx;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;width: 570rpx;">
-						{{item.type== 2 ?(item.nick?(item.nick+'：' +item.nearMsg):'无最新消息'):item.nearMsg}}
-					</view>
-					<view style="margin-top: 30rpx;height: 1rpx;background-color: #E6E6E6;"></view>
+					</scroll-view>
 				</view>
-
 			</view>
-
 		</view>
-		<u-empty mode="data" style="padding-top: 300rpx;" v-if="listData.length === 0"
-			icon="/static/img/icon_nodata.png"></u-empty>
-
-		<u-popup :show="showCode" mode="center" :round="4" @close="closeCodePop">
-			<view class="codeview">
-				<image class="code" :src="docCodeImg">
-				</image>
-				<view class="codeitem">
-					<image src="/static/static/images/yisheng.png"
-						style="width: 30rpx;height: 34rpx;margin-right: 20rpx;">
-					</image>
-					<text>{{account.user.userName}}</text>
-				</view>
-				<view class="codeitem">
-					<text>{{account.user.professionalTitle}}</text>
-					<view style="margin-left: 20rpx;margin-right: 20rpx;">|</view>
-					<text>{{account.user.departmentName}}</text>
-				</view>
-				<text style="color: #3894FF;">让患者微信扫一扫添加</text>
-			</view>
-		</u-popup>
 		<ca-check ref="caCheck" />
 	</view>
 </template>
 
 <script>
 	import caCheck from '@/components/ca/check';
-
+	
 	export default {
 		data() {
 			return {
-				showCode: false,
-				docCodeImg: undefined,
-				numZX: 0,
-				numSF: 0,
-				listData: [],
-				keyword: undefined,
-				conversationIDList: [],
-
-				account: {
-					user: {}
-				}
+				list: [1,2],
+				total: 0,
+				pageNo: 1,
+				pageSize: 20,
+				flag: false,
+				
+				account: uni.getStorageSync('account'),
+				
+				headerHeight: getApp().globalData.headerInfo.height,
+				statusHeight: getApp().globalData.headerInfo.statusBarHeight,
+				navigatorHeight: getApp().globalData.headerInfo.navigatorHeight
 			}
 		},
 		components: {
 			caCheck
 		},
 		onLoad() {
-			this.account = uni.getStorageSync('account');
 		},
-		onReady() {},
 		onShow() {
-			this.listData = []
-			// 1.第一个原 互联网医院咨询 改成 本院复诊，原来的健康咨询里面的复诊续方拖出来到首页的应用，点进去跳转到单独的页面
-			// 2.原 互联网医院咨询 其实是 图文咨询 也归纳到 健康咨询 里面去
-
-			this.listData.push({
-				userName: '本院复诊',
-				// userName: '互联网医院咨询',
-				type: 1, //构造字段 用来区分患者和应用
-				headUrl: '/static/img/icon_mission.png',
-				// nearMsg: '[患者发起的图文咨询/复诊开方]'
-				nearMsg: ''
-			})
-			this.listData.push({
-				userName: '健康咨询',
-				type: 1,
-				headUrl: '/static/img/icon_talk.png',
-				// nearMsg: '[患者发起的图文&电话&视频咨询]'
-				nearMsg: ''
-			})
-
-
-			if (this.account && this.account.accountId && this.account.bindStatus == 0) {
-
-				this.getNum();
-
-				setTimeout(() => {
-					this.$refs.caCheck.check();
-				});
-			}
-
-			this.refreshBindStatus();
-
 		},
 		methods: {
-			//个人信息页
-			goInfoPage() {
-				uni.navigateTo({
-					url: '/pages2/pages/mine/info'
-				})
-			},
-			
-			goTestCode() {
-				uni.navigateTo({
-					url: '/pages3/pages/record/choose-patient'
-				})
-			},
-			
-			
-			/**
-			 * auditStatus  0待完善/1审核中/2审核通过/3审核不通过
-			 * 1、3有单独两个页面展示；0为提交一个页面为待完善，直接进基础页面；2审核通过后就没有入口看不见了
-			 */
-			goIdentify() {
-				uni.$u.http.get('/account-api/accountInfo/getDoctorAuthStatus', {
-					params: {}
-				}).then(res => {
-					if (res.code == 0) {
-						if (res.data.auditStatus == 1) { //审核中
-							uni.navigateTo({
-								url: '/pages2/pages/mine/identify-result?type=1&jumpFrom=1'
-							})
-						} else if (res.data.auditStatus == 3) { //审核不通过
-							uni.navigateTo({
-								url: '/pages2/pages/mine/identify-result?type=2&jumpFrom=1'
-							})
-						} else { // 0待完善   进去后查询数据来确定填充信息还是完全的新增
-							uni.navigateTo({
-								url: '/pages2/pages/mine/identify-base'
-							})
-						}
-
-					} else {
-						this.$u.toast(res.message)
-					}
-
-				}).finally(() => {
-					uni.hideLoading();
-				});
-			},
-
-			refreshBindStatus() {
-				uni.$u.http.get('/account-api/accountInfo/getDoctorAuthStatus', {
-					params: {}
-				}).then(res => {
-					if (res.code == 0) {
-						this.account.bindStatus = res.data.bindStatus
-					} else {
-						this.$u.toast(res.message)
-					}
-
-				}).finally(() => {
-					uni.hideLoading();
-				});
-			},
-			//获取健康咨询数量
-			getNum() {
-
+			getList() {
 				uni.showLoading({
-					title: '请求中'
+					title:'正在加载'
 				});
-				//权益使用待接诊数量查询
-				uni.$u.http.post('/medical-api/rightsUse/qryRightsUsingCountByDoc', {
-						docId: this.account.user.userId
-					}).then(res => {
-						uni.hideLoading()
-						this.$set(this.listData[1], 'unreadCount', res.data.TextNum + res.data.TelNum + res.data
-							// this.$set(this.listData[0], 'unreadCount', res.data.TextNum + res.data.TelNum + res.data
-							.VedioNum)
-
-						//本院复诊的数量也从这里来
-						this.$set(this.listData[0], 'unreadCount', res.data.appointNum)
-						this.$set(this.listData[0], 'nearMsg', '患者发起的复诊续方')
-
-						// this.listData[1].unreadCount = res.data.TextNum + res.data.TelNum + res.data.VedioNum
-						console.log('this.listData[0]', JSON.stringify(this.listData[1]))
-						//互联网咨询不显示了
-
-						this.getChatList()
-						// this.getnumZX()
-					})
-					.catch(() => {
-						uni.hideLoading()
-					});
-			},
-
-			//获取互联网咨询数量  最初的湘雅二的咨询数据
-			getnumZX() {
-				uni.$u.http.get('/health-api/health/patient/getUserTaskNum', {
-					params: {
-						execFlag: '0',
-						taskType: '9',
-						execTime: '',
-						userId: this.account.user.userId
-					}
+				uni.$u.http.post(`/medical-api/userRightsSettlement/getIncomeDetailsByLoginUser`, {
+					pageNo: this.pageNo,
+					pageSize: this.pageSize
 				}).then(res => {
 					uni.hideLoading();
-					res.data = res.data || {};
-					this.$set(this.listData[0], 'unreadCount', res.data.taskNum)
-					this.getChatList()
+					this.total = res.data.total;
+					this.list = this.list.concat(res.data.records);
+				}).finally(() => {
+					this.flag = false;
 				});
 			},
-
-			goSearch() {
-				uni.navigateTo({
-					url: '/pages2/pages/work/search'
-				})
-			},
-			getChatList() {
-				this.conversationIDList = []
-				uni.$u.http.post('/medical-api/rightsUse/qryRightsUsingByDoc', {
-					keyWord: '',
-					userId: this.account.user.userId
-				}).then(res => {
-					res.data = res.data || {};
-					if (res.data.length > 0) {
-						res.data.forEach((item) => {
-							this.$set(item, 'type', 2)
-							this.$set(item, 'headUrl', '/static/static/images/header.png')
-							// this.$set(item, 'nearMsg', '在吗？吃饭了吗')
-
-							if (item.imGroupId) {
-								console.log('ggg', 'GROUP' + item.imGroupId)
-								this.$set(item, 'conversationID', 'GROUP' + item.imGroupId)
-								this.conversationIDList.push(item.conversationID)
-							}
-						})
-						//单独处理第2个应用的最近一条信息信息
-						// this.$set(this.listData[1], 'nearMsg', '患者发起的' + res.data[0].serviceItemName)
-						console.log('fff', res.data)
-						this.listData = this.listData.concat(res.data)
-						console.log('fffddd', this.listData)
-						this.getConversationList() //TODO 聊天H5 api暂时无法使用
-						uni.hideLoading();
-					} else {
-						//互联网咨询不显示了
-						// this.getRecentMsg()
-						this.getRecentMsgMore()
-						uni.hideLoading();
-					}
-				});
-			},
-
-			closeCodePop() {
-				this.showCode = false
-			},
-			/**
-			 * 这里也是只有图文咨询聊天用group，其他的三种都用group2
-			 * @param {Object} index
-			 */
-			onItemClick(index) {
-
-				if (!this.account || !this.account.accountId || this.account.bindStatus !== 0) {
-					//如果没有账号 或者 没有认证
-					this.goIdentify()
-					return
+			scrolltolower() {
+				if (this.pageNo*this.pageSize >= this.total){
+					return;
 				}
-
-				//互联网咨询不显示了
-				if (index == 0) {
-					uni.navigateTo({
-						// url: `/pages2/pages/todo/index`
-						url: `/pages2/pages/work/talk/fuzhen`
-					});
-				} else
-				if (index == 1) {
-					uni.navigateTo({
-						url: '/pages2/pages/work/treat'
-					})
-					// } else if (this.listData[index].broadClassify == 4) {
-				} else if (this.listData[index].serviceItemType == '101') {
-					uni.setStorageSync('taskItem', this.listData[index]);
-					// this.chatList()
-					uni.navigateTo({
-						url: `/pages2/pages/TUI-Chat-Group2/chat?conversationID=GROUP${this.listData[index].imGroupId}`
-					});
-				} else {
-					uni.setStorageSync('taskItem', this.listData[index]);
-					// this.chatList()
-					uni.navigateTo({
-						url: `/pages2/pages/TUI-Chat-Group2/chat?conversationID=GROUP${this.listData[index].imGroupId}`
-					});
+				if (this.flag){
+					return;
 				}
+				this.flag = true;
+				this.pageNo ++;
+				this.getList();
 			},
-
-			//获取问诊列表的未读数
-			getConversationList() {
-				if (this.conversationIDList.length == 0) {
-					return
-				}
-				console.log(this.conversationIDList)
-				// if (getApp().globalData.sdkReady) {
-				// 获取指定的会话列表
-				let promise = uni.$TUIKit.getConversationList(this.conversationIDList);
-				let that = this
-				let listDataTemp = JSON.parse(JSON.stringify(this.listData))
-				uni.hideLoading();
-				promise.then(function(imResponse) {
-					const conversationList = imResponse.data.conversationList; // 缓存中已存在的指定的会话列表
-					console.log("获取指定的会话列表", JSON.stringify(conversationList))
-					console.log("获取指定的会话列表dd", imResponse)
-					// var num = 0
-					if (conversationList && conversationList.length > 0) {
-						for (var i = 0; i < conversationList.length; i++) {
-							for (var j = 0; j < listDataTemp.length; j++) {
-								if (conversationList[i].conversationID == listDataTemp[j].conversationID) {
-									listDataTemp[j].unreadCount = conversationList[i].unreadCount
-									listDataTemp[j].nearMsg = conversationList[i].lastMessage.messageForShow
-									listDataTemp[j].nick = conversationList[i].lastMessage.nick
-									listDataTemp[j].lastMsgTime = that.formatDate(conversationList[i]
-										.lastMessage
-										.lastTime * 1000)
-									// num = num + conversationList[i].unreadCount
-								}
-							}
-						}
-						// that.setData({
-						// 	appointList: appointList,
-						// 	unreadConsult: num
-						// })
-					}
-					// that.$set(listDataTemp[1], 'lastMsgTime', listDataTemp[2].createdTime)
-					//互联网咨询不显示了
-					// that.getRecentMsg()
-					that.getRecentMsgMore()
-					that.listData = listDataTemp
-					console.log("转换后的数据", JSON.stringify(listDataTemp))
-				}).catch(function(imError) {
-					console.warn('getConversationList error:', imError); // 获取会话列表失败的相关信息
-				})
-				// this.listData = listDataTemp
-				// }
-
-			},
-
-			///patient/getLastRightsUserRecordByDoc 根据医生获取最新问诊记录
-			//获取原 互联网咨询 的最近消息 
-			getRecentMsg() {
-				uni.$u.http.get('/health-api/patient/getLastRightsUserRecordByDoc', {
-					params: {
-						docId: this.account.user.userId
-					}
-				}).then(res => {
-					// res.data = res.data || {};
-					// rightsName createTime
-					if (res.data) {
-						this.$set(this.listData[0], 'nearMsg', res.data.rightsName ? ('患者发起的' + res.data
-							.rightsName) : '')
-						this.$set(this.listData[0], 'lastMsgTime', res.data.createTime ? this.formatDate(res
-							.data.createTime) : '')
-					}
-				});
-			},
-
-			//获取 健康咨询 的最近消息 
-			getRecentMsgMore() {
-				uni.$u.http.post('/medical-api/rightsUse/qryRightsUseRecord', {
-					docId: this.account.user.userId
-				}).then(res => {
-					// res.data = res.data || {};
-					// rightsName createTime
-					if (res.data && res.data.length > 0) {
-						//互联网咨询不显示了
-						// this.$set(this.listData[1], 'nearMsg', res.data[0].serviceItemName ? ('患者发起的' + res.data[0]
-						this.$set(this.listData[1], 'nearMsg', res.data[0].broadClassifyName ? ('患者发起的' + res.data[
-								0]
-							.broadClassifyName) : '')
-						res.data[0].createdTime = this.changeDate(res.data[0].createdTime)
-						// this.$set(this.listData[1], 'lastMsgTime', res.data[0].createdTime ? res
-						this.$set(this.listData[1], 'lastMsgTime', res.data[0].createdTime ? res
-							.data[0].createdTime : '')
-					}
-				});
-			},
-
-			showDocCode() {
-				if (this.docCodeImg) {
-					this.showCode = true
-					return
-				}
-				// uni.$u.http.get('/wx-api/wx/qrcode/' + uni.getAccountInfoSync().miniProgram.appId + '/getDoctorQrCode', {
-				uni.$u.http.get('/wx-api/wx/qrcode/wx2f945858177df980/getDoctorQrCode', {
-					params: {
-						docUserId: this.account.user.userId,
-						forceMpCode: '',
-					}
-				}).then(res => {
-
-					if (res.code == 0) {
-						this.docCodeImg = res.data
-						this.showCode = true
-					} else {
-						uni.showToast({
-							title: res.message
-						})
-					}
-
-				});
-			},
-
-
-			formatDate(date) {
-				date = new Date(date);
-				let myyear = date.getFullYear();
-				let mymonth = date.getMonth() + 1;
-				let myweekday = date.getDate();
-				mymonth < 10 ? (mymonth = '0' + mymonth) : mymonth;
-				myweekday < 10 ? (myweekday = '0' + myweekday) : myweekday;
-				return `${myyear}/${mymonth}/${myweekday}`;
-			},
-			changeDate(dateStr) {
-				if (!dateStr) {
-					return ''
-				}
-				dateStr = dateStr.substring(0, 10)
-				let str = dateStr.substring(0, 4) + '/' + dateStr.substring(5, 7) + '/' + dateStr.substring(8, 10)
-				return str
-			},
-			formatDateFull(date) {
-				date = new Date(date)
-				let myyear = date.getFullYear()
-				let mymonth = date.getMonth() + 1
-				let myweekday = date.getDate()
-				let oHour = date.getHours()
-				let oMin = date.getMinutes()
-				let oSen = date.getSeconds()
-				mymonth < 10 ? (mymonth = '0' + mymonth) : mymonth
-				myweekday < 10 ? (myweekday = '0' + myweekday) : myweekday
-				oHour < 10 ? (oHour = '0' + oHour) : oHour
-				oMin < 10 ? (oMin = '0' + oMin) : oMin
-				oSen < 10 ? (oSen = '0' + oSen) : oSen
-				return `${myyear}-${mymonth}-${myweekday} ${oHour}:${oMin}:${oSen}`
-			},
+			hideKeyboard() {
+				uni.hideKeyboard();
+			}
 		}
 	}
 </script>
 
 <style lang="scss">
-	.codeview {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		width: 620rpx;
-		padding-top: 100rpx;
-		padding-bottom: 32rpx;
-
-		.code {
-			width: 316rpx;
-			height: 316rpx;
-			margin-bottom: 32rpx;
-
-		}
-
-		text {
-			font-size: 30rpx;
-			color: #1A1A1A;
-		}
-
-		.codeitem {
-			display: flex;
-			flex-direction: row;
-			align-items: center;
-			justify-content: center;
-			margin-bottom: 30rpx;
-		}
-	}
-
-	.identyView {
-		width: 690rpx;
-		margin-top: 20rpx;
-		margin-left: 30rpx;
-		height: 208rpx;
-		background: #3894FF;
-		border-radius: 4rpx;
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-
-		.identyitem {
-			display: flex;
-			flex-direction: column;
-			font-size: 32rpx;
-			margin-left: 30rpx;
-			color: #FFFFFF;
-		}
-
-		.identyright {
-			width: 150rpx;
-			height: 68rpx;
-			background: #FFFFFF;
-			border-radius: 34rpx;
-			font-size: 28rpx;
-			color: #3894FF;
-			display: flex;
-			flex-direction: row;
-			align-items: center;
-			justify-content: center;
-			margin-left: auto;
-			margin-right: 30rpx;
-		}
-	}
-
-	.uni-tabbar .uni-tabbar-border {
-		height: 3px !important;
-	}
-
 	.wrap {
-		min-height: 100%;
-		background: #fff;
-
-		.u-sticky__content {
-			background-color: white;
+		min-height: 100vh;
+		background: #F5F5F5;
+		.headers {
+			background: #3894FF;
+			.navigator {
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				.title {
+					font-size: 36rpx;
+					font-weight: 500;
+					color: #FFFFFF;
+					text-align: center;
+				}
+			}
 		}
-
-		.view-info {
-			padding: 30rpx 30rpx;
-			overflow: hidden;
-			width: 92vw;
+		.infos {
 			display: flex;
-			flex-direction: row;
-			align-items: center;
-
-			image {
-				float: left;
-				width: 108rpx;
-				height: 108rpx;
-				border-radius: 50%;
-			}
-
-			.view-info-personal {
+			align-items: flex-start;
+			justify-content: space-between;
+			padding: 20rpx 30rpx 120rpx 30rpx;
+			background: #3894FF;
+			.left {
 				display: flex;
-				margin-left: 30rpx;
+				align-items: center;
+				justify-content: flex-start;
 				flex: 1;
-				flex-direction: column;
-				// align-items: center;
-
-				.info-personal {
-					display: flex;
-					flex-direction: row;
+				image {
+					width: 128rpx;
+					height: 128rpx;
+					margin-right: 30rpx;
+					border-radius: 50%;
+				}
+				.desc {
+					.name {
+						font-size: 32rpx;
+						font-weight: 400;
+						color: #FFFFFF;
+						line-height: 62rpx;
+					}
+					.welcome {
+						font-size: 24rpx;
+						font-weight: 400;
+						color: #FFFFFF;
+						line-height: 54rpx;
+					}
 				}
 			}
-
-			.view-info-card {
+			.right {
 				display: flex;
-				flex-direction: column;
 				align-items: center;
-
-				image {
-					border-radius: 0;
+				justify-content: flex-end;
+				.btn {
+					&:last-child {
+						margin-right: 0rpx;
+					}
+					margin-right: 20rpx;
+					width: 104rpx;
+					font-size: 28rpx;
+					font-weight: 400;
+					color: #FFFFFF;
+					line-height: 68rpx;
+					text-align: center;
+					background: #5EB6FF;
+					border-radius: 4rpx;
 				}
 			}
 		}
-
-		.view-list {
-			// display: flex;
-			// flex-direction: column;
-			// padding: 30rpx 30rpx;
-
-			.view-info-list {
-				margin-left: 30rpx;
-				margin-right: 30rpx;
-
-				margin-bottom: 28rpx;
-				// margin: 30rpx 30rpx 0 30rpx;
+		.contents {
+			padding: 0 30rpx;
+			.auth {
+				position: relative;
+				top: -90rpx;
+				padding: 20rpx 30rpx 30rpx 40rpx;
 				overflow: hidden;
-				// border-bottom: 1rpx solid #E6E6E6;
-				width: 92vw;
-				display: flex;
-				flex-direction: row;
-				align-items: center;
-
-				.v-num {
-					// width: 500rpx;
-					display: flex;
-					flex-direction: row;
-
-					.v-num-wrap {
-						margin-left: -30rpx;
-						width: 40rpx;
-						height: 40rpx;
-						z-index: 100;
-						display: flex;
-						align-items: center;
-						flex-direction: row;
-						background: #FF482C;
-						justify-content: center;
-						border-radius: 20rpx;
-
-						.num {
-							font-size: 20rpx;
-							// font-family: PingFang SC;
-							// font-weight: 400;
-							color: #FFFFFF;
-						}
-					}
-
-
+				background: #FFFFFF;
+				box-shadow: 0rpx 2rpx 4rpx 0rpx rgba(230,230,230,0.35);
+				border-radius: 4rpx;
+				.title {
+					font-size: 32rpx;
+					font-weight: 500;
+					color: #4D4D4D;
+					line-height: 72rpx;
 				}
-
-				.view-info-personal-list {
-					display: flex;
-					margin-left: 30rpx;
-					flex: 1;
-					flex-direction: column;
-					// align-items: center;
-
-					.info-personal-list {
-						margin-top: 5rpx;
-						display: flex;
-						width: 638rpx;
-						align-items: center;
-						flex-direction: row;
-
-						.left-whole {
-							width: 68%;
-							// flex: 1;
-							display: flex;
-							flex-direction: row;
-							align-items: center;
-						}
-					}
+				.desc {
+					font-size: 28rpx;
+					font-weight: 400;
+					color: #999999;
+					line-height: 54rpx;
 				}
-
-
+				.btn {
+					float: right;
+					margin-top: 20rpx;
+					width: 150rpx;
+					font-size: 28rpx;
+					font-weight: 400;
+					color: #FFFFFF;
+					line-height: 68rpx;
+					text-align: center;
+					background: #3894FF;
+					border-radius: 34rpx;
+				}
 			}
-
-
+			.card {
+				position: relative;
+				top: -90rpx;
+				padding: 45rpx 0 35rpx 0;
+				background: #FFFFFF;
+				box-shadow: 0rpx 2rpx 4rpx 0rpx rgba(230,230,230,0.35);
+				border-radius: 4rpx;
+				.up {
+					display: flex;
+					align-items: center;
+					justify-content: space-around;
+					padding: 0 0 40rpx 0;
+					.item {
+						.num {
+							font-size: 48rpx;
+							font-weight: 500;
+							color: #1A1A1A;
+							line-height: 74rpx;
+						}
+						.action {
+							display: flex;
+							align-items: center;
+							justify-content: flex-start;
+							.name {
+								font-size: 24rpx;
+								font-weight: 400;
+								color: #4D4D4D;
+								line-height: 38rpx;
+							}
+							.u-icon {
+								position: relative;
+								top: 2rpx;
+								margin-left: 4rpx;
+							}
+						}
+					}
+				}
+				.down {
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+					.btn {
+						flex: 1;
+						font-size: 28rpx;
+						font-weight: 400;
+						color: #1A1A1A;
+						line-height: 40rpx;
+						text-align: center;
+						&:first-child {
+							border-right: 3rpx solid #CCCCCC;
+						}
+					}
+				}
+			}
+			.apps {
+				position: relative;
+				top: -70rpx;
+				display: flex;
+				align-items: center;
+				justify-content: space-around;
+				padding: 45rpx 0 30rpx 0;
+				background: #FFFFFF;
+				box-shadow: 0rpx 2rpx 4rpx 0rpx rgba(230,230,230,0.35);
+				border-radius: 4rpx;
+				&.gray {
+					filter: grayscale(100%);
+				}
+				.mask {
+					position: absolute;
+					top: 0;
+					left: 0;
+					right: 0;
+					bottom: 0;
+					background: #F3EBEB;
+					opacity: 0.5;
+					z-index: 10;
+				}
+				.item {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					justify-content: flex-start;
+					image {
+						width: 60rpx;
+						height: 60rpx;
+					}
+					.name {
+						font-size: 24rpx;
+						font-weight: 400;
+						color: #4D4D4D;
+						line-height: 54rpx;
+					}
+				}
+			}
+			.notes {
+				position: relative;
+				top: -40rpx;
+				.tabs {
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+					.tab {
+						font-size: 30rpx;
+						font-weight: 400;
+						color: #4D4D4D;
+						line-height: 50rpx;
+						border-bottom: 4rpx solid transparent;
+						&.active {
+							color: #3894FF;
+							border-bottom: 4rpx solid #3894FF;
+						}
+					}
+				}
+				.note {
+					padding-top: 20rpx;
+					.u-empty {
+						padding-top: 200rpx;
+					}
+					.list {
+						max-height: calc(100vh - 942rpx);
+						overflow-y: auto;
+						background: #FFFFFF;
+						box-shadow: 0rpx 2rpx 4rpx 0rpx rgba(230,230,230,0.35);
+						border-radius: 4rpx;
+						.item {
+							display: flex;
+							align-items: center;
+							justify-content: space-between;
+							padding: 30rpx 20rpx;
+							border-bottom: 2rpx solid #F5F5F5;
+							&:last-child {
+								border-bottom: none;
+							}
+							.left {
+								width: 405rpx;
+								.title {
+									max-width: 100%;
+									white-space: nowrap;
+									overflow: hidden;
+									text-overflow: ellipsis;
+									font-size: 32rpx;
+									font-weight: 500;
+									color: #1A1A1A;
+									line-height: 52rpx;
+								}
+								.date {
+									margin-top: 55rpx;
+									font-size: 24rpx;
+									font-weight: 400;
+									color: #999999;
+									line-height: 64rpx;
+								}
+							}
+							.right {
+								image {
+									width: 226rpx;
+									height: 162rpx;
+									border-radius: 8rpx;
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 </style>
