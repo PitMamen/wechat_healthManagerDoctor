@@ -246,11 +246,11 @@
 					title:'正在加载'
 				});
 				uni.$u.http.post(`/medical-api/rightsUse/qryRightsUseRecordPageByDoc`, {
+					flag: !(this.serviceItemType||this.broadClassify) ? 1 : '',
 					serviceItemType: this.tab===1 ? this.serviceItemType : '',
 					broadClassify: this.tab===1 ? this.broadClassify : '',
 					docId: uni.getStorageSync('account').user.userId,
 					status: ['', '', 2, 3, 9][this.tab],
-					flag: this.tab!==1 ? 1 : '',
 					pageSize: this.pageSize,
 					pageNo: this.pageNo
 				}).then(res => {
