@@ -27,6 +27,12 @@
 			"style": {
 				"navigationBarTitleText": "随访"
 			}
+		},
+		{
+			"path": "pages/patient/index",
+			"style": {
+				"navigationBarTitleText": "患者管理"
+			}
 		}
 
 	],
@@ -505,21 +511,21 @@
 		"selectedColor": "#00A1FF",
 		"list": [{
 				"pagePath": "pages/work/workshop",
-				"iconPath": "static/img/tab_home.png",
-				"selectedIconPath": "static/img/tab_home_checked.png",
+				"iconPath": "static/img/tab_home_n.png",
+				"selectedIconPath": "static/img/tab_home_s.png",
 				"text": "工作室"
 			},
 			{
-				"pagePath": "pages/follow/current-follow-list",
-				"iconPath": "static/img/tab_sf.png",
-				"selectedIconPath": "static/img/tab_sf_checked.png",
-				"text": "随访"
+				"pagePath": "pages/patient/index",
+				"iconPath": "static/img/tab_hzgl_n.png",
+				"selectedIconPath": "static/img/tab_hzgl_s.png",
+				"text": "患者管理"
 			},
 			{
 				"pagePath": "pages/mine/index",
 				"text": "我的",
-				"iconPath": "/static/img/tab_me.png",
-				"selectedIconPath": "/static/img/tab_me_checked.png"
+				"iconPath": "/static/img/tab_me_n.png",
+				"selectedIconPath": "/static/img/tab_me_s.png"
 			}
 		]
 	},

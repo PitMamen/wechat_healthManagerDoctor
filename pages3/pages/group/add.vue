@@ -30,7 +30,8 @@
 	export default {
 		data() {
 			return {
-				tagTitle:''
+				tagTitle:'',
+				requestting:false
 			}
 		},
 		methods: {
@@ -43,6 +44,11 @@
 					});
 					return
 				}
+				if(this.requestting){
+					return
+				}
+				
+				this.requestting=true
 				uni.showLoading({
 					title: '正在加载'
 				});
@@ -63,7 +69,7 @@
 					
 				}).finally(() => {
 					uni.hideLoading();
-					
+					this.requestting=false
 				});;
 			
 			},

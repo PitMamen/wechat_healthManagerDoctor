@@ -8,8 +8,7 @@
 				<view class="deltitle" @click="btndelClick">删除标签</view>
 			</view>
 			<view class="inputview">
-				<u-input class="input" maxlength="15" placeholder="请输入标签名称，不超过15个字符" border="none"
-					v-model="tagsName">
+				<u-input class="input" maxlength="15" placeholder="请输入标签名称，不超过15个字符" border="none" v-model="tagsName">
 
 				</u-input>
 			</view>
@@ -22,12 +21,11 @@
 				<view class="titletag"></view>
 				<view class="title">标签患者</view>
 			</view>
-			<view class="userview" v-for="(item, index) in userList"
-				:key="item.patient_user_id">
+			<view class="userview" v-for="(item, index) in userList" :key="item.patient_user_id">
 				<view class="usertitle">{{item.user_name}} ｜ {{item.user_sex}} ｜ {{item.birthday}}岁</view>
-				<view class="item" >
+				<view class="item">
 					<view class="tag" v-for="(tagitem, tagindex) in item.tags">{{tagitem}}</view>
-					
+
 				</view>
 				<view class="item">
 					<view class="bqms">病情描述:</view>
@@ -38,7 +36,7 @@
 			</view>
 			<u-loadmore v-if="userList.length>0" :status="status" color="#999999" />
 		</view>
-		
+
 	</view>
 </template>
 
@@ -47,27 +45,28 @@
 		data() {
 			return {
 				status: 'loadmore',
-				isCompleted:false,
-				requestData:{
-					tagsId:'',
+				isCompleted: false,
+				requestData: {
+					tagsIds: '',
 					pageNo: 1,
 					pageSize: 10,
 				},
-				tagsName:'',
-				id:'',
-				userList:[]
+				tagsName: '',
+				id: '',
+				requestting: false,
+				userList: []
 			}
 		},
 		onLoad(options) {
-			this.id=options.id
-			this.tagsName=options.tagsName
-			this.requestData.tagsId=options.id
-			this.getData(true) 
+			this.id = options.id
+			this.tagsName = options.tagsName
+			this.requestData.tagsIds = options.id
+			this.getData(true)
 		},
 		//下拉刷新监听
 		onPullDownRefresh() {
 			console.log('refresh');
-		
+
 			this.getData(true)
 		},
 		//加载更多
@@ -75,11 +74,11 @@
 			if (this.isCompleted) return;
 			this.status = 'loading';
 			this.getData(false)
-		
+
 		},
 		methods: {
-			
-			
+
+
 			getData(isRefresh) {
 				if (isRefresh) {
 					this.isCompleted = false
@@ -95,24 +94,24 @@
 				).then(res => {
 					if (res.code === 0) {
 						var list = res.data.records
-			
+
 						if (isRefresh) {
 							this.userList = list
 						} else {
 							this.userList = [...this.userList, ...list];
 						}
-			
-			
+
+
 						if (res.data.current >= res.data.pages) {
 							this.isCompleted = true
 							this.status = 'nomore';
-			
+
 						} else {
 							this.status = 'loadmore';
 						}
-			
-						
-						
+
+
+
 					}
 					uni.stopPullDownRefresh();
 					uni.hideLoading()
@@ -128,6 +127,10 @@
 					});
 					return
 				}
+				if (this.requestting) {
+					return
+				}
+				this.requestting = true
 				uni.showLoading({
 					title: '正在加载'
 				});
@@ -147,13 +150,16 @@
 
 				}).finally(() => {
 					uni.hideLoading();
-
+					this.requestting = false
 				});;
 
 			},
 			//删除
 			btndelClick() {
-
+				if (this.requestting) {
+					return
+				}
+				this.requestting = true
 
 				uni.showLoading({
 					title: '正在加载'
@@ -170,7 +176,7 @@
 
 				}).finally(() => {
 					uni.hideLoading();
-
+					this.requestting = false
 				});;
 
 			},
@@ -257,14 +263,16 @@
 		height: 1rpx;
 		background: #E6E6E6;
 	}
+
 	.line2 {
-		
+
 		width: 642rpx;
 		height: 1rpx;
 		background: #E6E6E6;
 		margin-top: 20rpx;
 		margin-bottom: 20rpx;
 	}
+
 	.wrap-submit {
 
 		display: flex;
@@ -330,7 +338,12 @@
 		font-size: 28rpx;
 		color: #1A1A1A;
 		line-height: 37rpx;
-		width: 400rpx;
+		width: 500rpx;
+		overflow: hidden; 
+		text-overflow: ellipsis; 
+		display: -webkit-box;
+		-webkit-line-clamp: 1; 
+		-webkit-box-orient: vertical;
 	}
 
 	.time {
