@@ -2,14 +2,14 @@
 	<view class="wrap">
 		<u-sticky>
 			<view class="wrap-search">
-				<image src="/static/static/images/icon_dot.png" style="width: 26rpx;height: 26rpx;margin-left: 10rpx;">
+				<image @click="showMenuBtn()" src="/static/static/images/icon_dot.png" style="width: 36rpx;height: 36rpx;margin-left: 10rpx;">
 				</image>
 				<view style="margin-left: 20rpx;flex: 1;">
-					<u-search v-model="searchName" placeholder="请输入患者姓名、电话查找" :show-action="false" @change="searchChange">
+					<u-search v-model="searchName" placeholder="请输入患者姓名、电话查找" :show-action="false" @change="onSearch">
 					</u-search>
 				</view>
 				<image :src="hasTagChecked?'/static/static/images/icon_coned.png':'/static/static/images/icon_con.png'"
-					style="width: 26rpx;height: 26rpx;margin-left: 20rpx;margin-right: 10rpx;" @click="seeCondition">
+					style="width: 32rpx;height: 32rpx;margin-left: 20rpx;margin-right: 10rpx;" @click="seeCondition">
 				</image>
 				<view :style="hasTagChecked?'font-size: 28rpx;color: #3894FF;':'font-size: 28rpx;color: #999999;'" @click="seeCondition">筛选</view>
 			</view>
@@ -62,16 +62,15 @@
 			<view style="height: 100vh;">
 				<view class="wrap-search" style="background-color: white;">
 					<image src="/static/static/images/icon_dot.png"
-						style="width: 26rpx;height: 26rpx;margin-left: 10rpx;">
+						style="width: 36rpx;height: 36rpx;margin-left: 10rpx;">
 					</image>
 					<view style="margin-left: 20rpx;flex: 1;">
-						<u-search v-model="searchName" placeholder="请输入患者姓名、电话查找" :show-action="false"
-							@change="searchChange">
+						<u-search v-model="searchName" placeholder="请输入患者姓名、电话查找" :show-action="false" disabled>
 						</u-search>
 					</view>
 					<image
 						:src="hasTagChecked?'/static/static/images/icon_coned.png':'/static/static/images/icon_con.png'"
-						style="width: 26rpx;height: 26rpx;margin-left: 20rpx;margin-right: 10rpx;" @click="seeCondition">
+						style="width: 32rpx;height: 32rpx;margin-left: 20rpx;margin-right: 10rpx;" @click="seeCondition">
 					</image>
 					<view :style="hasTagChecked?'font-size: 28rpx;color: #3894FF;':'font-size: 28rpx;color: #999999;'" @click="seeCondition">筛选</view>
 				</view>
@@ -101,7 +100,57 @@
 			</view>
 		</u-overlay>
 
+		<!-- 筛选弹窗，做了页面顶部一样搜索顶部结构 -->
+		<u-overlay :show="showMenu"    :opacity="0">
+			<view style="height: 100vh;" >
+				<view class="wrap-search" style="background-color: white;">
+					<image @click="showMenuBtn()" src="/static/static/images/icon_dot.png"
+						style="width: 36rpx;height: 36rpx;margin-left: 10rpx;">
+					</image>
+					<view style="margin-left: 20rpx;flex: 1;">
+						<u-search v-model="searchName" placeholder="请输入患者姓名、电话查找" :show-action="false" disabled>
+						</u-search>
+					</view>
+					<image
+						:src="hasTagChecked?'/static/static/images/icon_coned.png':'/static/static/images/icon_con.png'"
+						style="width: 32rpx;height: 32rpx;margin-left: 20rpx;margin-right: 10rpx;" >
+					</image>
+					<view :style="hasTagChecked?'font-size: 28rpx;color: #3894FF;':'font-size: 28rpx;color: #999999;'" >筛选</view>
+				</view>
 		
+				<!-- <view style="height: 20rpx;background: #F5F5F5;"></view> -->
+				<!-- <image class="menutip"src="/static/img/tip.png"></image> -->
+				
+				<view class="menuview">
+					<view class="menuitem" @click="onHZPQclick">
+						<image class="menuicon"
+							src="/static/img/biaoqian.png">
+						</image>
+						<view>患者标签</view>
+					</view>
+					<view class="menuitem" @click="onQFXXclick">
+						<image class="menuicon"
+							src="/static/img/qfxx.png">
+						</image>
+						<view>群发消息</view>
+					</view>
+					<view class="menuitem" @click="onJKXJclick">
+						<image class="menuicon"
+							src="/static/img/jiankangxuanjiao.png">
+						</image>
+						<view>健康宣教</view>
+					</view>
+					<view class="menuitem" @click="onWJPGclick">
+						<image class="menuicon"
+							src="/static/img/wenjuan.png">
+						</image>
+						<view>问卷评估</view>
+					</view>
+				</view>
+		
+		
+			</view>
+		</u-overlay>
 	</view>
 </template>
 
@@ -109,12 +158,14 @@
 	export default {
 		data() {
 			return {
+				overlay:false,
 				info: {},
 				patientList: [],
 				status: 'loadmore',
 				isCompleted: false,
 				requestData: {
-					tagsIds: '1111',
+					tagsIds: '', 
+					queryStr:'',
 					pageNo: 1,
 					pageSize: 20,
 				},
@@ -126,6 +177,7 @@
 				showCondition: false,
 				hasTagChecked:false,
 				tagsData: [],
+				showMenu:false
 			}
 		},
 		onLoad() {
@@ -160,7 +212,7 @@
 					var list= res.data.records || [];
 					this.tagsData=(res.data.records || []).map((item)=>{
 						return {
-							name: item.tagsName,
+							name: item.tags_name,
 							isChecked: false,
 							id: item.id
 						}
@@ -209,6 +261,23 @@
 					uni.hideLoading()
 				})
 			},
+			//搜索
+			onSearch(value){
+				
+				this.requestData.queryStr=value || ''
+				this.showCondition =false
+				this.hasTagChecked=false
+				this.tagsData.forEach(item=>{
+					item.isChecked=false
+				})
+				this.requestData.tagsIds=''
+				
+				
+				this.getData(true)
+			},
+			showMenuBtn(){
+				this.showMenu=!this.showMenu
+			},
 			//筛选按钮
 			seeCondition() {
 				this.showCondition = !this.showCondition
@@ -227,6 +296,8 @@
 					item.isChecked=false
 				})
 				this.requestData.tagsIds=''
+				this.requestData.queryStr=''
+				this.searchName=''
 				this.getData(true)
 			},
 			//筛选确认
@@ -239,8 +310,26 @@
 				}).join(',')
 				
 				this.hasTagChecked=this.requestData.tagsIds && this.requestData.tagsIds.length>0
-				
+				this.requestData.queryStr=''
+				this.searchName=''
 				this.getData(true)
+			},
+			
+			//点击患者标签
+			onHZPQclick(){
+				this.showMenu=false
+			},
+			//点击群发消息
+			onQFXXclick(){
+				this.showMenu=false
+			},
+			//点击健康宣教
+			onJKXJclick(){
+				this.showMenu=false
+			},
+			//点击问卷评估
+			onWJPGclick(){
+				this.showMenu=false
 			},
 			searchChange(name) {
 				if (name) {
@@ -323,6 +412,7 @@
 			display: flex;
 			overflow-y: auto;
 			flex-direction: column;
+			
 
 			.patient-item {
 				display: flex;
@@ -502,5 +592,37 @@
 		}
 
 
+		.menutip{
+			width: 30rpx;
+			height: 15rpx;
+			margin-left: 39rpx;
+			
+		}
+		.menuview{
+			margin-left: 20rpx;
+			width: 280rpx;
+			padding-top: 47rpx;
+			
+			background: #FFFFFF;
+			box-shadow: 2rpx 6rpx 12rpx 0px #CCCCCC;
+			border-radius: 4rpx;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			
+			.menuitem{
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				font-size: 30rpx;
+				margin-bottom: 47rpx;
+				color: #4D4D4D;
+			}
+			.menuicon{
+				width: 40rpx;
+				height: 40rpx;
+				margin-right: 28rpx;
+			}
+		}
 	}
 </style>

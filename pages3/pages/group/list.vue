@@ -4,10 +4,10 @@
 			<view class="tags-item" :class="{notStyle: index==tagsData.length-1}" v-for="(item, index) in tagsData"
 				:key="index" @click="onItemTap(item)">
 				
-				<view>{{item.tagsName}}</view>
+				<view>{{item.tags_name}}</view>
 				
 				<view style="display: flex;flex-direction: row;">
-					<view>{{item.count}}人</view>
+					<view>{{item.co}}人</view>
 					<u-icon name="arrow-right" color="#333"
 						style="width: 10px;height: 10px;float: right;margin-left: 10px;margin-top: 6.5px;"></u-icon>
 				</view>
@@ -42,7 +42,7 @@
 		methods: {
 			getList() {
 				uni.$u.http.post('/account-api/tdUserTags/getUserTagsDoctor', 
-				{
+				{	"tagsType":2,
 					"pageNo": 1,
 					"pageSize": 99999,
 				}
@@ -62,7 +62,7 @@
 			
 			onItemTap(item) {
 				uni.navigateTo({
-					url: './edit?tagsName='+item.tagsName+'&id='+item.id
+					url: './edit?tagsName='+item.tags_name+'&id='+item.id
 				});
 			}
 		}
