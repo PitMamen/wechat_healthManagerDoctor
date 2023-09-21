@@ -36,7 +36,7 @@
 		},
 		methods: {
 			btnClick() {
-				
+				let that=this
 				if(!this.tagTitle){
 					uni.showToast({
 						title: '请填写标签名称',
@@ -49,6 +49,10 @@
 				}
 				
 				this.requestting=true
+				setTimeout(()=>{
+					that.requestting=false
+				},2000)
+				
 				uni.showLoading({
 					title: '正在加载'
 				});
@@ -69,7 +73,7 @@
 					
 				}).finally(() => {
 					uni.hideLoading();
-					this.requestting=false
+					
 				});;
 			
 			},

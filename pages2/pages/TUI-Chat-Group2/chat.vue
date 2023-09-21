@@ -91,7 +91,9 @@
 			this.setData({
 				conversationID
 			});
-
+			
+			this.tab=options.tab || 'tab2'
+			
 			try {
 				this.loadFunction()
 			} catch (e) {
