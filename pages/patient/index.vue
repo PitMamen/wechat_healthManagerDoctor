@@ -2,7 +2,7 @@
 	<view class="wrap">
 		<u-sticky v-if="account && account.accountId && account.bindStatus == 0">
 			<view class="wrap-search">
-				<image @click="showMenuBtn()" src="/static/static/images/icon_dot.png" style="width: 36rpx;height: 36rpx;margin-left: 10rpx;">
+				<image @click="showMenuBtn()" src="/static/static/images/icon_dot.png" style="width: 36rpx;height: 36rpx;padding-left: 30rpx;">
 				</image>
 				<view style="margin-left: 20rpx;flex: 1;">
 					<u-search v-model="searchName" placeholder="请输入患者姓名、电话查找" :show-action="false" @change="onSearch">
@@ -11,7 +11,7 @@
 				<image :src="hasTagChecked?'/static/static/images/icon_coned.png':'/static/static/images/icon_con.png'"
 					style="width: 32rpx;height: 32rpx;margin-left: 20rpx;margin-right: 10rpx;" @click="seeCondition">
 				</image>
-				<view :style="hasTagChecked?'font-size: 28rpx;color: #3894FF;':'font-size: 28rpx;color: #999999;'" @click="seeCondition">筛选</view>
+				<view :style="hasTagChecked?'font-size: 28rpx;color: #3894FF;padding-right:30rpx':'font-size: 28rpx;color: #999999;padding-right:30rpx'" @click="seeCondition">筛选</view>
 			</view>
 		</u-sticky>
 
@@ -38,7 +38,7 @@
 
 		<!-- 待选患者列表 -->
 		<view class="wrap-patient" v-else>
-			<view class="patient-item" v-for="(item, index) in patientList" :key="index">
+			<view class="patient-item" v-for="(item, index) in patientList" :key="index" @click="onPatientItemClick(item)">
 				
 
 				<view class="patient-item-right">
@@ -70,7 +70,7 @@
 			<view style="height: 100vh;">
 				<view class="wrap-search" style="background-color: white;">
 					<image src="/static/static/images/icon_dot.png"
-						style="width: 36rpx;height: 36rpx;margin-left: 10rpx;">
+						style="width: 36rpx;height: 36rpx;padding-left: 30rpx;">
 					</image>
 					<view style="margin-left: 20rpx;flex: 1;">
 						<u-search v-model="searchName" placeholder="请输入患者姓名、电话查找" :show-action="false" disabled>
@@ -80,12 +80,13 @@
 						:src="hasTagChecked?'/static/static/images/icon_coned.png':'/static/static/images/icon_con.png'"
 						style="width: 32rpx;height: 32rpx;margin-left: 20rpx;margin-right: 10rpx;" @click="seeCondition">
 					</image>
-					<view :style="hasTagChecked?'font-size: 28rpx;color: #3894FF;':'font-size: 28rpx;color: #999999;'" @click="seeCondition">筛选</view>
+					<view :style="hasTagChecked?'font-size: 28rpx;color: #3894FF;padding-right:30rpx':'font-size: 28rpx;color: #999999;padding-right:30rpx'" @click="seeCondition">筛选</view>
 				</view>
 
 				<view style="height: 20rpx;background: #F5F5F5;"></view>
 
 				<!-- 患者标签 -->
+				<scroll-view scroll-y="true" style="max-height: 70vh;">
 				<view class="wrap-tags" style="background-color: white;">
 					<view class="tags-top">
 						<view style="height: 30rpx;width: 6rpx;background-color: #3894FF;"></view>
@@ -96,8 +97,9 @@
 							:key="index" @click="onTagChange(index)">{{item.name}}</view>
 					</view>
 				</view>
-
-				<view style="background-color: white;height: 50rpx;"></view>
+				</scroll-view>
+				
+				
 
 				<view class="con-btn" style="background-color: white;">
 					<view class="btn-reset" @click="tagReset()"> 重置</view>
@@ -113,7 +115,7 @@
 			<view style="height: 100vh;" >
 				<view class="wrap-search" style="background-color: white;">
 					<image @click="showMenuBtn()" src="/static/static/images/icon_dot.png"
-						style="width: 36rpx;height: 36rpx;margin-left: 10rpx;">
+						style="width: 36rpx;height: 36rpx;padding-left: 30rpx;">
 					</image>
 					<view style="margin-left: 20rpx;flex: 1;">
 						<u-search v-model="searchName" placeholder="请输入患者姓名、电话查找" :show-action="false" disabled>
@@ -123,11 +125,10 @@
 						:src="hasTagChecked?'/static/static/images/icon_coned.png':'/static/static/images/icon_con.png'"
 						style="width: 32rpx;height: 32rpx;margin-left: 20rpx;margin-right: 10rpx;" >
 					</image>
-					<view :style="hasTagChecked?'font-size: 28rpx;color: #3894FF;':'font-size: 28rpx;color: #999999;'" >筛选</view>
+					<view :style="hasTagChecked?'font-size: 28rpx;color: #3894FF;padding-right:30rpx':'font-size: 28rpx;color: #999999;padding-right:30rpx'" >筛选</view>
 				</view>
 		
-				<!-- <view style="height: 20rpx;background: #F5F5F5;"></view> -->
-				<!-- <image class="menutip"src="/static/img/tip.png"></image> -->
+				
 				
 				<view class="menuview">
 					<view class="menuitem" @click="onHZPQclick">
@@ -326,6 +327,33 @@
 				this.getData(true)
 			},
 			
+			//点击患者
+			onPatientItemClick(item){
+				if(!item.order){
+					return
+				}
+				var taskItem=item.order
+				taskItem.rightsId=taskItem.id
+				taskItem.id=taskItem.chartId
+				taskItem.userInfo={
+					userName:item.user_name,
+					userSex:item.user_sex,
+					userAge:item.birthday,
+				}
+				uni.setStorageSync('taskItem', taskItem);
+				console.log(uni.getStorageSync('taskItem'))
+				if(taskItem.status.value === 3 ){					
+					uni.navigateTo({
+						url: `/pages2/pages/TUI-Chat-Group2/chat?conversationID=GROUP${taskItem.imGroupId}&tab=tab1`
+					});
+				}else {
+					uni.navigateTo({
+						url: `/pages2/pages/TUI-Group-History/chat?conversationID=GROUP${taskItem.imGroupId}&tab=tab1`
+					});
+				}
+				
+			},
+			
 			//点击患者标签
 			onHZPQclick(){
 				this.showMenu=false
@@ -349,56 +377,7 @@
 			onWJPGclick(){
 				this.showMenu=false
 			},
-			searchChange(name) {
-				if (name) {
-					this.getPatientList(name)
-				}
-			},
 
-			getPatientList(name) {},
-
-
-			/**
-			 * isAll为true 全选  isAll为false 不全选
-			 */
-			allClick() {
-				this.isAll = !this.isAll
-				uni.showToast({
-					title: this.isAll ? '全选了' : '取消全选',
-					icon: 'success'
-				});
-
-			},
-
-			onChangeAll() {
-				this.isAll = !this.isAll
-				uni.showToast({
-					title: this.isAll ? '全选了' : '取消全选',
-					icon: 'success'
-				});
-
-			},
-
-
-
-			goUp() {
-				this.isUp = !this.isUp
-				this.showChose = !this.isUp
-			},
-
-			itemClick() {
-				uni.navigateTo({
-					url: `/pages3/pages/cash/out-info?id=${this.info.id}&types=提`
-				});
-			},
-
-			
-
-			onItemTap(item) {
-				console.log('onItemTap Before', JSON.stringify(item))
-				item.isChecked = !item.isChecked
-				console.log('onItemTap After', JSON.stringify(item))
-			},
 			goIdentify() {
 				uni.$u.http.get('/account-api/accountInfo/getDoctorAuthStatus', {
 					params: {}
@@ -489,8 +468,7 @@
 			display: flex;
 			flex-direction: row;
 			align-items: center;
-			padding-left: 30rpx;
-			padding-right: 30rpx;
+			
 			height: 120rpx;
 			background: white;
 		}
@@ -591,6 +569,7 @@
 			flex-direction: column;
 			padding-left: 30rpx;
 			padding-right: 30rpx;
+			min-height: 30vh;
 
 			.tags-top {
 				display: flex;

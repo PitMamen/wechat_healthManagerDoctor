@@ -41,8 +41,8 @@
 		},
 		methods: {
 			getList() {
-				uni.$u.http.post('/account-api/tdUserTags/getUserTagsDoctor', 
-				{	"tagsType":2,
+				uni.$u.http.post('/medical-api/tlSendImMessageLog/getSendImMessageLogPageList', 
+				{	"messageType":1,
 					"pageNo": 1,
 					"pageSize": 99999,
 				}

@@ -12,7 +12,7 @@
 					{{account.user.userName}}
 				</view>
 				<view class="v-right-hor">
-					<view style="color: #141418;font-weight: 700;">{{account.user.professionalTitle || ''}}</view>
+					<view style="color: #141418;font-weight: 700;" @click="goCom">{{account.user.professionalTitle || ''}}</view>
 					<view style="color: #1A1A1A;margin-left: 20rpx;">{{account.user.departmentName || ''}}</view>
 				</view>
 				<view style="color: #999999;font-size: 24rpx;width: 100%;margin-top: 10rpx;">
@@ -405,6 +405,15 @@
 				uni.$u.http.get(`/info-api/sysConfigData/getConfig/CA_AUTH_FLAG`).then(res => {
 					this.showCa = res.data.value === '1';
 				});
+			},
+			goCom(){//临时加入口的测试代码
+				// uni.navigateTo({
+				// 	url: '/pages2/pages/work/treat'
+				// })
+				
+				uni.navigateTo({
+					url: '/pages3/pages/record/choose-patient'
+				})
 			},
 
 			quit() {

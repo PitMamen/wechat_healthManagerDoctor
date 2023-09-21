@@ -21,6 +21,7 @@
 				<view class="titletag"></view>
 				<view class="title">标签患者</view>
 			</view>
+			<u-empty mode="data" icon="/static/img/icon_nodata.png" text="暂无患者" v-if="userList.length===0"></u-empty>
 			<view class="userview" v-for="(item, index) in userList" :key="item.patient_user_id">
 				<view class="usertitle">{{item.user_name}} ｜ {{item.user_sex}} ｜ {{item.birthday}}岁</view>
 				<view class="item">
@@ -119,7 +120,7 @@
 			},
 			//修改
 			btnchangeClick() {
-
+				let that = this
 				if (!this.tagsName) {
 					uni.showToast({
 						title: '请填写标签名称',
@@ -131,6 +132,9 @@
 					return
 				}
 				this.requestting = true
+				setTimeout(() => {
+					that.requestting = false
+				}, 2000)
 				uni.showLoading({
 					title: '正在加载'
 				});
@@ -150,17 +154,20 @@
 
 				}).finally(() => {
 					uni.hideLoading();
-					this.requestting = false
+
 				});;
 
 			},
 			//删除
 			btndelClick() {
+				let that = this
 				if (this.requestting) {
 					return
 				}
 				this.requestting = true
-
+				setTimeout(() => {
+					that.requestting = false
+				}, 2000)
 				uni.showLoading({
 					title: '正在加载'
 				});
@@ -176,7 +183,7 @@
 
 				}).finally(() => {
 					uni.hideLoading();
-					this.requestting = false
+
 				});;
 
 			},
@@ -339,10 +346,10 @@
 		color: #1A1A1A;
 		line-height: 37rpx;
 		width: 500rpx;
-		overflow: hidden; 
-		text-overflow: ellipsis; 
+		overflow: hidden;
+		text-overflow: ellipsis;
 		display: -webkit-box;
-		-webkit-line-clamp: 1; 
+		-webkit-line-clamp: 1;
 		-webkit-box-orient: vertical;
 	}
 
