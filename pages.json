@@ -176,6 +176,12 @@
 					}
 				},
 				{
+					"path": "pages/config/consult-suiz",
+					"style": {
+						"navigationBarTitleText": "门诊随诊"
+					}
+				},
+				{
 					"path": "pages/config/duty",
 					"style": {
 						"navigationBarTitleText": "问诊排班"
