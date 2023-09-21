@@ -2,14 +2,14 @@
 	<view class="wrap">
 		<view class="content">
 			<view class="tags-item" :class="{notStyle: index==tagsData.length-1}" v-for="(item, index) in tagsData"
-				:key="index" @click="onItemTap(item)">
+				:key="index" @click="onChange(item)">
 				<view>
 					<u-checkbox activeColor="#3894FF" :checked="item.isChecked" label="  " :name='index'
-						@change="onChange(index)"></u-checkbox>
+						@change="onChange(item)"></u-checkbox>
 				</view>
 
-				<view>{{item.name}}</view>
-				<view>（{{item.num}}）</view>
+				<view>{{item.tags_name}}</view>
+				<view>（{{item.co}}）</view>
 			</view>
 
 		</view>
@@ -17,7 +17,7 @@
 		<view style="flex: 1;"></view>
 
 		<view style="height: 20rpx;"></view>
-		<view class="wrap-submit">
+		<view class="wrap-submit" @click="saveUserTagsList">
 			<view class="btn-sub">保存</view>
 		</view>
 	</view>
@@ -28,52 +28,24 @@
 		data() {
 			return {
 				info: {},
-				tagsData: [{
-						name: '基本信息',
-						isChecked: false,
-						num: 1,
-						id: 1
-					},
-					{
-						name: '发热热',
-						isChecked: false,
-						num: 1,
-						id: 2
-					}, {
-						name: '发热fr热',
-						isChecked: true,
-						num: 1,
-						id: 3
-					},
-					{
-						name: '发热热',
-						isChecked: false,
-						num: 1,
-						id: 2
-					}, {
-						name: '发热fr热',
-						isChecked: true,
-						num: 1,
-						id: 3
-					},
-					{
-						name: '发热热',
-						isChecked: false,
-						num: 1,
-						id: 2
-					}, {
-						name: '发热fr热',
-						isChecked: true,
-						num: 1,
-						id: 3
-					},
-
-
+				userId: '',
+				tagsList: [],
+				userTags: [],
+				tagsData: [
+					// {
+					// 	name: '基本信息',
+					// 	isChecked: false,
+					// 	num: 1,
+					// 	id: 1
+					// }
 				],
 			}
 		},
-		onLoad() {
+		onLoad(options) {
+			this.userId = options.userId
+			console.log('______________________', this.userId)
 			this.info = uni.getStorageSync('cashItem');
+			this.getUserTagsList()
 		},
 		onReady() {},
 		onShow() {},
@@ -84,18 +56,82 @@
 				});
 			},
 
-			onChange(index) {
-				console.log("index------------------", index)
-				console.log('onChange Before', this.tagsData[index].isChecked)
-				this.tagsData[index].isChecked = !this.tagsData[index].isChecked
-				console.log('onChange After', this.tagsData[index].isChecked)
+			//请求标签列表
+			getUserTagsList() {
+				let postData = {
+					pageNo: 1,
+					pageSize: 10000,
+				}
+				uni.$u.http.post('/account-api/tdUserTags/getUserTagsDoctor', postData).then(res => {
+					this.tagsData = res.data.records || []
+					this.tagsData.forEach((item) => {
+						this.$set(item, 'isChecked', false)
+					})
+
+					this.getUserTagsInfo()
+				})
 			},
 
-			onItemTap(item) {
-				console.log('onItemTap Before', JSON.stringify(item))
+			//请求用户标签
+			getUserTagsInfo() {
+				let postData = {
+					userId: this.userId,
+				}
+				uni.$u.http.post('/account-api/tdUserTags/getPatientTags', postData).then(res => {
+					this.userTags = res.data.records || []
+
+					if (this.userTags.length > 0) {
+						this.userTags.forEach((item) => {
+							for (let num = 0; num < this.tagsData.length; num++) {
+								if (this.tagsData[num].id == item.tag_id) {
+									this.tagsData[num].isChecked = true
+									this.tagsList.push(this.tagsData[num].id)
+								}
+							}
+
+						})
+					}
+				})
+			},
+
+			//添加用户到分组
+			saveUserTagsList() {
+				let postData = {
+					tagsList: this.tagsList,
+					userId: this.userId,
+				}
+				uni.$u.http.post('/account-api/tdUserTags/addPatientToTags', postData).then(res => {
+					uni.$u.toast('操作成功！')
+					uni.$emit('refreshTags', this.tagsList);
+					uni.navigateBack({
+						delta: 1
+					});
+				})
+			},
+
+			onChange(item) {
+				console.log("index------------------", item)
+				console.log('onChange Before', item.isChecked)
 				item.isChecked = !item.isChecked
-				console.log('onItemTap After', JSON.stringify(item))
-			}
+				console.log('onChange After', item.isChecked)
+
+				if (item.isChecked) {
+					this.tagsList.push(item.id)
+				} else {
+					this.tagsList = this.tagsList.filter(element => element != item.id)
+				}
+
+				console.log("tagsList------------------", this.tagsList)
+				// console.log('onChange Before', this.tagsData[index].isChecked)
+				// this.tagsData[index].isChecked = !this.tagsData[index].isChecked
+				// console.log('onChange After', this.tagsData[index].isChecked)
+			},
+
+			// onItemTap(item) {
+			// 	console.log('onItemTap Before', JSON.stringify(item))
+			// 	item.isChecked = !item.isChecked
+			// 	console.log('onItemTap After', JSON.stringify(item))
+			// }
 		}
 	}
 </script>

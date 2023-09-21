@@ -610,6 +610,8 @@
 				display: flex;
 				flex-direction: row;
 				align-items: center;
+				max-height: 50vh;
+				overflow-y: auto;
 				flex-wrap: wrap;
 
 				.tag-item {

@@ -13,6 +13,7 @@
 		{
 			"path": "pages/work/workshop",
 			"style": {
+				"navigationStyle": "custom",
 				"navigationBarTitleText": "工作室"
 			}
 		},
