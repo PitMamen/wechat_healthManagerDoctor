@@ -21,7 +21,9 @@
 				<view class="patient-tags" @click="goEditTags">
 					<view style="font-size: 30rpx;margin-top: 10rpx;">分组：</view>
 					<view class="tags-wrap">
-						<view class="tags-item" v-for="(item, index) in tagsData" :key="index">{{item.name}}</view>
+						<view class="tags-item" v-for="(item, index) in tagsData" :key="index">{{item.tags_name}}</view>
+						<view v-if="tagsData.length==0" style="color: #999;font-size: 30rpx;margin-top: 10rpx;">暂无
+						</view>
 					</view>
 					<view style="margin-top: 2rpx;">
 						<u-icon name="edit-pen" size="50rpx"></u-icon>
@@ -249,28 +251,7 @@
 				jyList: [], //检验资料
 
 				selectTag: 0,
-				tagsData: [{
-						name: '基本信息',
-						id: 1
-					},
-					{
-						name: '发热热',
-						id: 2
-					}, {
-						name: '发热fr热',
-						id: 2
-					}, {
-						name: '发热wq热',
-						id: 2
-					},
-					{
-						name: '发dd热热',
-						id: 2
-					}, {
-						name: '个人各个',
-						id: 3
-					}
-				],
+				tagsData: [],
 
 				list1: [{
 						name: '基本信息',
@@ -297,12 +278,24 @@
 			}
 		},
 
+		onShow() {
+			// this.getUserTagsInfo()
+		},
+
 		created() {
 
 			this.accountUserId = uni.getStorageSync('account').user.userId
 
 			this.healthRecordUserInfo()
 			this.getSavedUserTagsInfo()
+			this.getUserTagsInfo()
+			uni.$on('refreshTags', (data) => {
+				console.log('ddd',data)
+				this.getUserTagsInfo()
+			});
+		},
+		beforeDestroy() {
+			uni.$off('refreshTags')
 		},
 		methods: {
 
@@ -346,7 +339,7 @@
 			goEditTags() {
 				//TODO 编辑患者标签
 				uni.navigateTo({
-					url: '/pages3/pages/record/tags'
+					url: '/pages3/pages/record/tags?userId=' + this.userId
 				});
 
 			},
@@ -481,6 +474,15 @@
 				})
 
 
+			},
+			//请求用户标签
+			getUserTagsInfo() {
+				let postData = {
+					userId: this.userId,
+				}
+				uni.$u.http.post('/account-api/tdUserTags/getPatientTags', postData).then(res => {
+					this.tagsData = res.data.records || []
+				})
 			},
 			//问诊信息
 			getRightsReqData() {
