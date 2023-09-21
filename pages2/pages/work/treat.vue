@@ -48,7 +48,7 @@
 			</view>
 		</view>
 		<view class="content">
-			<u-empty mode="data" style="padding-top: 500rpx;" icon="/pages2/static/img/icon_nodata.png" v-if="list.length === 0"></u-empty>
+			<u-empty mode="data" icon="/pages2/static/img/icon_nodata.png" v-if="list.length === 0"></u-empty>
 			<scroll-view class="list" :class="{all: tab===1}" :scroll-y="true" @scrolltolower="scrolltolower" v-else>
 				<view class="item" v-for="item in list" :key="item.id" @click="itemClick(item)">
 					<view class="top">
@@ -233,7 +233,7 @@
 		computed: {
 		},
 		onLoad(options) {
-			this.tab = options.tab || 1;
+			this.tab = parseInt(options.tab || 1);
 		},
 		onReady() {
 		},
@@ -668,6 +668,9 @@
 			}
 		}
 		.content {
+			.u-empty {
+				padding-top: 200rpx;
+			}
 			.list {
 				max-height: calc(100vh - 95rpx);
 				padding: 30rpx 24rpx;

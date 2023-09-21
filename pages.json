@@ -109,6 +109,12 @@
 					}
 				},
 				{
+					"path": "pages/group/note-info2",
+					"style": {
+						"navigationBarTitleText": "文章详情"
+					}
+				},
+				{
 					"path": "pages/group/paper-info",
 					"style": {
 						"navigationBarTitleText": "问卷详情"
