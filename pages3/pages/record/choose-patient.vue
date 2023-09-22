@@ -1,8 +1,8 @@
 <template>
 	<view class="wrap">
 		<view class="wrap-search">
-			<image src="/static/static/images/icon_dot.png" style="width: 26rpx;height: 26rpx;margin-left: 10rpx;">
-			</image>
+			<!-- <image src="/static/static/images/icon_dot.png" style="width: 26rpx;height: 26rpx;margin-left: 10rpx;"> -->
+			<!-- </image> -->
 			<view style="margin-left: 20rpx;flex: 1;">
 				<u-search v-model="searchName" placeholder="请输入患者姓名、电话查找" :show-action="false" @change="searchChange">
 				</u-search>
@@ -100,9 +100,9 @@
 			<view style="height: 100vh;">
 				<!-- 弹窗的搜索元素 -->
 				<view class="wrap-search" style="background-color: white;">
-					<image src="/static/static/images/icon_dot.png"
+					<!-- <image src="/static/static/images/icon_dot.png"
 						style="width: 26rpx;height: 26rpx;margin-left: 10rpx;">
-					</image>
+					</image> -->
 					<view style="margin-left: 20rpx;flex: 1;">
 						<u-search v-model="searchName" placeholder="请输入患者姓名、电话查找" :show-action="false"
 							@change="searchChange">
