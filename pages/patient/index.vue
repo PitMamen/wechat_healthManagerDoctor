@@ -669,7 +669,6 @@
 		.menuview{
 			margin-left: 20rpx;
 			width: 280rpx;
-			padding-top: 47rpx;
 			
 			background: #FFFFFF;
 			box-shadow: 2rpx 6rpx 12rpx 0px #CCCCCC;
@@ -682,14 +681,17 @@
 				display: flex;
 				flex-direction: row;
 				align-items: center;
+				justify-content: center;
+				width: 280rpx;
 				font-size: 30rpx;
-				margin-bottom: 47rpx;
+				height: 90rpx;
 				color: #4D4D4D;
-			}
+				background-color: white;
+			}:active { background-color: #F5F5F5; }
 			.menuicon{
 				width: 40rpx;
 				height: 40rpx;
-				margin-right: 28rpx;
+				margin-right: 26rpx;
 			}
 		}
 	}
