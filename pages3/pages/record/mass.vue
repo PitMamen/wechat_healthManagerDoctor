@@ -1,25 +1,61 @@
 <template>
 	<view class="wrap">
-		<view class="content">
-			<view class="tags-item" :class="{notStyle: index==tagsData.length-1}" v-for="(item, index) in tagsData"
-				:key="index" @click="onItemTap(item)">
-				
-				<view>消息消息消息消息</view>
-				
-				<view style="display: flex;flex-direction: row;">
-					
-					<u-icon name="arrow-right" color="#333"
-						style="width: 10px;height: 10px;float: right;margin-left: 10px;margin-top: 6.5px;"></u-icon>
+		<view class="card">
+			<view class="nameview">收件人：张三、李四、王五、赵六，黄七等共计20人</view>
+			<view class="line"></view>
+			<view class="msgview">您好，本人周五12月23日的门诊取消，本人周五12月23日的门诊取消,请知晓。</view>
+			<view class="line"></view>
+			<view class="tags-item">
+				<view class="tagleft">
+					<u-icon name="/pages3/static/static/images/icon_wc.png" color="#2979ff" size="20"></u-icon>
+					<view class="tagname">发送完成</view>
+				</view>
+				<view class="tagbtn">再发一条</view>
+
+			</view>
+			<view class="tags-item">
+				<view class="tagleft">
+					<u-icon name="/pages3/static/static/images/jinhangzhong.png" color="#2979ff" size="20"></u-icon>
+					<view class="tagname2">发送中（110/130）</view>
+				</view>
+				<view class="tagbtn">再发一条</view>
+
+			</view>
+		</view>
+	<view class="card">
+			<view class="nameview">收件人：张三、李四、王五、赵六，黄七等共计20人</view>
+			<view class="line"></view>
+			<view class="midview">
+				<u-icon name="/pages3/static/static/images/jiankangxuanjiao.png" color="#2979ff" size="20"></u-icon>
+				<view class="midview-right">
+					<view>宣教文章</view>
+					<view style="margin-top: 10rpx;">款关节置换出院须知</view>
 				</view>
 			</view>
+			<view class="line"></view>
+			<view class="tags-item">
+				<view class="tagleft">
+					<u-icon name="/pages3/static/static/images/icon_wc.png" color="#2979ff" size="20"></u-icon>
+					<view class="tagname">发送完成</view>
+				</view>
+				<view class="tagbtn">再发一条</view>
 
+			</view>
+			<view class="tags-item">
+				<view class="tagleft">
+					<u-icon name="/pages3/static/static/images/jinhangzhong.png" color="#2979ff" size="20"></u-icon>
+					<view class="tagname2">发送中（110/130）</view>
+				</view>
+				<view class="tagbtn">再发一条</view>
+
+			</view>
 		</view>
 
-		<view style="flex: 1;"></view>
 
-		<view style="height: 20rpx;"></view>
-		<view class="wrap-submit" @click="btnClick">
-			<view class="btn-sub">新建群发</view>
+		<view style="height: 150rpx;"></view>
+
+		<view class="fix">
+			<view class="save-btn" @click="btnClick">新建群发</view>
 		</view>
 	</view>
 </template>
@@ -41,17 +77,16 @@
 		},
 		methods: {
 			getList() {
-				uni.$u.http.post('/medical-api/tlSendImMessageLog/getSendImMessageLogPageList', 
-				{	"messageType":1,
+				uni.$u.http.post('/medical-api/tlSendImMessageLog/getSendImMessageLogPageList', {
+					"messageType": '',
 					"pageNo": 1,
 					"pageSize": 99999,
-				}
-				).then(res => {
+				}).then(res => {
 					this.tagsData = res.data.records || [];
-					
-					
+
+
 				});
-			
+
 			},
 			btnClick() {
 				uni.navigateTo({
@@ -59,10 +94,10 @@
 				});
 			},
 
-			
+
 			onItemTap(item) {
 				uni.navigateTo({
-					url: './edit?tagsName='+item.tags_name+'&id='+item.id
+					url: './edit?tagsName=' + item.tags_name + '&id=' + item.id
 				});
 			}
 		}
@@ -70,58 +105,149 @@
 </script>
 
 <style lang="scss">
-	page{
+	page {
 		background-color: #F5F5F5;
 	}
+
+	.fix {
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		width: 750rpx;
+		padding-bottom: 30rpx;
+		background: #F5F5F5;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+
+
+		.save-btn {
+			margin-left: 30rpx;
+			width: 690rpx;
+			font-size: 30rpx;
+			font-weight: 400;
+			color: #FFFFFF;
+			line-height: 70rpx;
+			text-align: center;
+			background: #409EFF;
+			border-radius: 10rpx;
+			margin-right: 30rpx;
+
+		}
+	}
+
 	.wrap {
-		height: 100vh;
+
 		display: flex;
 		flex-direction: column;
 		background: #F5F5F5;
 		box-sizing: border-box;
 		padding: 30rpx 24rpx;
 
-		.content {
-			padding: 0 24rpx;
-			border-radius: 5rpx;
-			max-height: 90vh;
-			overflow-y: auto;
+		.card {
+			padding: 30rpx 26rpx;
+			margin-bottom: 30rpx;
+			border-radius: 4rpx;
 			background-color: white;
+			box-shadow: 0px 3rpx 6rpx 0px rgba(204, 204, 204, 0.35);
+			display: flex;
+			flex-direction: column;
+
+			.line {
+				width: 650rpx;
+				height: 1rpx;
+				background: #E6E6E6;
+				margin-bottom: 30rpx;
+				margin-top: 30rpx;
+
+
+			}
+
+			.nameview {
+
+				font-size: 24rpx;
+
+				color: #999999;
+				line-height: 37rpx;
+			}
+
+			.msgview {
+
+				font-size: 30rpx;
+				color: #4D4D4D;
+				line-height: 37rpx;
+			}
+
 
 			.tags-item {
-				padding: 43rpx 0;
+
 				display: flex;
 				justify-content: space-between;
 				flex-direction: row;
-				border-bottom: 1rpx #E6E6E6 solid;
 				align-items: center;
-				font-size: 30rpx;
 
-				&.notStyle {
-					border-bottom: none;
-				}
 			}
 
-		}
+			.tagleft {
+				display: flex;
 
-		.wrap-submit {
+				flex-direction: row;
+				align-items: center;
+			}
+
+			.tagname {
+				font-size: 24rpx;
+				margin-left: 20rpx;
+				color: #5FCC5A;
+				line-height: 37rpx;
+			}
+			.tagname2{
+				font-size: 24rpx;
+				margin-left: 20rpx;
+				color: #3894FF;
+				line-height: 37rpx;
+			}
+
+			.tagbtn {
+				width: 162rpx;
+				height: 60rpx;
+				background-color: #FFFFFF;
+				border: 1rpx solid #3894FF;
+				border-radius: 30rpx;
+				font-size: 30rpx;
+				color: #3894FF;
+				display: flex;
+				justify-content: center;
+				flex-direction: row;
+				align-items: center;
+			}
+
+			:active {
+				background-color: #F5F5F5;
+			}
 			
-			display: flex;
-			flex-direction: column;
-			margin-bottom: 30rpx;
-			padding-left: 24rpx;
-			padding-right: 24rpx;
-
-			.btn-sub {
-				width: 100%;
-				border-radius: 8rpx;
-				text-align: center;
-				padding: 20rpx 0;
-				font-size: 30rpx;
-				color: white;
-				background-color: #3894FF;
-
+			.midview{
+				display: flex;
+				
+				flex-direction: row;
+				align-items: flex-start;
 			}
+			
+			.midview-right{
+				display: flex;
+				
+				flex-direction: column;
+				margin-left: 18rpx;
+				font-size: 24rpx;
+				
+				color: #4D4D4D;
+				line-height: 37rpx;
+			}
+			
+
 		}
+
+
 	}
 </style>
