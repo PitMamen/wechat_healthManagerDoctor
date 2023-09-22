@@ -319,6 +319,8 @@
 			position: fixed;
 			width: 100%;
 			height: 180rpx;
+			padding: 0 24rpx;
+			box-sizing: border-box;
 			bottom: 0rpx;
 			background: #FFFFFF;
 			.button {

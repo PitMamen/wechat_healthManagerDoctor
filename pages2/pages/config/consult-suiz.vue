@@ -8,7 +8,7 @@
 						<view style="padding-top: 30rpx;font-size: 28rpx;color: #4D4D4D;">患者报到后赠送的免费追问次数</view>
 					</view>
 					<view class="action" @click="showCall()">
-						<view class="value times">{{ info.limitNumsValue }}次</view>
+						<view class="value times">{{ info.limitNumsValue||0 }}次</view>
 						<u-icon class="icon" name="arrow-right" color="#999999" size="18"></u-icon>
 					</view>
 				</view>
@@ -97,6 +97,7 @@
 			}
 		},
 		onLoad() {
+			this.getInfo();
 			// this.getList();
 		},
 		onReady() {
@@ -130,7 +131,25 @@
 					uni.hideLoading();
 				});
 			},
+			getInfo() {
+				uni.showLoading({
+					title:'正在加载'
+				});
+				uni.$u.http.get('/medical-api/commodityConfig/getGuidePkgRules', {
+					params: {}
+				}).then(res => {
+					uni.hideLoading();
+					this.info = res.data || {};
+				});
+			},
 			save() {
+				if (!this.info.limitNumsValue || parseFloat(this.info.limitNumsValue)<=0){
+					uni.showToast({
+						title: '请选择赠送的追问次数',
+						icon: 'none'
+					});
+					return;
+				}
 				if (!/^0|([1-9]\d*)$/.test(this.info.expireValue)
 					|| parseFloat(this.info.expireValue)>999
 					|| parseFloat(this.info.expireValue)===0){
@@ -306,6 +325,8 @@
 			position: fixed;
 			width: 100%;
 			height: 180rpx;
+			padding: 0 24rpx;
+			box-sizing: border-box;
 			bottom: 0rpx;
 			background: #FFFFFF;
 			.button {

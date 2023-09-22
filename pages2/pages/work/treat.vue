@@ -234,11 +234,11 @@
 		},
 		onLoad(options) {
 			this.tab = parseInt(options.tab || 1);
+			this.getList();
 		},
 		onReady() {
 		},
 		onShow() {
-			this.getList();
 		},
 		methods: {
 			getList() {
