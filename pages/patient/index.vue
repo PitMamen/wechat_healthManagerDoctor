@@ -249,7 +249,7 @@
 					this.requestData
 				).then(res => {
 					if (res.code === 0) {
-						var list = res.data.records
+						var list = res.data.records || []
 			
 						if (isRefresh) {
 							this.patientList = list

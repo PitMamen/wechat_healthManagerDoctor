@@ -513,6 +513,7 @@
 				{
 					"path" : "pages/record/mass",
 					"style" : {
+						"enablePullDownRefresh":true,
 						"navigationBarTitleText": "群发消息"
 					}
             

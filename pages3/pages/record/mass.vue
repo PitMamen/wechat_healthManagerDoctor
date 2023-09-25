@@ -1,56 +1,47 @@
 <template>
 	<view class="wrap">
-		<view class="card">
-			<view class="nameview">收件人：张三、李四、王五、赵六，黄七等共计20人</view>
-			<view class="line"></view>
-			<view class="msgview">您好，本人周五12月23日的门诊取消，本人周五12月23日的门诊取消,请知晓。</view>
-			<view class="line"></view>
-			<view class="tags-item">
-				<view class="tagleft">
-					<u-icon name="/pages3/static/static/images/icon_wc.png" color="#2979ff" size="20"></u-icon>
-					<view class="tagname">发送完成</view>
-				</view>
-				<view class="tagbtn">再发一条</view>
 
-			</view>
-			<view class="tags-item">
-				<view class="tagleft">
-					<u-icon name="/pages3/static/static/images/jinhangzhong.png" color="#2979ff" size="20"></u-icon>
-					<view class="tagname2">发送中（110/130）</view>
-				</view>
-				<view class="tagbtn">再发一条</view>
-
-			</view>
-		</view>
-	<view class="card">
-			<view class="nameview">收件人：张三、李四、王五、赵六，黄七等共计20人</view>
+		<view class="card" v-for="(item, index) in tagsData">
+			<view class="nameview">收件人：{{item.nameTags}}等共计<text
+					style="color: #3894FF;">{{item.userNames.length}}</text>人</view>
 			<view class="line"></view>
-			<view class="midview">
+
+			<view v-if="item.message_type === 1" class="msgview">{{item.message_original_name}}</view>
+			<view v-else-if="item.message_type === 2" class="midview">
 				<u-icon name="/pages3/static/static/images/jiankangxuanjiao.png" color="#2979ff" size="20"></u-icon>
 				<view class="midview-right">
 					<view>宣教文章</view>
-					<view style="margin-top: 10rpx;">款关节置换出院须知</view>
+					<view style="margin-top: 10rpx;">{{item.message_original_name}}</view>
 				</view>
 			</view>
+			<view v-else-if="item.message_type === 3" class="midview">
+				<u-icon name="/pages3/static/static/images/wenjuan.png" color="#2979ff" size="20"></u-icon>
+				<view class="midview-right">
+					<view>问卷评估</view>
+					<view style="margin-top: 10rpx;">{{item.message_original_name}}</view>
+				</view>
+			</view>
+
 			<view class="line"></view>
-			<view class="tags-item">
+			<view v-if="item.succCount === item.sumCount" class="tags-item">
 				<view class="tagleft">
 					<u-icon name="/pages3/static/static/images/icon_wc.png" color="#2979ff" size="20"></u-icon>
 					<view class="tagname">发送完成</view>
 				</view>
-				<view class="tagbtn">再发一条</view>
+				<view class="tagbtn" @click="sendAgain(item)">再发一条</view>
 
 			</view>
-			<view class="tags-item">
+			<view v-else class="tags-item">
 				<view class="tagleft">
 					<u-icon name="/pages3/static/static/images/jinhangzhong.png" color="#2979ff" size="20"></u-icon>
-					<view class="tagname2">发送中（110/130）</view>
+					<view class="tagname2">发送中（{{item.succCount}}/{{item.sumCount}}）</view>
 				</view>
-				<view class="tagbtn">再发一条</view>
+				<view class="tagbtn" @click="sendAgain(item)">再发一条</view>
 
 			</view>
 		</view>
 
+		<u-loadmore v-if="tagsData.length>0" :status="status" color="#999999" />
 
 		<view style="height: 150rpx;"></view>
 
@@ -65,7 +56,13 @@
 		data() {
 			return {
 				info: {},
+				requestData: {
+					pageNo: 1,
+					pageSize: 5,
+				},
 				tagsData: [],
+				status: 'loadmore',
+				isCompleted: false,
 			}
 		},
 		onLoad() {
@@ -73,20 +70,67 @@
 		},
 		onReady() {},
 		onShow() {
-			this.getList()
+			this.getList(true)
+		},
+		//下拉刷新监听
+		onPullDownRefresh() {
+			console.log('refresh');
+
+			this.getList(true)
+		},
+		//加载更多
+		onReachBottom() {
+			if (this.isCompleted) return;
+			this.status = 'loading';
+			this.getList(false)
+
 		},
 		methods: {
-			getList() {
-				uni.$u.http.post('/medical-api/tlSendImMessageLog/getSendImMessageLogPageList', {
-					"messageType": '',
-					"pageNo": 1,
-					"pageSize": 99999,
-				}).then(res => {
-					this.tagsData = res.data.records || [];
+			getList(isRefresh) {
+				if (isRefresh) {
+					this.isCompleted = false
+					this.requestData.pageNo = 1
+					uni.showLoading({
+						title: '加载中'
+					})
+				} else {
+					this.requestData.pageNo = this.requestData.pageNo + 1
+				}
+				uni.$u.http.post('/medical-api/tlSendImMessageLog/getSendImMessageLogPageList', this.requestData).then(
+					res => {
+
+						var list = res.data.records || []
+						list.forEach(item => {
+
+							item.nameTags = item.userNames.filter((nameItem, nameIndex) => {
+								return nameIndex < 6
+							}).join('、')
+
+						})
+
+						if (isRefresh) {
+							this.tagsData = list
+						} else {
+							this.tagsData = [...this.tagsData, ...list];
+						}
 
 
-				});
+						if (res.data.current >= res.data.pages) {
+							this.isCompleted = true
+							this.status = 'nomore';
 
+						} else {
+							this.status = 'loadmore';
+						}
+
+						uni.stopPullDownRefresh();
+						uni.hideLoading()
+					});
+
+			},
+			//再发一条
+			sendAgain(item){
+				
 			},
 			btnClick() {
 				uni.navigateTo({
@@ -202,7 +246,8 @@
 				color: #5FCC5A;
 				line-height: 37rpx;
 			}
-			.tagname2{
+
+			.tagname2 {
 				font-size: 24rpx;
 				margin-left: 20rpx;
 				color: #3894FF;
@@ -226,25 +271,25 @@
 			:active {
 				background-color: #F5F5F5;
 			}
-			
-			.midview{
+
+			.midview {
 				display: flex;
-				
+
 				flex-direction: row;
 				align-items: flex-start;
 			}
-			
-			.midview-right{
+
+			.midview-right {
 				display: flex;
-				
+
 				flex-direction: column;
 				margin-left: 18rpx;
 				font-size: 24rpx;
-				
+
 				color: #4D4D4D;
 				line-height: 37rpx;
 			}
-			
+
 
 		}
 
