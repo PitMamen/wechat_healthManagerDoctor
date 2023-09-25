@@ -279,6 +279,12 @@
 					}
 				},
 				{
+					"path": "pages/work/grep",
+					"style": {
+						"navigationBarTitleText": "抢单池"
+					}
+				},
+				{
 					"path": "pages/work/treat",
 					"style": {
 						"navigationBarTitleText": "问诊"
@@ -511,6 +517,18 @@
             
 				},
 				{
+					"path": "pages/group/note",
+					"style": {
+						"navigationBarTitleText": "宣教文章"
+					}
+				},
+				{
+					"path": "pages/group/note-info",
+					"style": {
+						"navigationBarTitleText": "文章详情"
+					}
+				},
+				{
 					"path" : "pages/record/mass",
 					"style" : {
 						"navigationBarTitleText": "群发消息"
@@ -574,3 +592,4 @@
 		}]
 	}
 }
+
