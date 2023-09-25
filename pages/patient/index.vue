@@ -371,7 +371,10 @@
 			},
 			//点击健康宣教
 			onJKXJclick(){
-				this.showMenu=false
+				this.showMenu=false;
+				uni.navigateTo({
+					url: '/pages3/pages/group/note'
+				});
 			},
 			//点击问卷评估
 			onWJPGclick(){
