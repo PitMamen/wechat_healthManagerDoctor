@@ -9,24 +9,24 @@
 			></u-search>
 		</view>
 		<view class="content">
-			<u-empty mode="data" style="padding-top: 300rpx;" icon="/pages2/static/img/icon_nodata.png" v-if="list.length === 0"></u-empty>
+			<u-empty mode="data" style="padding-top: 300rpx;" icon="/static/img/icon_nodata.png" v-if="list.length === 0"></u-empty>
 			<scroll-view class="list" :scroll-y="true" @scrolltolower="scrolltolower" v-else>
 				<view class="item" v-for="item in list" :key="item.articleId">
 					<view class="top" @click="viewHandler(item)">
 						<view class="row title">
-							<image src="/pages2/static/static/images/group/icon_note.png"></image>
+							<image src="/pages3/static/static/images/group/icon_note.png"></image>
 							<text>{{ item.title || '' }}</text>
 						</view>
 						<view class="row desc">{{ item.brief || '暂无' }}</view>
 						<view class="read">
-							<image src="/pages2/static/static/images/group/icon_read.png"></image>
+							<image src="/pages3/static/static/images/group/icon_read.png"></image>
 							<text>{{ item.clickNum || 0 }}</text>
 						</view>
 						<image class="abs" :src="item.previewUrl"></image>
 					</view>
 					<view class="bottom">
 						<view class="btn" @click="sendHandler(item)">
-							<image src="/pages2/static/static/images/group/icon_send.png"></image>
+							<image src="/pages3/static/static/images/group/icon_send.png"></image>
 							<text>发送给患者</text>
 						</view>
 					</view>
@@ -57,7 +57,7 @@
 		methods: {
 			viewHandler(item) {
 				uni.navigateTo({
-					url: `/pages2/pages/group/note-info?id=${item.articleId}&title=${item.title}`
+					url: `/pages3/pages/group/note-info?id=${item.articleId}&title=${item.title}`
 				});
 			},
 			sendHandler(item) {
@@ -100,10 +100,11 @@
 					params: {
 						status: 2,
 						title: this.value,
-						pageSize: 10,
+						pageSize: 20,
 						start: this.pageNo
 					}
 				}).then(res => {
+					uni.hideLoading();
 					res.data = res.data || {};
 					res.data.list = res.data.list || [];
 					res.data.total = res.data.total || 0;
@@ -111,11 +112,10 @@
 					this.list = this.list.concat(res.data.list);
 				}).finally(() => {
 					this.flag = false;
-					uni.hideLoading();
 				});
 			},
 			scrolltolower() {
-				if (this.pageNo*10 >= this.total){
+				if (this.pageNo*20 >= this.total){
 					return;
 				}
 				if (this.flag){
