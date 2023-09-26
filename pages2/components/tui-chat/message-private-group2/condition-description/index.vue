@@ -13,7 +13,7 @@
 				</view>
 				<view class="depart">
 					<view class="title">图片资料</view>
-					<view class="album">
+					<view class="album" v-if="message.imageList && message.imageList.length>0">
 						<u-album :urls="message.imageList"></u-album>
 					</view>
 				</view>
@@ -33,7 +33,7 @@
 				</view>
 				<view class="depart">
 					<view class="title">病情简介</view>
-					<view class="album">
+					<view class="album" v-if="message.imageList && message.imageList.length>0">
 						<u-album :urls="message.imageList"></u-album>
 					</view>
 				</view>

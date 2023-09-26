@@ -576,12 +576,14 @@
 					display: flex;
 					align-items: center;
 					justify-content: flex-start;
+					overflow-x: auto;
 					.tab {
 						margin-right: 40rpx;
 						font-size: 30rpx;
 						font-weight: 400;
 						color: #4D4D4D;
 						line-height: 50rpx;
+						white-space: nowrap;
 						border-bottom: 4rpx solid transparent;
 						&.active {
 							color: #3894FF;
