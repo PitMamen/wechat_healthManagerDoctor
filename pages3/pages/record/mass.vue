@@ -58,7 +58,7 @@
 				info: {},
 				requestData: {
 					pageNo: 1,
-					pageSize: 5,
+					pageSize: 20,
 				},
 				tagsData: [],
 				status: 'loadmore',
@@ -221,6 +221,12 @@
 				font-size: 30rpx;
 				color: #4D4D4D;
 				line-height: 37rpx;
+				width: 650rpx;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				display: -webkit-box;
+				-webkit-line-clamp: 1;
+				-webkit-box-orient: vertical;
 			}
 
 

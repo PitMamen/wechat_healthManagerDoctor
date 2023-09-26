@@ -340,7 +340,7 @@
 					pageSize: 10000,
 					tagsId: this.tagsIdChose.length > 0 ? this.tagsIdChose.join(',') : '',
 					queryStr: this.name,
-					userId: 355, //TODO 调试测试代码，后期注释,不需要这个参数
+					
 				}).then(res => {
 					uni.hideLoading();
 					if (res.code == 0 && res.data.records.length > 0) {

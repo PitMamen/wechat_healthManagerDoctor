@@ -71,10 +71,7 @@
 						uni.navigateBack()
 					},1500)
 					
-				}).finally(() => {
-					uni.hideLoading();
-					
-				});;
+				})
 			
 			},
 		}

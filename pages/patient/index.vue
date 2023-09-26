@@ -49,7 +49,7 @@
 						<view style="width: 1rpx;height: 32rpx;background-color: #1A1A1A;margin-left: 15rpx;"></view>
 						<view style="color: #1A1A1A;font-size: 32rpx;margin-left: 15rpx;font-weight: bold;">{{item.birthday}}岁</view>
 					</view>
-					<view class="right-row" style="margin-top: 20rpx;">
+					<view class="tag-row" style="margin-top: 20rpx;">
 						<view class="patient-tag" v-for="(tagitem, tagindex) in item.tags">{{tagitem}}</view>
 						
 					</view>
@@ -501,27 +501,35 @@
 						flex-direction: row;
 						align-items: center;
 						
-						.des{
-							font-size: 28rpx;
-							color: #1A1A1A;
-							line-height: 37rpx;
-							width: 545rpx;
-							overflow: hidden; 
-							text-overflow: ellipsis; 
-							display: -webkit-box;
-							-webkit-line-clamp: 1; 
-							-webkit-box-orient: vertical;
-						}
-
-						.patient-tag {
-							color: white;
-							background-color: #65BEFE;
-							padding: 10rpx 15rpx;
-							font-size: 24rpx;
-							border-radius: 5rpx;
-							margin-right: 20rpx;
-						}
+						
 					}
+					.des{
+						font-size: 28rpx;
+						color: #1A1A1A;
+						line-height: 37rpx;
+						width: 545rpx;
+						overflow: hidden; 
+						text-overflow: ellipsis; 
+						display: -webkit-box;
+						-webkit-line-clamp: 1; 
+						-webkit-box-orient: vertical;
+					}
+					
+					.patient-tag {
+						color: white;
+						background-color: #65BEFE;
+						padding: 10rpx 15rpx;
+						font-size: 24rpx;
+						border-radius: 5rpx;
+						margin-right: 20rpx;
+					}
+					.tag-row{
+						display: flex;
+						flex-direction: row;
+						align-items: center;
+						flex-wrap: wrap;
+					}
+					
 				}
 			}
 		}

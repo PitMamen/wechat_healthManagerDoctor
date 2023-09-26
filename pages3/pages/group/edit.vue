@@ -143,19 +143,19 @@
 					tagsName: this.tagsName,
 
 				}).then(res => {
+					if(res.code === 0){
+						uni.showToast({
+							title: '修改成功',
+							icon: 'success'
+						});
+						
+						setTimeout(() => {
+							uni.navigateBack()
+						}, 1500)
+					}
+					
 
-					uni.showToast({
-						title: '修改成功',
-						icon: 'success'
-					});
-					setTimeout(() => {
-						uni.navigateBack()
-					}, 1500)
-
-				}).finally(() => {
-					uni.hideLoading();
-
-				});;
+				})
 
 			},
 			//删除
@@ -181,10 +181,7 @@
 						uni.navigateBack()
 					}, 1500)
 
-				}).finally(() => {
-					uni.hideLoading();
-
-				});;
+				})
 
 			},
 		}
