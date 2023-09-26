@@ -1,19 +1,32 @@
 <template>
 	<view class="wrap">
-		<view class="v-status-top">
-			<!-- 5个点分情况展示 -->
-			<view class="v-dot dot-red" v-if="passItem.status==2"></view>
-			<view class="v-dot dot-blue" v-if="passItem.status==3"></view>
-			<view class="v-dot" v-if="passItem.status==4"></view>
-			<view class="v-dot dot-blue-dark" v-if="passItem.status==5"></view>
-			<view class="v-status-name">{{statusName}}</view>
+		<view class="v-status-top" style="justify-content: space-between;">
+			<view style="display: flex;align-items: center;">
+				<!-- 5个点分情况展示 -->
+				<view class="v-dot dot-red" v-if="passItem.status==2"></view>
+				<view class="v-dot dot-blue" v-if="passItem.status==3"></view>
+				<view class="v-dot" v-if="passItem.status==4"></view>
+				<view class="v-dot dot-blue-dark" v-if="passItem.status==5"></view>
+				<view class="v-status-name">{{statusName}}</view>
+			</view>
+			<view style="display: flex;align-items: center;" v-if="rightDetail.snatchFlag && passItem.status==2">
+				<view>抢单剩余时间：</view>
+				<u-count-down :time="new Date(rightDetail.snatchExpireTime).getTime() - new Date().getTime()" format="HH:mm:ss"></u-count-down>
+			</view>
 		</view>
 		
 		<view class="v-package">
-			<view class="v-p-name">套餐信息</view>
+			<view class="v-p-name" style="display: flex;align-items: center;justify-content: space-between;">
+				<view>套餐信息</view>
+				<view
+					style="width: 70rpx;font-size: 24rpx;font-weight: 400;color: #FFFFFF;line-height: 45rpx;text-align: center;background: #6796F2;"
+					v-if="rightDetail.snatchFlag"
+				>团队</view>
+			</view>
 			<view class="v-line"></view>
 			<view class="v-p-item">
-				<view class="v-item-name">套餐名称：</view>
+				<view class="v-item-name" v-if="rightDetail.snatchFlag">服务团队：</view>
+				<view class="v-item-name" v-else>套餐名称：</view>
 				<view class="v-item-value">{{rightDetail.commodityName}}</view>
 			</view>
 			<view class="v-p-item">
@@ -96,11 +109,14 @@
 			<!-- 待接诊按钮 -->
 			<view class="view-btn-wait" v-if="passItem.status==2">
 				<view
+					style="width: 50%;text-align: center;font-size:30rpx;padding:  17rpx 60rpx;background-color: #409EFF;color: white;border-radius: 8rpx;"
+					@click="grep" v-if="rightDetail.snatchFlag">抢单</view>
+				<view
 					style="width: 50%;text-align: center;;font-size:30rpx;padding: 17rpx 60rpx;background-color: #E14C4C;color: white;border-radius: 8rpx;"
-					@click="goPopRefuse">拒诊</view>
+					@click="goPopRefuse" v-if="!rightDetail.snatchFlag">拒诊</view>
 				<view
 					style="width: 50%;text-align: center;margin-left: 30rpx;font-size:30rpx;padding:  17rpx 60rpx;background-color: #409EFF;color: white;border-radius: 8rpx;"
-					@click="goOn">接诊</view>
+					@click="goOn" v-if="!rightDetail.snatchFlag">接诊</view>
 			</view>
 			<!-- 待处理按钮 -->
 			<view class="view-btn-handle" v-if="passItem.status==3">
@@ -583,7 +599,41 @@
 
 				});
 			},
-
+			
+			
+			grep() {
+				uni.showModal({
+					title: '温馨提示',
+					content: '确认是否抢单？',
+					showCancel: true,
+					success: (res) => {
+						if (res.confirm){
+							this.doGrep();
+						}
+					}
+				});
+			},
+			doGrep() {
+				uni.showLoading({
+					title: '正在加载'
+				});
+				uni.$u.http.post('/medical-api/rightsUse/dynamicConfirm', {
+					id: this.passItem.id
+				}).then(res => {
+					uni.hideLoading();
+					uni.showToast({
+						title: '抢单成功',
+						icon: 'success'
+					});
+					this.statusName = '待处理';
+					this.passItem.status = 3;
+					setTimeout(() => {
+						this.getRightDetail();
+					});
+				});
+			},
+			
+			
 			goHistory() {
 				// uni.setStorageSync('taskItem', this.passItem);
 				// uni.navigateTo({

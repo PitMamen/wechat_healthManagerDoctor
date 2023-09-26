@@ -1,6 +1,6 @@
 <template>
 	<view class="wrap">
-		<view class="head">
+		<view class="head" v-if="false">
 			<view class="tab">
 				<view class="item" :class="{active: tab===1}" @click="tabClick(1)">
 					<view>全部</view>
@@ -95,65 +95,19 @@
 					</view>
 					<view class="bottom" v-if="item.broadClassify === 4">
 						<view class="remark-abs inner">院内结算</view>
-						<block v-if="item.status === 2">
-							<view class="btn btn2" @click.stop="onTextRefuse(item)">拒诊</view>
-							<view class="btn btn1" @click.stop="onTextGoOn(item)">接诊</view>
-						</block>
-						<block v-if="item.status === 3">
-							<view class="btn btn2" @click.stop="goPopEnd(item)">结束问诊</view>
-							<view class="btn btn1" @click.stop="goChufang(item)" v-if="item.diagnosisFlag.value === 1">开具处方</view>
-							<view class="btn btn1" @click.stop="goChatClick(item)">进入诊室</view>
-						</block>
-						<block v-if="item.status===4 || item.status===5">
-							<view class="btn btn2" @click.stop="showComments(item)" v-if="item.appraiseId">查看评价</view>
-							<view class="btn btn2" @click.stop="goChatHistory(item)">查看记录</view>
-						</block>
+						<view class="btn btn1" @click.stop="grep(item)">抢单</view>
 					</view>
 					<view class="bottom" v-else-if="item.serviceItemType === 101">
 						<view class="remark-abs">雅医结算</view>
-						<block v-if="item.status === 2">
-							<view class="btn btn2" @click.stop="onTextRefuse(item)">拒诊</view>
-							<view class="btn btn1" @click.stop="onTextGoOn(item)">接诊</view>
-						</block>
-						<block v-if="item.status === 3">
-							<view class="btn btn2" @click.stop="goPopEnd(item)">结束问诊</view>
-							<view class="btn btn1" @click.stop="goChufang(item)" v-if="item.diagnosisFlag.value === 1">开具处方</view>
-							<view class="btn btn1" @click.stop="goChatClick(item)">进入诊室</view>
-						</block>
-						<block v-if="item.status===4 || item.status===5">
-							<view class="btn btn2" @click.stop="showComments(item)" v-if="item.appraiseId">查看评价</view>
-							<view class="btn btn2" @click.stop="goChatHistory(item)">查看记录</view>
-						</block>
+						<view class="btn btn1" @click.stop="grep(item)">抢单</view>
 					</view>
 					<view class="bottom" v-else-if="item.serviceItemType === 102">
 						<view class="remark-abs">雅医结算</view>
-						<block v-if="item.status === 2">
-							<view class="btn btn2" @click.stop="onTextRefuse(item)">拒诊</view>
-							<view class="btn btn1" @click.stop="onTextGoOn(item)">接诊</view>
-						</block>
-						<block v-if="item.status === 3">
-							<view class="btn btn2" @click.stop="goPopEnd(item)">结束问诊</view>
-							<view class="btn btn1" @click.stop="goChufang(item)" v-if="item.diagnosisFlag.value === 1">开具处方</view>
-							<view class="btn btn1" @click.stop="goCall(item)">拨打电话</view>
-						</block>
-						<block v-if="item.status===4 || item.status===5">
-							<view class="btn btn2" @click.stop="showComments(item)" v-if="item.appraiseId">查看评价</view>
-						</block>
+						<view class="btn btn1" @click.stop="grep(item)">抢单</view>
 					</view>
 					<view class="bottom" v-else-if="item.serviceItemType === 103">
 						<view class="remark-abs">雅医结算</view>
-						<block v-if="item.status === 2">
-							<view class="btn btn2" @click.stop="onTextRefuse(item)">拒诊</view>
-							<view class="btn btn1" @click.stop="onTextGoOn(item)">接诊</view>
-						</block>
-						<block v-if="item.status === 3">
-							<view class="btn btn2" @click.stop="goPopEnd(item)">结束问诊</view>
-							<view class="btn btn1" @click.stop="goChufang(item)" v-if="item.diagnosisFlag.value === 1">开具处方</view>
-							<view class="btn btn1" @click.stop="goCallVideo(item)">发起视频</view>
-						</block>
-						<block v-if="item.status===4 || item.status===5">
-							<view class="btn btn2" @click.stop="showComments(item)" v-if="item.appraiseId">查看评价</view>
-						</block>
+						<view class="btn btn1" @click.stop="grep(item)">抢单</view>
 					</view>
 				</view>
 			</scroll-view>
@@ -245,12 +199,7 @@
 				uni.showLoading({
 					title:'正在加载'
 				});
-				uni.$u.http.post(`/medical-api/rightsUse/qryRightsUseRecordPageByDoc`, {
-					flag: !(this.serviceItemType||this.broadClassify) ? 1 : '',
-					serviceItemType: this.tab===1 ? this.serviceItemType : '',
-					broadClassify: this.tab===1 ? this.broadClassify : '',
-					docId: uni.getStorageSync('account').user.userId,
-					status: ['', '', 2, 3, 9][this.tab],
+				uni.$u.http.post(`/medical-api/rightsUse/qryPoolReqByPage`, {
 					pageSize: this.pageSize,
 					pageNo: this.pageNo
 				}).then(res => {
@@ -344,6 +293,36 @@
 				this.getList();
 			},
 			
+			grep(item) {
+				uni.showModal({
+					title: '温馨提示',
+					content: '确认是否抢单？',
+					showCancel: true,
+					success: (res) => {
+						if (res.confirm){
+							this.doGrep(item);
+						}
+					}
+				});
+			},
+			doGrep(item) {
+				uni.showLoading({
+					title: '正在加载'
+				});
+				uni.$u.http.post('/medical-api/rightsUse/dynamicConfirm', {
+					id: item.id
+				}).then(res => {
+					uni.hideLoading();
+					uni.showToast({
+						title: '抢单成功',
+						icon: 'success'
+					});
+					this.refreshAllData();
+					setTimeout(() => {
+						this.itemClick(item);
+					}, 2000);
+				});
+			},
 			onTextRefuse(item) {
 				this.choseOne = item;
 				this.showRefuse = true;
@@ -672,11 +651,11 @@
 				padding-top: 200rpx;
 			}
 			.list {
-				max-height: calc(100vh - 95rpx);
+				max-height: calc(100vh - 0rpx);
 				padding: 30rpx 24rpx;
 				box-sizing: border-box;
 				&.all {
-					max-height: calc(100vh - 178rpx);
+					max-height: calc(100vh - 0rpx);
 				}
 				.item {
 					margin-bottom: 30rpx;
