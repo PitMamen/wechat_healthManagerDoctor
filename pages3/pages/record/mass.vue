@@ -63,6 +63,7 @@
 				tagsData: [],
 				status: 'loadmore',
 				isCompleted: false,
+				requestting:false
 			}
 		},
 		onLoad() {
@@ -130,7 +131,43 @@
 			},
 			//再发一条
 			sendAgain(item){
+			
+				let that = this
 				
+				if (this.requestting) {
+					return
+				}
+			
+				this.requestting = true
+			
+				setTimeout(() => {
+					that.requestting = false
+				}, 2000)
+			
+			
+			
+				uni.showLoading({
+					title: '发送中'
+				});
+				uni.$u.http.post('/medical-api/tlSendImMessageLog/addImMessageLog', {
+					"messageType": item.message_type,
+					"sendMessage": item.message_original_name,
+					"sendUserIds": item.userIds.split(','),
+					"messageOriginalId":item.message_original_id,
+					"payLoad":item.pay_load
+			
+				}).then(res => {
+			
+					uni.showToast({
+						title: '发送成功',
+						icon: 'success'
+					});
+					setTimeout(() => {
+						that.getList(true)
+					}, 1500)
+			
+				})
+			
 			},
 			btnClick() {
 				uni.navigateTo({
