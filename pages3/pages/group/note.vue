@@ -61,29 +61,23 @@
 				});
 			},
 			sendHandler(item) {
-				const pages = getCurrentPages();
-				if (pages.length > 1){
-					const page = pages[pages.length - 1 - 1];
-					if (page.route==='pages2/pages/TUI-Chat-Group/chat' || page.route==='pages2/pages/TUI-Chat-Group2/chat'){
-						page.$vm.sendCustomMessage({
-							detail: {
-								payload: {
-									data: JSON.stringify({
-										content: item.title,
-										description: '文章卡',
-										id: item.articleId,
-										type: 'CustomArticleMessage'
-									}),
-									extension: '',
-									description: '文章卡'
-								}
-							}
-						});
-						uni.navigateBack({
-							delta: 1
-						});
-					}
-				}
+				const articleMsgReq = {
+					messageOriginalId: item.articleId,
+					payLoad: JSON.stringify({
+						data: JSON.stringify({
+							content: item.title,
+							description: '文章卡',
+							id: item.articleId,
+							type: 'CustomArticleMessage'
+						}),
+						extension: '',
+						description: '文章卡'
+					})
+				};
+				uni.setStorageSync('articleMsgReq', articleMsgReq);
+				uni.navigateTo({
+					url: '/pages3/pages/record/choose-patient?type=ArticleMessage'
+				});
 			},
 			change() {
 				this.value = this.value.trim();
@@ -98,6 +92,7 @@
 				});
 				uni.$u.http.get(`/health-api/health/patient/allArticlesNewPage`, {
 					params: {
+						own: 'doctor',
 						status: 2,
 						title: this.value,
 						pageSize: 20,

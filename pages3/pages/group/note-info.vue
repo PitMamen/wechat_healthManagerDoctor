@@ -76,30 +76,24 @@ export default {
 
 	methods: {
 		sendHandler() {
-			const pages = getCurrentPages();
-			if (pages.length > 2){
-				const page = pages[pages.length - 1 - 1 - 1];
-				if (page.route==='pages2/pages/TUI-Chat-Group/chat' || page.route==='pages2/pages/TUI-Chat-Group2/chat'){
-					page.$vm.sendCustomMessage({
-						detail: {
-							payload: {
-								data: JSON.stringify({
-									content: this.title,
-									description: '文章卡',
-									id: this.id,
-									type: 'CustomArticleMessage'
-								}),
-								extension: '',
-								description: '文章卡'
-							}
-						}
-					});
-					uni.navigateBack({
-						delta: 2
-					});
-				}
-			}
-		},
+			const articleMsgReq = {
+				messageOriginalId: this.id,
+				payLoad: JSON.stringify({
+					data: JSON.stringify({
+						content: this.title,
+						description: '文章卡',
+						id: this.id,
+						type: 'CustomArticleMessage'
+					}),
+					extension: '',
+					description: '文章卡'
+				})
+			};
+			uni.setStorageSync('articleMsgReq', articleMsgReq);
+			uni.navigateTo({
+				url: '/pages3/pages/record/choose-patient?type=ArticleMessage'
+			});
+		}
 	}
 };
 </script>

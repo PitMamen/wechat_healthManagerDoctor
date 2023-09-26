@@ -227,6 +227,7 @@
 				searchName: '',
 				name: '',
 				isUp: true,
+				flag: false,
 				isAll: false,
 				// isReloaded: false, //每次重新获取患者列表的时候，需要在全选，全不选，单个选择的时候都做删除或者去重添加
 				showChose: false,
@@ -490,9 +491,34 @@
 					uni.navigateTo({
 						url:'./message-text'
 					})
+				}else if (this.options.type=='ArticleMessage'){
+					if (this.flag){
+						return;
+					}
+					this.flag = true;
+					uni.showLoading({
+						title: '发送中'
+					});
+					uni.$u.http.post('/medical-api/tlSendImMessageLog/addImMessageLog', {
+						... uni.getStorageSync('articleMsgReq'),
+						messageType: 2,
+						sendUserIds: this.patientListChose.map(item => {return item.patient_user_id})
+					}).then(res => {
+						uni.hideLoading();
+						uni.showToast({
+							title: '发送成功',
+							icon: 'success'
+						});
+						setTimeout(() => {
+							uni.navigateBack({
+								delta: 1
+							});
+						}, 1500);
+					}).catch(err => {
+						this.flag = false;
+					});
 				}
-				
-			},
+			}
 		}
 	}
 </script>
