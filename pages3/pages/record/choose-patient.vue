@@ -231,6 +231,7 @@
 				name: '',
 				isUp: true,
 				flag: false,
+				isTagChose: false, //只有在筛选条件切换标签后，勾选全选才会生效
 				isAll: false,
 				// isReloaded: false, //每次重新获取患者列表的时候，需要在全选，全不选，单个选择的时候都做删除或者去重添加
 				showChose: false,
@@ -326,6 +327,7 @@
 				if (item.isChecked) {
 					this.tagsIdChose.push(item.id)
 					console.log('onTagClick choose', JSON.stringify(this.tagsIdChose))
+					this.isTagChose = true
 				} else {
 					// this.tagsIdChose.push(item.id)
 
@@ -407,14 +409,17 @@
 						this.$set(item, 'isChecked', true)
 					})
 
+					//勾选标签时需要清空已选
+					if (this.tagsIdChose.length > 0 && this.isTagChose) {
+						this.patientListChose = []
+					}
+
 					//去重添加
 					this.patientList.forEach((item) => {
 						this.addPatientItem(item)
 					})
 
-					// if (this.isReloaded) {
-					// 	this.patientListChose = this.patientListChose.concat(JSON.parse(JSON.stringify(this.patientList)))
-					// }
+					this.isTagChose = false
 
 				} else {
 					this.patientList.forEach((item) => {
