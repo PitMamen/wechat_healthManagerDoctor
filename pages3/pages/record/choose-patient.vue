@@ -111,7 +111,8 @@
 					</view>
 					<image
 						:src="showCondition?'/static/static/images/icon_coned.png':'/static/static/images/icon_con.png'"
-						style="width: 32rpx;height: 32rpx;margin-left: 20rpx;margin-right: 10rpx;" @click="seeCondition">
+						style="width: 32rpx;height: 32rpx;margin-left: 20rpx;margin-right: 10rpx;"
+						@click="seeCondition">
 					</image>
 					<view style="font-size: 28rpx;" @click="seeCondition">筛选</view>
 				</view>
@@ -126,7 +127,7 @@
 					</view>
 					<view class="view-tags">
 						<view @click="onTagClick(item)" :class="item.isChecked?'tag-item':'tag-item-not'"
-							v-for="(item, index) in tagsData" :key="index">{{item.tagsName}}</view>
+							v-for="(item, index) in tagsData" :key="index">{{item.tags_name}}</view>
 					</view>
 				</view>
 
@@ -219,7 +220,7 @@
 	export default {
 		data() {
 			return {
-				options:'',
+				options: '',
 				info: {},
 				patientList: [],
 				// patientList: [],
@@ -282,7 +283,7 @@
 		 * 整体的选中逻辑是，任何一种筛选条件都展示新的列表，勾选或全选都去重添加到已选或者删除已选
 		 */
 		onLoad(options) {
-			this.options=options
+			this.options = options
 			this.info = uni.getStorageSync('cashItem');
 			this.getTagsList()
 		},
@@ -309,12 +310,12 @@
 				})
 				this.tagsIdChose = []
 			},
-			
-			clearTags(){
+
+			clearTags() {
 				this.resetTags()
 				this.getPatientList()
 			},
-			
+
 			confirmTags() {
 				this.getPatientList()
 				this.showCondition = false
@@ -343,12 +344,12 @@
 					pageSize: 10000,
 					tagsIds: this.tagsIdChose.length > 0 ? this.tagsIdChose.join(',') : '',
 					queryStr: this.name,
-					
+
 				}).then(res => {
 					uni.hideLoading();
 					// if (res.code == 0 && res.data.records.length > 0) {
-					if (res.code == 0 ) {
-						console.log('getPatientList',JSON.stringify(res.data.records))
+					if (res.code == 0) {
+						console.log('getPatientList', JSON.stringify(res.data.records))
 						this.patientList = res.data.records
 						//展示已选的
 						if (this.patientListChose.length > 0) {
@@ -362,9 +363,11 @@
 
 			// 标签列表
 			getTagsList() {
-				uni.$u.http.post(`/account-api/tdUserTags/getUserTags`, {
+				// uni.$u.http.post(`/account-api/tdUserTags/getUserTags`, {
+				uni.$u.http.post(`/account-api/tdUserTags/getUserTagsDoctor`, {
 					pageNo: 1,
 					pageSize: 10000,
+					tagsType: 2
 					// userIds: 355, //TODO 调试测试代码，后期注释,不需要这个参数
 				}).then(res => {
 					if (res.code == 0) {
@@ -490,13 +493,13 @@
 				uni.setStorageSync('cache_chose_patients', this.patientListChose);
 				//TODO 处理跳转
 				uni.$u.toast('下一步');
-				if(this.options.type=='TextMessage'){
+				if (this.options.type == 'TextMessage') {
 					//发送文字消息
 					uni.navigateTo({
-						url:'./message-text'
+						url: './message-text'
 					})
-				}else if (this.options.type=='ArticleMessage'){
-					if (this.flag){
+				} else if (this.options.type == 'ArticleMessage') {
+					if (this.flag) {
 						return;
 					}
 					this.flag = true;
@@ -504,9 +507,11 @@
 						title: '发送中'
 					});
 					uni.$u.http.post('/medical-api/tlSendImMessageLog/addImMessageLog', {
-						... uni.getStorageSync('articleMsgReq'),
+						...uni.getStorageSync('articleMsgReq'),
 						messageType: 2,
-						sendUserIds: this.patientListChose.map(item => {return item.patient_user_id})
+						sendUserIds: this.patientListChose.map(item => {
+							return item.patient_user_id
+						})
 					}).then(res => {
 						uni.hideLoading();
 						uni.showToast({
