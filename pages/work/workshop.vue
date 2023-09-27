@@ -10,8 +10,8 @@
 			<view class="left">
 				<image :src="account.user.avatarUrl||'/static/static/images/header.png'" mode="aspectFill"></image>
 				<view class="desc">
-					<view class="name">{{account.user.userName}}的诊室</view>
-					<view class="welcome">欢迎您，{{account.user.userName}}</view>
+					<view class="name">{{account.user.userName||'XXX'}}的诊室</view>
+					<view class="welcome">欢迎您，{{account.user.userName||'XXX'}}</view>
 				</view>
 			</view>
 			<view class="right">
