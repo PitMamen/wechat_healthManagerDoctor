@@ -309,9 +309,7 @@
 				justify-content: center;
 				flex-direction: row;
 				align-items: center;
-			}
-
-			:active {
+			}:active {
 				background-color: #F5F5F5;
 			}
 
