@@ -91,7 +91,8 @@
 				</view>
 				<view style="color: #999999;font-size: 24rpx;margin-top: 20rpx;">每次最多可选2000人</view>
 			</view>
-			<view class="btn-next" @click="goNext">下一步</view>
+			<view class="btn-next" @click="goNext" v-if="options.type=='ArticleMessage'">发送</view>
+			<view class="btn-next" @click="goNext" v-else>下一步</view>
 		</view>
 
 		<!-- 筛选弹窗，做了页面顶部一样搜索顶部结构 -->
@@ -205,7 +206,8 @@
 						</view>
 						<view style="color: #999999;font-size: 24rpx;margin-top: 20rpx;">每次最多可选2000人</view>
 					</view>
-					<view class="btn-next" @click="goNext">下一步</view>
+					<view class="btn-next" @click="goNext" v-if="options.type=='ArticleMessage'">发送</view>
+					<view class="btn-next" @click="goNext" v-else>下一步</view>
 				</view>
 
 			</view>
