@@ -8,7 +8,7 @@
 				</u-search>
 			</view>
 			<image :src="showCondition?'/static/static/images/icon_coned.png':'/static/static/images/icon_con.png'"
-				style="width: 26rpx;height: 26rpx;margin-left: 20rpx;" @click="seeCondition">
+				style="width: 32rpx;height: 32rpx;margin-left: 20rpx;margin-right: 10rpx;" @click="seeCondition">
 			</image>
 			<view style="font-size: 28rpx;" @click="seeCondition">筛选</view>
 		</view>
@@ -111,7 +111,7 @@
 					</view>
 					<image
 						:src="showCondition?'/static/static/images/icon_coned.png':'/static/static/images/icon_con.png'"
-						style="width: 26rpx;height: 26rpx;margin-left: 20rpx;" @click="seeCondition">
+						style="width: 32rpx;height: 32rpx;margin-left: 20rpx;margin-right: 10rpx;" @click="seeCondition">
 					</image>
 					<view style="font-size: 28rpx;" @click="seeCondition">筛选</view>
 				</view>
@@ -341,12 +341,14 @@
 				uni.$u.http.post(`/account-api/tdUserTags/getPatientListByTags`, {
 					pageNo: 1,
 					pageSize: 10000,
-					tagsId: this.tagsIdChose.length > 0 ? this.tagsIdChose.join(',') : '',
+					tagsIds: this.tagsIdChose.length > 0 ? this.tagsIdChose.join(',') : '',
 					queryStr: this.name,
 					
 				}).then(res => {
 					uni.hideLoading();
-					if (res.code == 0 && res.data.records.length > 0) {
+					// if (res.code == 0 && res.data.records.length > 0) {
+					if (res.code == 0 ) {
+						console.log('getPatientList',JSON.stringify(res.data.records))
 						this.patientList = res.data.records
 						//展示已选的
 						if (this.patientListChose.length > 0) {
@@ -363,7 +365,7 @@
 				uni.$u.http.post(`/account-api/tdUserTags/getUserTags`, {
 					pageNo: 1,
 					pageSize: 10000,
-					userIds: 355, //TODO 调试测试代码，后期注释,不需要这个参数
+					// userIds: 355, //TODO 调试测试代码，后期注释,不需要这个参数
 				}).then(res => {
 					if (res.code == 0) {
 						this.tagsData = res.data.records
