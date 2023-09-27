@@ -334,7 +334,20 @@
 					});
 					this.refreshAllData();
 					setTimeout(() => {
-						this.itemClick(item);
+                        let pageName = '';
+					    if (item.broadClassify === 4){
+						    pageName = 'detailFz';
+					    }else if (item.serviceItemType === 101){
+						    pageName = 'detailImg';
+					    }else if (item.serviceItemType === 102){
+						    pageName = 'detailPhone';
+					    }else if (item.serviceItemType === 103){
+						    pageName = 'detailVideo';
+					    }
+					    uni.setStorageSync('taskItem', item);
+					    uni.navigateTo({
+						    url: `/pages2/pages/work/talk/${pageName}?item=${encodeURIComponent(JSON.stringify(item))}`
+					    });
 					}, 2000);
 				});
 			},
