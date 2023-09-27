@@ -251,19 +251,34 @@
 				this.changeTab(tab);
 			},
 			itemClick(item) {
-				let pageName = '';
-				if (item.broadClassify === 4){
-					pageName = 'detailFz';
-				}else if (item.serviceItemType === 101){
-					pageName = 'detailImg';
-				}else if (item.serviceItemType === 102){
-					pageName = 'detailPhone';
-				}else if (item.serviceItemType === 103){
-					pageName = 'detailVideo';
-				}
-				uni.setStorageSync('taskItem', item);
-				uni.navigateTo({
-					url: `/pages2/pages/work/talk/${pageName}?item=${encodeURIComponent(JSON.stringify(item))}`
+				uni.showLoading({
+					title: '正在加载'
+				});
+				uni.$u.http.post('/medical-api/rightsUse/qryRightsUseRecord', {
+					id: item.id
+				}).then(res => {
+					uni.hideLoading();
+					if (res.data.status !== 2){
+						uni.showToast({
+							title: '已被他人抢单，无法查看',
+							icon: 'none'
+						});
+						return;
+					}
+					let pageName = '';
+					if (item.broadClassify === 4){
+						pageName = 'detailFz';
+					}else if (item.serviceItemType === 101){
+						pageName = 'detailImg';
+					}else if (item.serviceItemType === 102){
+						pageName = 'detailPhone';
+					}else if (item.serviceItemType === 103){
+						pageName = 'detailVideo';
+					}
+					uni.setStorageSync('taskItem', item);
+					uni.navigateTo({
+						url: `/pages2/pages/work/talk/${pageName}?item=${encodeURIComponent(JSON.stringify(item))}`
+					});
 				});
 			},
 			chooseItemClick(type, classify) {
