@@ -250,6 +250,19 @@
 				).then(res => {
 					if (res.code === 0) {
 						var list = res.data.records || []
+						
+						list.forEach(item=>{
+							if(item.order){
+								item.order.rightsId=item.order.id
+								item.order.id=item.order.chartId
+								item.order.userInfo={
+									userName:item.user_name,
+									userSex:item.user_sex,
+									userAge:item.birthday,
+								}
+							}
+							
+						})
 			
 						if (isRefresh) {
 							this.patientList = list
@@ -333,13 +346,7 @@
 					return
 				}
 				var taskItem=item.order
-				taskItem.rightsId=taskItem.id
-				taskItem.id=taskItem.chartId
-				taskItem.userInfo={
-					userName:item.user_name,
-					userSex:item.user_sex,
-					userAge:item.birthday,
-				}
+				
 				uni.setStorageSync('taskItem', taskItem);
 				console.log(uni.getStorageSync('taskItem'))
 				if(taskItem.status.value === 3 ){					
