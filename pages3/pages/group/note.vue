@@ -92,7 +92,7 @@
 				});
 				uni.$u.http.get(`/health-api/health/patient/allArticlesNewPage`, {
 					params: {
-						own: 'doctor',
+						
 						status: 2,
 						title: this.value,
 						pageSize: 20,
