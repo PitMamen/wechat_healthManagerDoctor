@@ -1,6 +1,6 @@
 /**测试环境**/
 export const SDKAPPID = 1400613243;
-export const baseURL = `http://192.168.1.121`;
+export const baseURL = `http://develop.mclouds.org.cn:8009`;
 export const CAURL = `https://realnameverify-test05.fadada.com`;
 export const showDataLog = true;
 export const SocketUrl='ws://192.168.1.121:8091/webSocket/'

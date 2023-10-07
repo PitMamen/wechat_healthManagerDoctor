@@ -189,7 +189,7 @@
 				showCondition: false,
 				hasTagChecked:false,
 				tagsData: [],
-				showMenu:false
+				showMenu:false,
 			}
 		},
 		onLoad() {
@@ -198,6 +198,12 @@
 			this.getData(true)
 		},
 		onReady() {},
+		
+		 //监听 TabBar 切换点击	 
+		onTabItemTap(item) {
+			console.log(item)
+			this.getData(true)
+		},
 		onShow() {},
 		//下拉刷新监听
 		onPullDownRefresh() {
@@ -210,7 +216,7 @@
 			if (this.isCompleted) return;
 			this.status = 'loading';
 			this.getData(false)
-		
+			
 		},
 		methods: {
 			//标签列表
