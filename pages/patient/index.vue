@@ -202,15 +202,11 @@
 		 //监听 TabBar 切换点击	 
 		onTabItemTap(item) {
 			console.log(item)
+			this.getTagList()
 			this.getData(true)
 		},
 		onShow() {},
-		//下拉刷新监听
-		onPullDownRefresh() {
-			console.log('refresh');
-		
-			this.getData(true)
-		},
+	
 		//加载更多
 		onReachBottom() {
 			if (this.isCompleted) return;
@@ -221,6 +217,11 @@
 		methods: {
 			//标签列表
 			getTagList() {
+				
+				if (!this.checkAuth()) {
+					return
+				}
+				
 				uni.$u.http.post('/account-api/tdUserTags/getUserTagsDoctor', 
 				{
 					"pageNo": 1,
@@ -242,6 +243,11 @@
 			
 			//患者列表
 			getData(isRefresh) {
+				
+				if (!this.checkAuth()) {
+					return
+				}
+				
 				if (isRefresh) {
 					this.isCompleted = false
 					this.requestData.pageNo = 1
@@ -426,12 +432,13 @@
 			checkAuth() {
 				if (!this.account || !this.account.accountId || this.account.bindStatus !== 0) {
 					//如果没有账号 或者 没有认证
-					this.goIdentify()
+					
 					return false
 				} else {
 					return true
 				}
 			},
+			
 		}
 	}
 </script>
