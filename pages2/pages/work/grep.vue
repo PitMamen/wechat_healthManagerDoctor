@@ -258,7 +258,7 @@
 					id: item.id
 				}).then(res => {
 					uni.hideLoading();
-					if (res.data.status !== 2){
+					if (res.data[0].status !== 2){
 						uni.showToast({
 							title: '已被他人抢单，无法查看',
 							icon: 'none'
