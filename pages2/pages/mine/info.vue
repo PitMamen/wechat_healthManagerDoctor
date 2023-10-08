@@ -125,6 +125,23 @@
 			</view>
 
 			</view>
+			<view style="height: 0.5px;background: #E6E6E6;margin-left: 30rpx;margin-right: 30rpx;"></view>
+			<view class="itemview" @click="goSuiz">
+				<image src="/pages2/static/static/images/suizNum.png" style="float: left;width: 40rpx;height: 40rpx;">
+				</image>
+			
+				<view style="display: flex;flex-direction: column;">
+					<view style="float: left;margin-left: 10px;font-size: 15px;color: #1A1A1A;font-weight: bold;">门诊随诊
+					</view>
+					<view style="float: left;margin-left: 10px;font-size: 12px;color: #999999;margin-top: 10rpx;">
+						轻松管理诊后患者，提升个人品牌价值</view>
+				</view>
+			<view style="margin-left: auto;margin-top: 15px;">
+				<u-icon name="arrow-right"
+					style="width: 10px;height: 10px;margin-left: auto;margin-top: 20rpx;color=#333"></u-icon>
+			</view>
+			
+			</view>
 
 		</view>
 
@@ -186,19 +203,21 @@
 			gowsgrzl() {
 
 			},
-			//图文咨询
 			goTuwen() {
 				uni.navigateTo({
 					url:'/pages2/pages/config/consult-text'
 				});
 			},
-			//视频咨询
 			goShipin() {
 				uni.navigateTo({
 					url:'/pages2/pages/config/consult-video'
 				});
 			},
-			//电话咨询
+			goSuiz() {
+				uni.navigateTo({
+					url:'/pages2/pages/config/consult-suiz'
+				});
+			},
 			goDianhua() {
 				uni.navigateTo({
 					url:'/pages2/pages/config/consult-phone'

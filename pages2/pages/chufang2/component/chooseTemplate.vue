@@ -163,8 +163,11 @@
 				this.close()
 			},
 
-			getList() {
-				uni.$u.http.get('/medical-api/medical/getMyMedicalTemp', {}).then(res => {
+			getList(templateType) {
+				let cfInfo = uni.getStorageSync('cf-info');
+				uni.$u.http.get('/medical-api/medical/getMyMedicalTemp', {params: {
+					templateType:cfInfo.preType
+				}}).then(res => {
 					this.listTemp = res.data || {};
 				});
 

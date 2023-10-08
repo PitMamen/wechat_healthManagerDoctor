@@ -7,7 +7,6 @@
 			            style="width: 100%;" frameborder="0"></video>
 			</view>
 		</view>
-		<view class="fix" @click="sendHandler">发送给患者</view>
 	</view>
 </template>
 

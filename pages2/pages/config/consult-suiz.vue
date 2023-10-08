@@ -1,39 +1,38 @@
 <template>
-	<view class="wrap" :class="{empty: list.length === 0}">
-		<u-empty mode="data" style="padding-top: 300rpx;" icon="/pages2/static/img/icon_nodata.png" v-if="list.length === 0"></u-empty>
-		<view class="list" v-else>
-			<view class="part part2" v-for="item in list" :key="item.id" :class="{close: item.itemStatus === 0}">
-				<view class="bigrow">
-					<view class="row">
-						<view class="title">{{ item.serviceItemName || '' }}</view>
-						<view class="action">
-							<u-switch
-								v-model="item.itemStatus"
-								class="switch"
-								space="2"
-								size="24"
-								:activeValue="1"
-								:inactiveValue="0"
-								activeColor="#5A9CF8"
-								inactiveColor="#E6E6E6"
-							>
-							</u-switch>
-						</view>
+	<view class="wrap">
+		<view class="list">
+			<view class="part part2">
+				<view class="row call">
+					<view class="title">
+						<view>报到后赠送追问次数</view>
+						<view style="padding-top: 30rpx;font-size: 28rpx;color: #4D4D4D;">患者报到后赠送的免费追问次数</view>
 					</view>
-					<view class="desc">患者指定您进行图文问诊，您可以自主关闭（单次咨询限制时长最多24小时，医患沟通最多20回合）</view>
+					<view class="action" @click="showCall()">
+						<view class="value times">{{ info.limitNumsValue||0 }}次</view>
+						<u-icon class="icon" name="arrow-right" color="#999999" size="18"></u-icon>
+					</view>
 				</view>
 				<view class="line"></view>
-				<view class="row call">
-					<view class="title">价格设置</view>
-					<view class="action" @click="showCall(item)">
-						<view class="value times">{{ item.saleAmount || 0 }}元</view>
-						<u-icon class="icon" name="arrow-right" color="#999999" size="18"></u-icon>
+				<view class="row price">
+					<view class="title">有效天数</view>
+					<view class="action">
+						<view class="value inputs">
+							<u-input
+								v-model.trim="info.expireValue"
+								class="input"
+								type="number"
+								border="none"
+								inputAlign="right"
+								placeholder="请输入天数0～999"
+							>
+							</u-input>
+						</view>
 					</view>
 				</view>
 			</view>
 		</view>
 		
-		<view class="fixed" v-if="list.length > 0">
+		<view class="fixed">
 			<u-button
 				class="button"
 				type="primary"
@@ -51,7 +50,6 @@
 			@cancel="cancel"
 			@confirm="confirm"
 		></u-picker>
-		<!-- <sides /> -->
 	</view>
 </template>
 
@@ -61,93 +59,71 @@
 			return {
 				show: false,
 				loading: false,
+				info: {
+					expireUnit: '天',
+					expireValue: '',
+					limitNumsUnit: '条',
+					limitNumsValue: 3
+				},
 				columns: [
 					[
 						{
-							id: 0.01,
-							label: '0.01元'
+							id: 1,
+							label: '1次'
 						},
 						{
-							id: 4,
-							label: '4元'
+							id: 3,
+							label: '3次'
 						},
 						{
-							id: 6,
-							label: '6元'
-						},
-						{
-							id: 8,
-							label: '8元'
-						},
-						{
-							id: 10,
-							label: '10元'
-						},
-						{
-							id: 12,
-							label: '12元'
-						},
-						{
-							id: 15,
-							label: '15元'
-						},
-						{
-							id: 20,
-							label: '20元'
-						},
-						{
-							id: 25,
-							label: '25元'
-						},
-						{
-							id: 30,
-							label: '30元'
-						},
-						{
-							id: 50,
-							label: '50元'
-						},
-						{
-							id: 60,
-							label: '60元'
-						},
-						{
-							id: 80,
-							label: '80元'
-						},
-						{
-							id: 100,
-							label: '100元'
-						},
-						{
-							id: 150,
-							label: '150元'
-						},
-						{
-							id: 400,
-							label: '400元'
+							id: 5,
+							label: '5次'
 						}
 					]
 				],
+				duty: '',
 				list: [],
-				callItem: {}
+				callItem: {},
+				weekNameMap: {
+					'1': '周一',
+					'2': '周二',
+					'3': '周三',
+					'4': '周四',
+					'5': '周五',
+					'6': '周六',
+					'7': '周日'
+				},
+				userId: ((uni.getStorageSync('account') || {}).user || {}).userId
 			}
 		},
 		onLoad() {
-			this.getList();
+			this.getInfo();
+			// this.getList();
 		},
 		onReady() {
 		},
 		onShow() {
+			// this.getDuty();
 		},
 		methods: {
+			getDuty() {
+				uni.$u.http.post(`/medical-api/tdArrangeWorkTime/getDocArrangeInfo`, {
+					type: 1,
+					userId: this.userId
+				}).then(res => {
+					const names = (res.data || []).map(item => {
+						return this.weekNameMap[item.weekDay+''];
+					});
+					this.duty = names.join('、');
+				});
+			},
 			getList() {
 				uni.showLoading({
 					title:'正在加载'
 				});
 				uni.$u.http.get('/medical-api/commodityConfig/getPkgItemByDoc', {
 					params: {
-						projectType: '101'
+						projectType: '102'
 					}
 				}).then(res => {
 					this.list = res.data || [];
@@ -155,7 +131,34 @@
 					uni.hideLoading();
 				});
 			},
+			getInfo() {
+				uni.showLoading({
+					title:'正在加载'
+				});
+				uni.$u.http.get('/medical-api/commodityConfig/getGuidePkgRules', {
+					params: {}
+				}).then(res => {
+					uni.hideLoading();
+					this.info = res.data || {};
+				});
+			},
 			save() {
+				if (!this.info.limitNumsValue || parseFloat(this.info.limitNumsValue)<=0){
+					uni.showToast({
+						title: '请选择赠送的追问次数',
+						icon: 'none'
+					});
+					return;
+				}
+				if (!/^0|([1-9]\d*)$/.test(this.info.expireValue)
+					|| parseFloat(this.info.expireValue)>999
+					|| parseFloat(this.info.expireValue)===0){
+					uni.showToast({
+						title: '输入有误，有效天数为0~999',
+						icon: 'none'
+					});
+					return;
+				}
 				if (this.loading){
 					return;
 				}
@@ -163,35 +166,38 @@
 				uni.showLoading({
 					title:'正在加载'
 				});
-				uni.$u.http.post('/medical-api/commodityConfig/editPkgItemList', this.list.map(item => {
-					return {
-						id: item.id,
-						itemStatus: item.itemStatus,
-						saleAmount: item.saleAmount
-					}
-				})).then(res => {
+				uni.$u.http.post('/medical-api/commodityConfig/updateGuidePkgRules', this.info).then(res => {
 					uni.hideLoading();
 					uni.showToast({
 						title: '保存成功',
 						icon: 'success'
 					});
+					setTimeout(() => {
+						uni.navigateBack({
+							delta: 1
+						});
+					}, 2000);
 				}).catch(error => {
-					uni.hideLoading();
-				}).finally(() => {
 					this.loading = false;
+				}).finally(() => {
+					// this.loading = false;
 				});
 			},
-			showCall(item) {
+			goDuty() {
+				uni.navigateTo({
+					url: `/pages2/pages/config/duty?type=1`
+				});
+			},
+			showCall() {
 				this.show = true;
-				this.callItem = item;
 			},
 			cancel() {
 				this.show = false;
 			},
 			confirm(e) {
 				this.cancel();
-				const saleAmount = e.value[0].id;
-				this.$set(this.callItem, 'saleAmount', saleAmount);
+				const times = e.value[0].id;
+				this.$set(this.info, 'limitNumsValue', times);
 			}
 		}
 	}
@@ -206,6 +212,7 @@
 		}
 		.list {
 			margin-bottom: 180rpx;
+			padding-top: 20rpx;
 			overflow: hidden;
 			background: #F2F2F2;
 		}
@@ -220,7 +227,6 @@
 					padding-top: 5rpx;
 					padding-bottom: 30rpx;
 					.desc {
-						max-width: 580rpx;
 						padding: 0 30rpx;
 						font-size: 28rpx;
 						font-weight: 400;

@@ -105,6 +105,9 @@
 			this.setData({
 				conversationID
 			});
+			
+			this.tab=options.tab || 'tab2'
+			
 			const taskItem = uni.getStorageSync('taskItem');
 			try {
 				this.loadFunction()

@@ -3,26 +3,53 @@
 		<view class="head">
 			<view class="tab">
 				<view class="item" :class="{active: tab===1}" @click="tabClick(1)">
-					<view>本院复诊</view>
+					<view>全部</view>
 				</view>
 				<view class="item" :class="{active: tab===2}" @click="tabClick(2)">
-					<view>健康咨询</view>
+					<view>待接诊</view>
+				</view>
+				<view class="item" :class="{active: tab===3}" @click="tabClick(3)">
+					<view>问诊中</view>
+				</view>
+				<view class="item" :class="{active: tab===4}" @click="tabClick(4)">
+					<view>已结束</view>
 				</view>
 			</view>
-			<view class="filter">
-				<view class="item" @click="show1 = true; hideKeyboard();" v-if="tab === 2">
-					<view class="name">{{text1 || '请选择类别'}}</view>
-					<u-icon name="arrow-down" color="#1A1A1A" size="36rpx"></u-icon>
+			<view class="filter" v-if="tab===1">
+				<view class="left">
+					<view class="btns">
+						<view class="btn active" v-if="serviceItemType===101">图文问诊</view>
+						<view class="btn active" v-if="serviceItemType===102">电话问诊</view>
+						<view class="btn active" v-if="serviceItemType===103">视频问诊</view>
+						<view class="btn active" v-if="broadClassify===4">复诊续方</view>
+					</view>
 				</view>
-				<view class="item" @click="show2 = true; hideKeyboard();">
-					<view class="name">{{text2 || '请选择状态'}}</view>
-					<u-icon name="arrow-down" color="#1A1A1A" size="36rpx"></u-icon>
+				<view class="right" @click="chooseOpen()">
+					<image src="/pages2/static/static/images/treat/filter.png"></image>
+					<view class="name">筛选</view>
+					<view class="dot" v-if="serviceItemType||broadClassify">1</view>
+				</view>
+				<view class="choose-abs" v-if="showChoose">
+					<view class="up">
+						<view class="title">问诊类型</view>
+						<view class="list">
+							<view class="item" :class="{active: serviceItemType_===101}" @click="chooseItemClick(101, '')">图文问诊</view>
+							<view class="item" :class="{active: serviceItemType_===102}" @click="chooseItemClick(102, '')">电话问诊</view>
+							<view class="item" :class="{active: serviceItemType_===103}" @click="chooseItemClick(103, '')">视频问诊</view>
+							<view class="item" :class="{active: broadClassify_===4}" @click="chooseItemClick('', 4)">复诊续方</view>
+						</view>
+					</view>
+					<view class="down">
+						<view class="btn" @click="chooseReset()">重置</view>
+						<view class="btn confirm" @click="chooseConfirm()">确认</view>
+					</view>
+					<view class="mask" @click="chooseClose()"></view>
 				</view>
 			</view>
 		</view>
 		<view class="content">
-			<u-empty mode="data" style="padding-top: 500rpx;" icon="/pages2/static/img/icon_nodata.png" v-if="list.length === 0"></u-empty>
-			<scroll-view class="list" :scroll-y="true" @scrolltolower="scrolltolower" v-else>
+			<u-empty mode="data" icon="/pages2/static/img/icon_nodata.png" v-if="list.length === 0"></u-empty>
+			<scroll-view class="list" :class="{all: tab===1}" :scroll-y="true" @scrolltolower="scrolltolower" v-else>
 				<view class="item" v-for="item in list" :key="item.id" @click="itemClick(item)">
 					<view class="top">
 						<view class="left">
@@ -67,6 +94,7 @@
 						</view>
 					</view>
 					<view class="bottom" v-if="item.broadClassify === 4">
+						<view class="remark-abs inner">院内结算</view>
 						<block v-if="item.status === 2">
 							<view class="btn btn2" @click.stop="onTextRefuse(item)">拒诊</view>
 							<view class="btn btn1" @click.stop="onTextGoOn(item)">接诊</view>
@@ -82,6 +110,7 @@
 						</block>
 					</view>
 					<view class="bottom" v-else-if="item.serviceItemType === 101">
+						<view class="remark-abs">雅医结算</view>
 						<block v-if="item.status === 2">
 							<view class="btn btn2" @click.stop="onTextRefuse(item)">拒诊</view>
 							<view class="btn btn1" @click.stop="onTextGoOn(item)">接诊</view>
@@ -97,6 +126,7 @@
 						</block>
 					</view>
 					<view class="bottom" v-else-if="item.serviceItemType === 102">
+						<view class="remark-abs">雅医结算</view>
 						<block v-if="item.status === 2">
 							<view class="btn btn2" @click.stop="onTextRefuse(item)">拒诊</view>
 							<view class="btn btn1" @click.stop="onTextGoOn(item)">接诊</view>
@@ -111,6 +141,7 @@
 						</block>
 					</view>
 					<view class="bottom" v-else-if="item.serviceItemType === 103">
+						<view class="remark-abs">雅医结算</view>
 						<block v-if="item.status === 2">
 							<view class="btn btn2" @click.stop="onTextRefuse(item)">拒诊</view>
 							<view class="btn btn1" @click.stop="onTextGoOn(item)">接诊</view>
@@ -130,8 +161,6 @@
 		
 		<tuicall ref="TUICall"></tuicall>
 		<TUI-view-rate ref="TUIViewRate" />
-		<u-picker :show="show1" :columns="list1" @cancel="cancel1" @confirm="confirm1"></u-picker>
-		<u-picker :show="show2" :columns="list2" @cancel="cancel2" @confirm="confirm2"></u-picker>
 		<u-modal
 			title="温馨提示"
 			confirmText="确定"
@@ -178,30 +207,18 @@
 	export default {
 		data() {
 			return {
+				serviceItemType_: '',
 				serviceItemType: '',
-				broadClassify: 4,
-				status: '',
+				broadClassify_: '',
+				broadClassify: '',
+				showChoose: false,
 				tab: 1,
 				
 				flag: false,
 				total: 0,
 				pageNo: 1,
+				pageSize: 10,
 				list: [],
-				
-				show1: false,
-				show2: false,
-				text1: '',
-				text2: '',
-				list1: [[
-					{text: '图文咨询',value: 101},
-					{text: '电话咨询',value: 102},
-					{text: '视频咨询',value: 103}
-				]],
-				list2: [[
-					{text: '待接诊',value: 2},
-					{text: '问诊中',value: 3},
-					{text: '已结束',value: 9}
-				]],
 				
 				choseOne: null,
 				showEnd: false,
@@ -215,7 +232,8 @@
 		},
 		computed: {
 		},
-		onLoad() {
+		onLoad(options) {
+			this.tab = parseInt(options.tab || 1);
 			this.getList();
 		},
 		onReady() {
@@ -228,12 +246,13 @@
 					title:'正在加载'
 				});
 				uni.$u.http.post(`/medical-api/rightsUse/qryRightsUseRecordPageByDoc`, {
+					flag: !(this.serviceItemType||this.broadClassify) ? 1 : '',
+					serviceItemType: this.tab===1 ? this.serviceItemType : '',
+					broadClassify: this.tab===1 ? this.broadClassify : '',
 					docId: uni.getStorageSync('account').user.userId,
-					serviceItemType: this.serviceItemType,
-					broadClassify: this.broadClassify,
-					status: this.status,
-					pageNo: this.pageNo,
-					pageSize: 10
+					status: ['', '', 2, 3, 9][this.tab],
+					pageSize: this.pageSize,
+					pageNo: this.pageNo
 				}).then(res => {
 					uni.hideLoading();
 					this.total = res.data.totalRows;
@@ -243,7 +262,7 @@
 				});
 			},
 			scrolltolower() {
-				if (this.pageNo*10 >= this.total){
+				if (this.pageNo*this.pageSize >= this.total){
 					return;
 				}
 				if (this.flag){
@@ -272,19 +291,8 @@
 				this.list = [];
 			},
 			changeTab(tab) {
-				this.serviceItemType = '';
-				this.broadClassify = '';
-				this.status = '';
-				
-				this.text1 = '';
-				this.text2 = '';
 				this.tab = tab;
-				
 				this.resetPage();
-				if (this.tab === 1){
-					this.broadClassify = 4;
-				}
-				
 				this.getList();
 			},
 			tabClick(tab) {
@@ -308,6 +316,32 @@
 				uni.navigateTo({
 					url: `/pages2/pages/work/talk/${pageName}?item=${encodeURIComponent(JSON.stringify(item))}`
 				});
+			},
+			chooseItemClick(type, classify) {
+				this.serviceItemType_ = type;
+				this.broadClassify_ = classify;
+			},
+			chooseOpen() {
+				this.showChoose = true;
+			},
+			chooseClose() {
+				this.showChoose = false;
+			},
+			chooseReset() {
+				this.serviceItemType_ = '';
+				this.serviceItemType = '';
+				this.broadClassify_ = '';
+				this.broadClassify = '';
+				this.chooseClose();
+				this.resetPage();
+				this.getList();
+			},
+			chooseConfirm() {
+				this.serviceItemType = this.serviceItemType_;
+				this.broadClassify = this.broadClassify_;
+				this.chooseClose();
+				this.resetPage();
+				this.getList();
 			},
 			
 			onTextRefuse(item) {
@@ -338,7 +372,6 @@
 				});
 			},
 			showComments(item) {
-				console.log("FFFF:",item)
 				this.$refs.TUIViewRate.open(item.orderId);
 			},
 			goChatHistory(item) {
@@ -399,6 +432,10 @@
 						tradeId: id
 					}
 				}).then(res => {});
+			},
+			refreshAllData() {
+				this.resetPage();
+				this.getList();
 			},
 			goRefuse() {
 				uni.showLoading({
@@ -466,33 +503,6 @@
 				oMin < 10 ? (oMin = '0' + oMin) : oMin;
 				oSen < 10 ? (oSen = '0' + oSen) : oSen;
 				return `${myyear}-${mymonth}-${myweekday} ${oHour}:${oMin}:${oSen}`;
-			},
-			refreshAllData() {
-				this.resetPage();
-				this.getList();
-			},
-			
-			cancel1() {
-				this.show1 = false;
-			},
-			cancel2() {
-				this.show2 = false;
-			},
-			confirm1(e) {
-				this.cancel1();
-				this.text1 = e.value[0].text;
-				this.serviceItemType = e.value[0].value;
-				
-				this.resetPage();
-				this.getList();
-			},
-			confirm2(e) {
-				this.cancel2();
-				this.text2 = e.value[0].text;
-				this.status = e.value[0].value;
-				
-				this.resetPage();
-				this.getList();
 			}
 		}
 	}
@@ -509,8 +519,8 @@
 				align-items: center;
 				justify-content: space-between;
 				border-bottom: 1rpx solid #E6E6E6;
+				padding: 0 24rpx;
 				.item {
-					flex: 1;
 					font-size: 30rpx;
 					font-weight: 400;
 					color: #999999;
@@ -526,33 +536,148 @@
 				}
 			}
 			.filter {
+				position: relative;
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
-				.item {
+				padding: 20rpx 24rpx;
+				z-index: 10;
+				.left {
+					height: 44rpx;
+					.btns {
+						display: flex;
+						align-items: center;
+						justify-content: flex-start;
+						.btn {
+							width: 120rpx;
+							margin-right: 20rpx;
+							font-size: 24rpx;
+							font-weight: 400;
+							color: #4D4D4D;
+							line-height: 42rpx;
+							text-align: center;
+							background: #F5F5F5;
+							border-radius: 21rpx;
+							border: 1rpx solid transparent;
+							&.active {
+								color: #3894FF;
+								border: 1rpx solid #3894FF;
+							}
+						}
+					}
+				}
+				.right {
 					display: flex;
 					align-items: center;
-					justify-content: center;
-					flex: 1;
-					.name {
-						font-size: 30rpx;
-						font-weight: 400;
-						color: #4D4D4D;
-						line-height: 80rpx;
+					justify-content: flex-end;
+					image {
+						width: 34rpx;
+						height: 34rpx;
+						margin-right: 10rpx;
 					}
-					>.u-icon {
+					.name {
+						font-size: 28rpx;
+						font-weight: 400;
+						color: #999999;
+						line-height: 42rpx;
+					}
+					.dot {
 						position: relative;
-						top: 2rpx;
-						margin-left: 2rpx;
+						top: -14rpx;
+						left: -8rpx;
+						width: 28rpx;
+						height: 28rpx;
+						font-size: 24rpx;
+						font-weight: 400;
+						color: #FFFFFF;
+						line-height: 28rpx;
+						text-align: center;
+						background: #3894FF;
+						border-radius: 50%;
+					}
+				}
+				.choose-abs {
+					position: absolute;
+					top: 84rpx;
+					left: 0;
+					right: 0;
+					background: #FFFFFF;
+					.up {
+						padding: 20rpx 24rpx 350rpx 24rpx;
+						.title {
+							padding-left: 20rpx;
+							font-size: 30rpx;
+							font-weight: 400;
+							color: #4D4D4D;
+							line-height: 38rpx;
+							border-left: 6rpx solid #3894FF;
+						}
+						.list {
+							display: flex;
+							align-items: center;
+							justify-content: flex-start;
+							margin-top: 30rpx;
+							.item {
+								width: 120rpx;
+								margin-right: 20rpx;
+								font-size: 24rpx;
+								font-weight: 400;
+								color: #4D4D4D;
+								line-height: 42rpx;
+								text-align: center;
+								background: #F5F5F5;
+								border-radius: 21rpx;
+								border: 1rpx solid transparent;
+								&.active {
+									color: #3894FF;
+									border: 1rpx solid #3894FF;
+								}
+							}
+						}
+					}
+					.down {
+						display: flex;
+						align-items: center;
+						justify-content: space-between;
+						.btn {
+							flex: 1;
+							font-size: 30rpx;
+							font-weight: 400;
+							color: #1A1A1A;
+							line-height: 80rpx;
+							text-align: center;
+							border-top: 1rpx solid #E6E6E6;
+							&.confirm {
+								color: #FFFFFF;
+								background: #3894FF;
+								border-top: 1rpx solid transparent;
+							}
+						}
+					}
+					.mask {
+						position: fixed;
+						top: 735rpx;
+						left: 0;
+						right: 0;
+						bottom: 0;
+						background: #000000;
+						opacity: 0.3;
+						z-index: 10;
 					}
 				}
 			}
 		}
 		.content {
+			.u-empty {
+				padding-top: 200rpx;
+			}
 			.list {
-				max-height: calc(100vh - 174rpx);
+				max-height: calc(100vh - 95rpx);
 				padding: 30rpx 24rpx;
 				box-sizing: border-box;
+				&.all {
+					max-height: calc(100vh - 178rpx);
+				}
 				.item {
 					margin-bottom: 30rpx;
 					padding: 20rpx 30rpx;
@@ -622,11 +747,28 @@
 						}
 					}
 					.bottom {
+						position: relative;
 						display: flex;
 						align-items: center;
 						justify-content: flex-end;
                         height: 52rpx;
 						padding-bottom: 10rpx;
+						.remark-abs {
+							position: absolute;
+							top: 5rpx;
+							left: 0rpx;
+							width: 120rpx;
+							font-size: 24rpx;
+							font-weight: 400;
+							color: #FFFFFF;
+							line-height: 45rpx;
+							text-align: center;
+							background: #6796F2;
+							border-radius: 4rpx;
+							&.inner {
+								background: #3FC1A5;
+							}
+						}
 						.btn {
 							margin-left: 30rpx;
 							width: 148rpx;

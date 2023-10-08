@@ -13,6 +13,7 @@
 		{
 			"path": "pages/work/workshop",
 			"style": {
+				"navigationStyle": "custom",
 				"navigationBarTitleText": "工作室"
 			}
 		},
@@ -26,6 +27,12 @@
 			"path": "pages/follow/current-follow-list",
 			"style": {
 				"navigationBarTitleText": "随访"
+			}
+		},
+		{
+			"path": "pages/patient/index",
+			"style": {
+				"navigationBarTitleText": "患者管理"
 			}
 		}
 
@@ -102,6 +109,12 @@
 					}
 				},
 				{
+					"path": "pages/group/note-info2",
+					"style": {
+						"navigationBarTitleText": "文章详情"
+					}
+				},
+				{
 					"path": "pages/group/paper-info",
 					"style": {
 						"navigationBarTitleText": "问卷详情"
@@ -160,6 +173,12 @@
 					"path": "pages/config/consult-video",
 					"style": {
 						"navigationBarTitleText": "视频咨询"
+					}
+				},
+				{
+					"path": "pages/config/consult-suiz",
+					"style": {
+						"navigationBarTitleText": "门诊随诊"
 					}
 				},
 				{
@@ -260,6 +279,18 @@
 					}
 				},
 				{
+					"path": "pages/work/grep",
+					"style": {
+						"navigationBarTitleText": "抢单池"
+					}
+				},
+				{
+					"path": "pages/work/treat",
+					"style": {
+						"navigationBarTitleText": "问诊"
+					}
+				},
+				{
 					"path": "pages/work/search",
 					"style": {
 						"navigationBarTitleText": "搜索"
@@ -353,6 +384,18 @@
 						"navigationBarTitleText": "智能回复",
 						"navigationBarBackgroundColor": "#ffffff"
 					}
+				},
+				{
+					"path": "pages/chufang2/mode-edit",
+					"style": {
+						"navigationBarTitleText": "模板编辑"
+					}
+				},
+				{
+					"path": "pages/chufang2/mode-list",
+					"style": {
+						"navigationBarTitleText": "处方模板"
+					}
 				}
 			]
 		},
@@ -440,6 +483,65 @@
 					"style": {
 						"navigationBarTitleText": "互联网医院用户协议"
 					}
+				},
+				{
+					"path": "pages/record/tags",
+					"style": {
+						"navigationBarTitleText": "设置分组"
+					}
+				},
+				{
+					"path": "pages/record/choose-patient",
+					"style": {
+						"navigationBarTitleText": "添加患者"
+					}
+				},
+				{
+					"path": "pages/group/list",
+					"style": {
+						"navigationBarTitleText": "患者标签"
+					}
+				},
+				{
+					"path" : "pages/group/add",
+					"style" : {
+						"navigationBarTitleText": "患者标签"
+					}
+            
+				},
+				{
+					"path" : "pages/group/edit",
+					"style" : {
+						"navigationBarTitleText": "患者标签"
+					}
+            
+				},
+				{
+					"path": "pages/group/note",
+					"style": {
+						"navigationBarTitleText": "宣教文章"
+					}
+				},
+				{
+					"path": "pages/group/note-info",
+					"style": {
+						"navigationBarTitleText": "文章详情"
+					}
+				},
+				{
+					"path" : "pages/record/mass",
+					"style" : {
+						"enablePullDownRefresh":true,
+						"navigationBarTitleText": "群发消息"
+					}
+            
+				},
+				{
+					"path" : "pages/record/message-text",
+					"style" : {
+						"navigationBarTitleText": "编辑消息"
+					}
+            
 				}
 			]
 		}
@@ -455,21 +557,21 @@
 		"selectedColor": "#00A1FF",
 		"list": [{
 				"pagePath": "pages/work/workshop",
-				"iconPath": "static/img/tab_home.png",
-				"selectedIconPath": "static/img/tab_home_checked.png",
+				"iconPath": "static/img/tab_home_n.png",
+				"selectedIconPath": "static/img/tab_home_s.png",
 				"text": "工作室"
 			},
 			{
-				"pagePath": "pages/follow/current-follow-list",
-				"iconPath": "static/img/tab_sf.png",
-				"selectedIconPath": "static/img/tab_sf_checked.png",
-				"text": "随访"
+				"pagePath": "pages/patient/index",
+				"iconPath": "static/img/tab_hzgl_n.png",
+				"selectedIconPath": "static/img/tab_hzgl_s.png",
+				"text": "患者管理"
 			},
 			{
 				"pagePath": "pages/mine/index",
 				"text": "我的",
-				"iconPath": "/static/img/tab_me.png",
-				"selectedIconPath": "/static/img/tab_me_checked.png"
+				"iconPath": "/static/img/tab_me_n.png",
+				"selectedIconPath": "/static/img/tab_me_s.png"
 			}
 		]
 	},
@@ -491,3 +593,4 @@
 		}]
 	}
 }
+
