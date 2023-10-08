@@ -751,6 +751,7 @@
 						display: flex;
 						align-items: center;
 						justify-content: flex-end;
+                        height: 52rpx;
 						padding-bottom: 10rpx;
 						.remark-abs {
 							position: absolute;
