@@ -12,7 +12,9 @@
 					{{account.user.userName}}
 				</view>
 				<view class="v-right-hor">
-					<view style="color: #141418;font-weight: 700;" @click="goCom">{{account.user.professionalTitle || ''}}</view>
+					<view style="color: #141418;font-weight: 700;" @click="goCom">
+						{{account.user.professionalTitle || ''}}
+					</view>
 					<view style="color: #1A1A1A;margin-left: 20rpx;">{{account.user.departmentName || ''}}</view>
 				</view>
 				<view style="color: #999999;font-size: 24rpx;width: 100%;margin-top: 10rpx;">
@@ -170,6 +172,20 @@
 			</view>
 		</view>
 
+		<view class="v-items" @click="goMyPapers">
+			<image src="/static/static/images/mine_papers.png"
+				style="float: left;width: 56rpx;height: 56rpx;margin-left: 2vw;">
+			</image>
+
+			<view style="margin-left: 10px;font-size: 30rpx;flex: 1;">我的证件</view>
+
+			<view style="display: flex;flex-direction: row;">
+				<!-- <span style="float: right;font-size: 14px;">全部</span> -->
+				<u-icon name="arrow-right" color="#333"
+					style="width: 10px;height: 10px;float: right;margin-right: 10px;margin-top: 6.5px;"></u-icon>
+			</view>
+		</view>
+
 		<!-- <view class="v-items" @click="goIdentify">
 			<image src="/static/static/images/mine-srrz.png"
 				style="float: left;width: 56rpx;height: 56rpx;margin-left: 2vw;">
@@ -184,8 +200,8 @@
 			</view>
 		</view> -->
 
-		
-		
+
+
 	</view>
 </template>
 
@@ -195,6 +211,7 @@
 			return {
 				showCa: false,
 				cashEye: true,
+				has: true,
 				title: 'Hello',
 				account: {
 					name: '李雅',
@@ -308,17 +325,17 @@
 					uni.hideLoading();
 				});
 			},
-			
-			refreshBindStatus(){
+
+			refreshBindStatus() {
 				uni.$u.http.get('/account-api/accountInfo/getDoctorAuthStatus', {
 					params: {}
 				}).then(res => {
 					if (res.code == 0) {
-						this.account.bindStatus =res.data.bindStatus
+						this.account.bindStatus = res.data.bindStatus
 					} else {
 						this.$u.toast(res.message)
 					}
-				
+
 				}).finally(() => {
 					uni.hideLoading();
 				});
@@ -364,24 +381,40 @@
 					url: '/pages2/pages/login/update'
 				})
 			},
+			goMyPapers() {
+				if (!this.checkAuth()) {
+					return
+				}
+				if (this.has) {
+					uni.navigateTo({
+						url: '/pages2/pages/mine/my-papers'
+					})
+				} else {
+					uni.navigateTo({
+						url: '/pages2/pages/mine/my-papers-none'
+					})
+				}
+				this.has = !this.has
+
+			},
 			goMyCertificate() {
 				if (!this.checkAuth()) {
 					return
 				}
 			},
-		
-			
+
+
 			getShowCa() {
 
 				uni.$u.http.get(`/info-api/sysConfigData/getConfig/CA_AUTH_FLAG`).then(res => {
 					this.showCa = res.data.value === '1';
 				});
 			},
-			goCom(){//临时加入口的测试代码
+			goCom() { //临时加入口的测试代码
 				// uni.navigateTo({
 				// 	url: '/pages2/pages/work/treat'
 				// })
-				
+
 				uni.navigateTo({
 					url: '/pages3/pages/record/choose-patient'
 				})
@@ -462,7 +495,7 @@
 				});
 			},
 			goCashPack() {
-				if(!this.checkAuth()){
+				if (!this.checkAuth()) {
 					return
 				}
 				uni.navigateTo({

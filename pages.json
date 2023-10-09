@@ -152,6 +152,24 @@
 					}
 				},
 				{
+					"path": "pages/mine/my-papers",
+					"style": {
+						"navigationBarTitleText": "我的证件"
+					}
+				},
+				{
+					"path": "pages/mine/my-papers-none",
+					"style": {
+						"navigationBarTitleText": "我的证件"
+					}
+				},
+				{
+					"path": "pages/mine/my-papers-edit",
+					"style": {
+						"navigationBarTitleText": "我的证件"
+					}
+				},
+				{
 					"path": "pages/mine/search-hospital",
 					"style": {
 						"navigationBarTitleText": "选择医院"
