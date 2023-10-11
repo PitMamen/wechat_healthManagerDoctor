@@ -201,7 +201,9 @@
 			
 			//完善个人资料
 			gowsgrzl() {
-
+				uni.navigateTo({
+					url: '/pages2/pages/mine/edit'
+				});
 			},
 			goTuwen() {
 				uni.navigateTo({

@@ -133,6 +133,12 @@
 					}
 				},
 				{
+					"path": "pages/mine/edit",
+					"style": {
+						"navigationBarTitleText": "个人资料"
+					}
+				},
+				{
 					"path": "pages/mine/identify-base",
 					"style": {
 						"navigationBarTitleText": "实名认证"
