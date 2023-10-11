@@ -79,12 +79,12 @@
 			<view style="height: 1rpx;background-color: #E6E6E6;margin: 30rpx 24rpx 24rpx 24rpx;"></view>
 
 			<!-- 职称证 -->
-			<view style="display: flex;flex-direction: row;margin-left: 24rpx;">
+			<view v-if="account.roleName=='doctor'" style="display: flex;flex-direction: row;margin-left: 24rpx;">
 				<view style="color: #4D4D4D;font-size: 30rpx;">职称证</view>
 				<view style="color: red;margin-top: 6rpx;">*</view>
 			</view>
 
-			<view style="display: flex;flex-direction: row;align-items: center;margin-left: 24rpx;margin-top: 20rpx;">
+			<view v-if="account.roleName=='doctor'" style="display: flex;flex-direction: row;align-items: center;margin-left: 24rpx;margin-top: 20rpx;">
 				<view style="display: flex;flex-direction: column;align-items: center;justify-content: center;">
 					<u-upload :fileList="fileList4" @afterRead="afterRead" @delete="deletePic" :maxCount="1" name="4">
 						<view
@@ -100,7 +100,7 @@
 			</view>
 
 			<!-- 分割线 -->
-			<view style="height: 1rpx;background-color: #E6E6E6;margin: 30rpx 24rpx 24rpx 24rpx;"></view>
+			<view v-if="account.roleName=='doctor'" style="height: 1rpx;background-color: #E6E6E6;margin: 30rpx 24rpx 24rpx 24rpx;"></view>
 
 			<!-- 资格证 -->
 			<view style="display: flex;flex-direction: row;margin-left: 24rpx;">
@@ -142,13 +142,13 @@
 			<!-- 分割线 -->
 			<view style="height: 1rpx;background-color: #E6E6E6;margin: 30rpx 24rpx 24rpx 24rpx;"></view>
 
-			<!-- 资格证 -->
-			<view style="display: flex;flex-direction: row;margin-left: 24rpx;">
+			<!-- 执业证 -->
+			<view v-if="account.roleName=='doctor'|| account.roleName=='nurse'" style="display: flex;flex-direction: row;margin-left: 24rpx;">
 				<view style="color: #4D4D4D;font-size: 30rpx;">执业证正反面</view>
 				<view style="color: red;margin-top: 6rpx;">*</view>
 			</view>
 
-			<view style="display: flex;flex-direction: row;align-items: center;margin-left: 24rpx;margin-top: 20rpx;">
+			<view v-if="account.roleName=='doctor'|| account.roleName=='nurse'" style="display: flex;flex-direction: row;align-items: center;margin-left: 24rpx;margin-top: 20rpx;">
 				<view style="display: flex;flex-direction: column;align-items: center;justify-content: center;">
 					<u-upload :fileList="fileList7" @afterRead="afterRead" @delete="deletePic" :maxCount="1" name="7">
 						<view
@@ -227,8 +227,8 @@
 		</view>
 
 		<!-- 选择器，参看yp-edit.vue -->
-		<u-picker :show="showChooseHospital" :columns="columnsHospital" @cancel="cancelHospital"
-			@confirm="confirmHospital" keyName="text"></u-picker>
+<!-- 		<u-picker :show="showChooseHospital" :columns="columnsHospital" @cancel="cancelHospital"
+			@confirm="confirmHospital" keyName="text"></u-picker> -->
 
 		<u-modal :footer="null" :show="showImg" :title="title" :content='content' closeOnClickOverlay
 			@close="() => showImg = false">
@@ -269,7 +269,7 @@
 				headers: {
 					Authorization: '',
 				},
-				fileList1: [],
+				// fileList1: [],
 				fileList2: [],
 				fileList3: [],
 				fileList4: [],
@@ -278,14 +278,14 @@
 				fileList7: [],
 				fileList8: [],
 				showChooseHospital: false,
-				countExpert: 0,
-				countBrief: 0,
+				// countExpert: 0,
+				// countBrief: 0,
 				modifyData: undefined,
 				doctorAuthInfo: {
 					avatarUrl: "",
 
-					doctorBrief: "",
-					expertInDisease: "", //擅长
+					// doctorBrief: "",
+					// expertInDisease: "", //擅长
 
 					idcardF: "",
 					idcardZ: "",
@@ -345,14 +345,14 @@
 							this.doctorAuthInfo.qualificationF = baseInfo.qualificationF
 							this.doctorAuthInfo.practiceZ = baseInfo.practiceZ
 							this.doctorAuthInfo.practiceF = baseInfo.practiceF
-							this.doctorAuthInfo.doctorBrief = baseInfo.doctorBrief
-							this.doctorAuthInfo.expertInDisease = baseInfo.expertInDisease
+							// this.doctorAuthInfo.doctorBrief = baseInfo.doctorBrief
+							// this.doctorAuthInfo.expertInDisease = baseInfo.expertInDisease
 
-							this.fileList1 = [{
-								url: baseInfo.avatarUrl,
-								status: 'success',
-								message: '',
-							}]
+							// this.fileList1 = [{
+							// 	url: baseInfo.avatarUrl,
+							// 	status: 'success',
+							// 	message: '',
+							// }]
 							this.fileList2 = [{
 								url: baseInfo.idcardZ,
 								status: 'success',
@@ -389,8 +389,8 @@
 								message: '',
 							}]
 
-							this.countExpert = (this.doctorAuthInfo.expertInDisease || '').length
-							this.countBrief = (this.doctorAuthInfo.doctorBrief || '').length
+							// this.countExpert = (this.doctorAuthInfo.expertInDisease || '').length
+							// this.countBrief = (this.doctorAuthInfo.doctorBrief || '').length
 
 						} else { //新增的实名认证信息情况，
 							// this.getProf()
@@ -405,19 +405,6 @@
 				});
 
 			},
-			// onInputChange(type) {
-			// 	console.log('onInputChange', type)
-			// 	switch (type) {
-			// 		case 1:
-			// 			this.countExpert = this.doctorAuthInfo.expertInDisease.length
-			// 			break;
-			// 		case 2:
-			// 			this.countBrief = this.doctorAuthInfo.doctorBrief.length
-			// 			break;
-			// 		default:
-			// 			break;
-			// 	}
-			// },
 
 			showExample(type) {
 				switch (type) {
@@ -569,14 +556,14 @@
 							},
 			 */
 			goNext() {
-				console.log('this.fileList1', this.fileList1)
-				//8个必填项
-				if (!this.fileList1[0] || !this.fileList1[0].url) {
-					this.$u.toast("请上传头像！")
-					return
-				} else {
-					this.doctorAuthInfo.avatarUrl = this.fileList1[0].url
-				}
+				// console.log('this.fileList1', this.fileList1)
+				//7个必填项
+				// if (!this.fileList1[0] || !this.fileList1[0].url) {
+				// 	this.$u.toast("请上传头像！")
+				// 	return
+				// } else {
+				// 	this.doctorAuthInfo.avatarUrl = this.fileList1[0].url
+				// }
 
 				if (!this.fileList2[0] || !this.fileList2[0].url) {
 					this.$u.toast("请上传身份证正面！")

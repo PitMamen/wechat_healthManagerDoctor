@@ -81,12 +81,12 @@
 			<view style="height: 1rpx;background-color: #E6E6E6;margin: 30rpx 24rpx 24rpx 24rpx;"></view>
 
 			<!-- 职称证 -->
-			<view style="display: flex;flex-direction: row;margin-left: 24rpx;">
+			<view v-if="account.roleName=='doctor'" style="display: flex;flex-direction: row;margin-left: 24rpx;">
 				<view style="color: #4D4D4D;font-size: 30rpx;">职称证</view>
 				<view style="color: red;margin-top: 6rpx;">*</view>
 			</view>
 
-			<view style="display: flex;flex-direction: row;align-items: center;margin-left: 24rpx;margin-top: 20rpx;">
+			<view v-if="account.roleName=='doctor'" style="display: flex;flex-direction: row;align-items: center;margin-left: 24rpx;margin-top: 20rpx;">
 				<view style="display: flex;flex-direction: column;align-items: center;justify-content: center;">
 					<u-upload :fileList="fileList4" @afterRead="afterRead" @delete="deletePic" :maxCount="1" name="4">
 						<view
@@ -102,7 +102,7 @@
 			</view>
 
 			<!-- 分割线 -->
-			<view style="height: 1rpx;background-color: #E6E6E6;margin: 30rpx 24rpx 24rpx 24rpx;"></view>
+			<view v-if="account.roleName=='doctor'" style="height: 1rpx;background-color: #E6E6E6;margin: 30rpx 24rpx 24rpx 24rpx;"></view>
 
 			<!-- 资格证 -->
 			<view style="display: flex;flex-direction: row;margin-left: 24rpx;">
@@ -145,12 +145,12 @@
 			<view style="height: 1rpx;background-color: #E6E6E6;margin: 30rpx 24rpx 24rpx 24rpx;"></view>
 
 			<!-- 资格证 -->
-			<view style="display: flex;flex-direction: row;margin-left: 24rpx;">
+			<view v-if="account.roleName=='doctor'|| account.roleName=='nurse'" style="display: flex;flex-direction: row;margin-left: 24rpx;">
 				<view style="color: #4D4D4D;font-size: 30rpx;">执业证正反面</view>
 				<view style="color: red;margin-top: 6rpx;">*</view>
 			</view>
 
-			<view style="display: flex;flex-direction: row;align-items: center;margin-left: 24rpx;margin-top: 20rpx;">
+			<view v-if="account.roleName=='doctor'|| account.roleName=='nurse'" style="display: flex;flex-direction: row;align-items: center;margin-left: 24rpx;margin-top: 20rpx;">
 				<view style="display: flex;flex-direction: column;align-items: center;justify-content: center;">
 					<u-upload :fileList="fileList7" @afterRead="afterRead" @delete="deletePic" :maxCount="1" name="7">
 						<view
@@ -182,7 +182,7 @@
 
 
 			<!-- 分割线 -->
-			<view style="height: 1rpx;background-color: #E6E6E6;margin: 30rpx 24rpx 24rpx 24rpx;"></view>
+			<view v-if="account.roleName=='doctor'|| account.roleName=='nurse'" style="height: 1rpx;background-color: #E6E6E6;margin: 30rpx 24rpx 24rpx 24rpx;"></view>
 
 
 			<!-- 擅长领域 -->

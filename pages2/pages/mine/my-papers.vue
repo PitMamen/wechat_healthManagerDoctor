@@ -71,11 +71,11 @@
 			<view style="width: 100vw;height: 20rpx;background-color: #F2F2F2;margin-top: 30rpx;"></view>
 
 			<!-- 职称证 -->
-			<view style="display: flex;flex-direction: row;margin-left: 24rpx;margin-top: 30rpx;">
+			<view v-if="account.roleName=='doctor'" style="display: flex;flex-direction: row;margin-left: 24rpx;margin-top: 30rpx;">
 				<view style="color: #4D4D4D;font-size: 30rpx;">职称证</view>
 			</view>
 
-			<view style="display: flex;flex-direction: row;align-items: center;margin-left: 24rpx;margin-top: 20rpx;">
+			<view v-if="account.roleName=='doctor'" style="display: flex;flex-direction: row;align-items: center;margin-left: 24rpx;margin-top: 20rpx;">
 				<view style="display: flex;flex-direction: column;align-items: center;justify-content: center;">
 					<u-upload :fileList="fileList4" @afterRead="afterRead" @delete="deletePic" :maxCount="1" name="4">
 						<view
@@ -91,7 +91,7 @@
 			</view>
 
 			<!-- 分割线 -->
-			<view style="width: 100vw;height: 20rpx;background-color: #F2F2F2;margin-top: 30rpx;"></view>
+			<view v-if="account.roleName=='doctor'" style="width: 100vw;height: 20rpx;background-color: #F2F2F2;margin-top: 30rpx;"></view>
 
 			<!-- 资格证 -->
 			<view style="display: flex;flex-direction: row;margin-left: 24rpx;margin-top: 30rpx;">
@@ -133,11 +133,11 @@
 			<view style="width: 100vw;height: 20rpx;background-color: #F2F2F2;margin-top: 30rpx;"></view>
 
 			<!-- 资格证 -->
-			<view style="display: flex;flex-direction: row;margin-left: 24rpx;margin-top: 30rpx;">
+			<view v-if="account.roleName=='doctor'|| account.roleName=='nurse'" style="display: flex;flex-direction: row;margin-left: 24rpx;margin-top: 30rpx;">
 				<view style="color: #4D4D4D;font-size: 30rpx;">执业证</view>
 			</view>
 
-			<view style="display: flex;flex-direction: row;align-items: center;margin-left: 24rpx;margin-top: 20rpx;">
+			<view v-if="account.roleName=='doctor'|| account.roleName=='nurse'" style="display: flex;flex-direction: row;align-items: center;margin-left: 24rpx;margin-top: 20rpx;">
 				<view style="display: flex;flex-direction: column;align-items: center;justify-content: center;">
 					<u-upload :fileList="fileList7" @afterRead="afterRead" @delete="deletePic" :maxCount="1" name="7">
 						<view
@@ -240,6 +240,7 @@
 		},
 		onLoad(option) {
 			this.account = uni.getStorageSync('account');
+			console.log('account****************', this.account)
 
 			this.headers.Authorization = uni.getStorageSync('bussinessToken')
 

@@ -11,6 +11,26 @@
 				</image>
 				<view style="color: #999;font-size: 24rpx;margin-left: 3rpx;">平台严格保障您的信息安全，请放心填写</view>
 			</view>
+			
+			<view class="info-item">
+				<view class="info-item-content">
+					<view style="flex: 1;display: flex;flex-direction: row;" @click="goChooseType">
+						<view style="color: #1A1A1A;font-size: 32rpx;width: 135rpx;">
+							类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型
+						</view>
+						<view style="color: red;padding-top: 5rpx;">*</view>
+						<view style="margin-left: 30rpx;color: #999;font-size: 28rpx;padding-top: 5rpx;"
+							v-if="!professionalTitle">请选择</view>
+						<view style="margin-left: 30rpx;font-size: 28rpx;padding-top: 5rpx;" v-else>
+							{{ professionalTitle || '~' }}
+						</view>
+					</view>
+			
+					<u-icon name="arrow-right" color="#333"
+						style="width: 10rpx;height: 10rpx;float: right;margin-right: 10rpx;margin-top: 6.5rpx;"></u-icon>
+			
+				</view>
+			</view>
 
 			<view class="info-item">
 				<view class="info-item-content">
@@ -157,6 +177,9 @@
 
 		<u-picker :show="showChoosePro" :columns="columnsPro" @cancel="cancelPro" @confirm="confirmPro"
 			keyName="value"></u-picker>
+			
+		<u-picker :show="showChooseType" :columns="columnsPro" @cancel="cancelPro" @confirm="confirmPro"
+			keyName="value"></u-picker>
 
 	</view>
 </template>
@@ -191,6 +214,7 @@
 				timer: null,
 				showChooseDept: false,
 				showChoosePro: false,
+				showChooseType: false,
 				columnsDept: [
 					[]
 				],
@@ -387,6 +411,10 @@
 			},
 			goChoosePro() {
 				this.showChoosePro = true;
+				this.hideKeyboard();
+			},
+			goChooseType() {
+				this.showChooseType = true;
 				this.hideKeyboard();
 			},
 

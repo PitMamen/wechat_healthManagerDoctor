@@ -211,7 +211,7 @@
 			return {
 				showCa: false,
 				cashEye: true,
-				has: true,
+				has: true, //是否有证照信息
 				title: 'Hello',
 				account: {
 					name: '李雅',
@@ -241,6 +241,7 @@
 			}
 			this.getInfo();
 			this.refreshBindStatus();
+			this.getIdentifyInfo();
 		},
 		methods: {
 			jump() {
@@ -394,9 +395,35 @@
 						url: '/pages2/pages/mine/my-papers-none'
 					})
 				}
-				this.has = !this.has
 
 			},
+
+			getIdentifyInfo() {
+				// uni.showLoading({
+				// 	title: '正在加载'
+				// });
+				uni.$u.http.get('/account-api/accountInfo/getDoctorAuthInfo', {
+					params: {}
+				}).then(res => {
+					if (res.code == 0) {
+						let baseInfo = res.data
+						if (baseInfo.idcardZ) { //填过实名认证信息，需要填充数据
+							this.has = true
+						} else { //新增的实名认证信息  没有提交证件信息
+							// this.getProf()
+							this.has = false
+						}
+
+					} else {
+						this.$u.toast(res.message)
+					}
+
+				}).finally(() => {
+					// uni.hideLoading();
+				});
+
+			},
+
 			goMyCertificate() {
 				if (!this.checkAuth()) {
 					return
@@ -411,13 +438,13 @@
 				});
 			},
 			goCom() { //临时加入口的测试代码
-				// uni.navigateTo({
-				// 	url: '/pages2/pages/work/treat'
-				// })
-
 				uni.navigateTo({
-					url: '/pages3/pages/record/choose-patient'
+					url: '/pages2/pages/mine/identify-base'
 				})
+
+				// uni.navigateTo({
+				// 	url: '/pages3/pages/record/choose-patient'
+				// })
 			},
 
 			quit() {
