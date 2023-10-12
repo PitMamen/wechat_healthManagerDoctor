@@ -6,7 +6,7 @@
 
 
 		<view class="view-base">
-		<!-- 	<view style="color: #1A1A1A;font-size: 32rpx;font-weight: bold;margin-left: 24rpx;">完成资质认证，开通问诊服务</view>
+			<!-- 	<view style="color: #1A1A1A;font-size: 32rpx;font-weight: bold;margin-left: 24rpx;">完成资质认证，开通问诊服务</view>
 
 			<view class="view-head">
 				<u-upload :fileList="fileList1" @afterRead="afterRead" @delete="deletePic" :maxCount="1" name="1">
@@ -84,7 +84,8 @@
 				<view style="color: red;margin-top: 6rpx;">*</view>
 			</view>
 
-			<view v-if="account.roleName=='doctor'" style="display: flex;flex-direction: row;align-items: center;margin-left: 24rpx;margin-top: 20rpx;">
+			<view v-if="account.roleName=='doctor'"
+				style="display: flex;flex-direction: row;align-items: center;margin-left: 24rpx;margin-top: 20rpx;">
 				<view style="display: flex;flex-direction: column;align-items: center;justify-content: center;">
 					<u-upload :fileList="fileList4" @afterRead="afterRead" @delete="deletePic" :maxCount="1" name="4">
 						<view
@@ -100,7 +101,8 @@
 			</view>
 
 			<!-- 分割线 -->
-			<view v-if="account.roleName=='doctor'" style="height: 1rpx;background-color: #E6E6E6;margin: 30rpx 24rpx 24rpx 24rpx;"></view>
+			<view v-if="account.roleName=='doctor'"
+				style="height: 1rpx;background-color: #E6E6E6;margin: 30rpx 24rpx 24rpx 24rpx;"></view>
 
 			<!-- 资格证 -->
 			<view style="display: flex;flex-direction: row;margin-left: 24rpx;">
@@ -143,12 +145,14 @@
 			<view style="height: 1rpx;background-color: #E6E6E6;margin: 30rpx 24rpx 24rpx 24rpx;"></view>
 
 			<!-- 执业证 -->
-			<view v-if="account.roleName=='doctor'|| account.roleName=='nurse'" style="display: flex;flex-direction: row;margin-left: 24rpx;">
+			<view v-if="account.roleName=='doctor'|| account.roleName=='nurse'"
+				style="display: flex;flex-direction: row;margin-left: 24rpx;">
 				<view style="color: #4D4D4D;font-size: 30rpx;">执业证正反面</view>
 				<view style="color: red;margin-top: 6rpx;">*</view>
 			</view>
 
-			<view v-if="account.roleName=='doctor'|| account.roleName=='nurse'" style="display: flex;flex-direction: row;align-items: center;margin-left: 24rpx;margin-top: 20rpx;">
+			<view v-if="account.roleName=='doctor'|| account.roleName=='nurse'"
+				style="display: flex;flex-direction: row;align-items: center;margin-left: 24rpx;margin-top: 20rpx;">
 				<view style="display: flex;flex-direction: column;align-items: center;justify-content: center;">
 					<u-upload :fileList="fileList7" @afterRead="afterRead" @delete="deletePic" :maxCount="1" name="7">
 						<view
@@ -179,7 +183,7 @@
 			</view>
 
 
-<!-- 			<view style="height: 1rpx;background-color: #E6E6E6;margin: 30rpx 24rpx 24rpx 24rpx;"></view>
+			<!-- 			<view style="height: 1rpx;background-color: #E6E6E6;margin: 30rpx 24rpx 24rpx 24rpx;"></view>
 
 
 			<view style="display: flex;flex-direction: row;margin-left: 24rpx;margin-right: 24rpx;">
@@ -227,7 +231,7 @@
 		</view>
 
 		<!-- 选择器，参看yp-edit.vue -->
-<!-- 		<u-picker :show="showChooseHospital" :columns="columnsHospital" @cancel="cancelHospital"
+		<!-- 		<u-picker :show="showChooseHospital" :columns="columnsHospital" @cancel="cancelHospital"
 			@confirm="confirmHospital" keyName="text"></u-picker> -->
 
 		<u-modal :footer="null" :show="showImg" :title="title" :content='content' closeOnClickOverlay
@@ -624,7 +628,7 @@
 					if (res.code == 0) {
 						this.$u.toast("操作成功！")
 						uni.navigateTo({
-							url: '/pages2/pages/mine/identify-result?type=1&jumpFrom=2'
+							url: '/pages2/pages/mine/identify-result?type=1&jumpFrom=2&useFor=1'
 						})
 					} else {
 						this.$u.toast(res.message)
