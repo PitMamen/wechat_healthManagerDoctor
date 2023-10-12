@@ -2,7 +2,7 @@
 	<view class="wrap">
 		<view class="content">
 			<view class="top">
-				<view class="row">
+				<view class="row" @click="avatarClick()">
 					<view class="left">
 						<image :src="info.avatarUrl||'/static/static/images/header.png'" mode="aspectFill"></image>
 					</view>
@@ -123,6 +123,10 @@
 </template>
 
 <script>
+	import {
+		baseURL
+	} from '@/config/config';
+	
 	export default {
 		data() {
 			return {
@@ -233,6 +237,37 @@
 					}, 2000);
 				}).catch(err => {
 					this.flag = false;
+				});
+			},
+			avatarClick() {
+				this.hideKeyboard();
+				uni.chooseImage({
+					count: 1,
+					sourceType: ['album', 'camera'],
+					sizeType: ['original', 'compressed'],
+					success: res => {
+						if (res) {
+							uni.showLoading({
+								title:'正在加载'
+							});
+							uni.uploadFile({
+								url: baseURL + '/content-api/fileUpload/uploadImgFile',
+								filePath: res.tempFilePaths[0],
+								name: 'file',
+								header: {
+									Authorization: uni.getStorageSync('bussinessToken')
+								},
+								success: res => {
+									uni.hideLoading();
+									const resp = JSON.parse(res.data);
+									this.$set(this.info, 'avatarUrl', resp.data.fileLinkUrl);
+								}
+							});
+						}
+					},
+					fail: err => {
+						console.log('err', err);
+					}
 				});
 			},
 			hideKeyboard() {
