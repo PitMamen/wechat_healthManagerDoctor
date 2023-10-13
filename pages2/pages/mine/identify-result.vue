@@ -4,7 +4,7 @@
 		<view style="display: flex;flex-direction: row;padding-left: 20rpx;">
 			<u-icon @click="goBack" bold name="arrow-left" size='45rpx' color="#333"
 				style="width: 10rpx;height: 10rpx;float: right;margin-right: 10rpx;margin-top: 6.5rpx;"></u-icon>
-			<view style="margin-left: 30vw;font-size: 30rpx;">实名认证</view>
+			<view style="margin-left: 30vw;font-size: 30rpx;">{{title}}</view>
 		</view>
 		<view class="content">
 
@@ -18,7 +18,8 @@
 			</image>
 
 			<view v-if="type==1" style="color: #999999;font-size: 30rpx;margin: 56rpx 60rpx;">
-				您的资料已经提交，工作人员将在3-5个工作日内对您的资料进行审核！审核结果请关注短信和微信公众号消息。</view>
+				{{shenhe}}
+			</view>
 			<view v-else style="color: #999999;font-size: 30rpx;margin: 56rpx 60rpx;">
 				您的资料经工作人员审核，审核结果为：不通过！不通过原因：{{failReason}}。
 			</view>
@@ -42,6 +43,9 @@
 				type: 1, //1提交成功  2审核失败
 				jumpFrom: 1, //从哪里跳入标记  1我的  2提交审核  需要返回不同的页面
 				account: '',
+				useFor: '',
+				title: '实名认证',
+				shenhe: '您的资料已经提交，工作人员将在3-5个工作日内对您的资料进行审核！审核结果请关注短信和微信公众号消息。',
 				failReason: '',
 
 			}
@@ -49,8 +53,13 @@
 		onLoad(option) {
 			this.type = option.type
 			this.jumpFrom = option.jumpFrom
+			this.useFor = option.useFor
 			if (this.type == 2) {
 				this.getFailReason()
+			}
+			if (this.useFor == 1) {
+				this.shenhe = '您提交的证件信息平台正在审核，预计需要7-14个工作日审核完成。'
+				this.title = '更新证件'
 			}
 			this.account = uni.getStorageSync('account');
 			console.log('option', option)
@@ -98,7 +107,7 @@
 
 			goNext() {
 				uni.navigateTo({
-					url: '/pages2/pages/mine/identify-base'
+					url: '/pages2/pages/mine/identify-base?modifyFlag=1'
 				})
 			},
 

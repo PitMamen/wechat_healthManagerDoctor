@@ -233,6 +233,7 @@
 			// 	console.log('res', res)
 			// })
 			this.account = uni.getStorageSync('account');
+			console.log('me account', JSON.stringify(this.account))
 
 		},
 		onShow() {
@@ -332,6 +333,9 @@
 					params: {}
 				}).then(res => {
 					if (res.code == 0) {
+						if (res.data.auditStatus == 3) {
+							uni.setStorageSync('watchNo', '1');
+						}
 						this.account.bindStatus = res.data.bindStatus
 					} else {
 						this.$u.toast(res.message)
@@ -386,15 +390,46 @@
 				if (!this.checkAuth()) {
 					return
 				}
-				if (this.has) {
-					uni.navigateTo({
-						url: '/pages2/pages/mine/my-papers'
-					})
-				} else {
-					uni.navigateTo({
-						url: '/pages2/pages/mine/my-papers-none'
-					})
-				}
+
+				uni.$u.http.get('/account-api/accountInfo/getDoctorAuthStatus', {
+					params: {}
+				}).then(res => {
+					if (res.code == 0) {
+
+						if (this.has) {
+							uni.navigateTo({
+								url: '/pages2/pages/mine/my-papers?auditStatus=' + res.data.auditStatus
+							})
+						} else {
+							uni.navigateTo({
+								url: '/pages2/pages/mine/my-papers-none'
+							})
+						}
+
+						//2审核通过
+						// if (res.data.auditStatus == 1) { //审核中
+						// 	uni.navigateTo({
+						// 		url: '/pages2/pages/mine/identify-result?type=1&jumpFrom=1'
+						// 	})
+						// } else if (res.data.auditStatus == 3) { //审核不通过
+						// 	uni.navigateTo({
+						// 		url: '/pages2/pages/mine/identify-result?type=2&jumpFrom=1'
+						// 	})
+						// } else { // 0待完善   进去后查询数据来确定填充信息还是完全的新增
+						// 	uni.navigateTo({
+						// 		url: '/pages2/pages/mine/identify-base'
+						// 	})
+						// }
+
+					} else {
+						this.$u.toast(res.message)
+					}
+
+				}).finally(() => {
+					// uni.hideLoading();
+				});
+
+
 
 			},
 
