@@ -52,7 +52,7 @@
 					</view>
 					<view class="right">
 						<u--input
-							type="number"
+							type="idcard"
 							color="#1A1A1A"
 							fontSize="28rpx"
 							maxlength="18"
@@ -69,7 +69,7 @@
 					</view>
 					<view class="right">
 						<u--input
-							type="number"
+							type="text"
 							color="#1A1A1A"
 							fontSize="28rpx"
 							maxlength="50"
@@ -144,8 +144,8 @@
 					identificationNo: ''
 				},
 				list1: [[
-					{text: '男性',value: '男'},
-					{text: '女性',value: '女'},
+					{text: '男',value: '男'},
+					{text: '女',value: '女'},
 					{text: '未知',value: '未知'}
 				]],
 				minDate: new Date('1900/01/01').getTime()
@@ -192,10 +192,9 @@
 					});
 					return;
 				}
-				if (this.info.identificationNo
-				&& !/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/.test(this.info.identificationNo)){
+				if (!/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/.test(this.info.identificationNo)){
 					uni.showToast({
-						title: '请输入正确的身份证号',
+						title: '请先输入正确的身份证号',
 						icon: 'none'
 					});
 					return;

@@ -553,6 +553,18 @@
 					}
 				},
 				{
+					"path": "pages/group/paper",
+					"style": {
+						"navigationBarTitleText": "发送问卷"
+					}
+				},
+				{
+					"path": "pages/group/paper-info",
+					"style": {
+						"navigationBarTitleText": "问卷详情"
+					}
+				},
+				{
 					"path" : "pages/record/mass",
 					"style" : {
 						"enablePullDownRefresh":true,

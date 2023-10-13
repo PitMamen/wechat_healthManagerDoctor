@@ -397,7 +397,10 @@
 			},
 			//点击问卷评估
 			onWJPGclick(){
-				this.showMenu=false
+				this.showMenu=false;
+				uni.navigateTo({
+					url: '/pages3/pages/group/paper'
+				});
 			},
 
 			goIdentify() {
