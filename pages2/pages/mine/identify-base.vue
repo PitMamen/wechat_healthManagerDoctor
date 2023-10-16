@@ -256,7 +256,8 @@
 		onLoad(option) {
 			this.account = uni.getStorageSync('account');
 			uni.removeStorageSync('choose_hospital');
-			this.modifyFlag = option.modifyFlag || 2
+			////审核不通过修改的时候进来，不允许修改身份类型   1不可以修改  2可以修改   modifyFlag没传的话就是首次实名认证，不是审核不通过的修改
+			this.modifyFlag = option.modifyFlag || 2//测试代码，正常不能注释
 			console.log('this.account', this.account)
 			console.log('this.columnsType[0][0]', this.columnsType[0][0])
 			console.log('this.columnsType[0]', this.columnsType[0])
@@ -493,6 +494,7 @@
 			goChooseType() {
 				//审核不通过不能修改身份
 				if (this.modifyFlag == 1) {
+					this.$u.toast("不支持修改类型！")
 					return
 				}
 				this.showChooseType = true;
@@ -605,7 +607,7 @@
 					this.$u.toast("请选择科室！")
 					return
 				}
-				if (!this.profItem && (this.account.roleName == 'doctor' || this.account.roleName == 'nurse')) {
+				if (!this.profItem && (this.typeItem.typeCode == 'doctor' || this.typeItem.typeCode == 'nurse')) {
 					this.$u.toast("请选择职称！")
 					return
 				}
