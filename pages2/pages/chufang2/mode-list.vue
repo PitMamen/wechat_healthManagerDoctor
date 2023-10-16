@@ -15,7 +15,6 @@
 			<u-empty v-if="list.length === 0" mode="data" icon="/pages2/static/static/images/data.png"></u-empty>
 			<view style="height: 20rpx;background-color: #F5F5F5;" v-show="false"></view>
 			<view class="item"  v-for="(item,index) in list" :key="index">
-				
 				<view class="itemview">
 					<view class="title">诊断</view>
 					<view class="zd">{{item.diagnosis}}</view>
@@ -30,9 +29,7 @@
 						</view>
 					</view>
 				</view>
-				
 				<view class="btn" @click.stop="useItem(item)">修改</view>
-			
 			</view>
 			
 			<view style="height: 150rpx;"></view>
