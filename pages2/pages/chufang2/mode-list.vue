@@ -14,8 +14,7 @@
 		
 			<u-empty v-if="list.length === 0" mode="data" icon="/pages2/static/static/images/data.png"></u-empty>
 			<view style="height: 20rpx;background-color: #F5F5F5;" v-show="false"></view>
-			<view class="item"  v-for="(item,index) in list" :key="index" @click="goDetail(item)"
-				>
+			<view class="item"  v-for="(item,index) in list" :key="index">
 				
 				<view class="itemview">
 					<view class="title">诊断</view>
