@@ -369,7 +369,7 @@
 				uni.$u.http.post(`/account-api/tdUserTags/getUserTagsDoctor`, {
 					pageNo: 1,
 					pageSize: 10000,
-					tagsType: 2
+					// tagsType: 2
 					// userIds: 355, //TODO 调试测试代码，后期注释,不需要这个参数
 				}).then(res => {
 					if (res.code == 0) {

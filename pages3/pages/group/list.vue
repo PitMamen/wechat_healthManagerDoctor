@@ -3,9 +3,9 @@
 		<view class="content">
 			<view class="tags-item" :class="{notStyle: index==tagsData.length-1}" v-for="(item, index) in tagsData"
 				:key="index" @click="onItemTap(item)">
-				
+
 				<view>{{item.tags_name}}</view>
-				
+
 				<view style="display: flex;flex-direction: row;">
 					<view>{{item.co}}人</view>
 					<u-icon name="arrow-right" color="#333"
@@ -41,17 +41,16 @@
 		},
 		methods: {
 			getList() {
-				uni.$u.http.post('/account-api/tdUserTags/getUserTagsDoctor', 
-				{	"tagsType":2,
+				uni.$u.http.post('/account-api/tdUserTags/getUserTagsDoctor', {
+					"tagsType": 2,
 					"pageNo": 1,
 					"pageSize": 99999,
-				}
-				).then(res => {
+				}).then(res => {
 					this.tagsData = res.data.records || [];
-					
-					
+
+
 				});
-			
+
 			},
 			btnClick() {
 				uni.navigateTo({
@@ -59,10 +58,10 @@
 				});
 			},
 
-			
+
 			onItemTap(item) {
 				uni.navigateTo({
-					url: './edit?tagsName='+item.tags_name+'&id='+item.id
+					url: './edit?tagsName=' + item.tags_name + '&id=' + item.id
 				});
 			}
 		}
@@ -70,9 +69,10 @@
 </script>
 
 <style lang="scss">
-	page{
+	page {
 		background-color: #F5F5F5;
 	}
+
 	.wrap {
 		height: 100vh;
 		display: flex;
@@ -105,7 +105,7 @@
 		}
 
 		.wrap-submit {
-			
+
 			display: flex;
 			flex-direction: column;
 			margin-bottom: 30rpx;
