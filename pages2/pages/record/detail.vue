@@ -20,7 +20,7 @@
 				</view>
 				
 			</view>
-			<view style="background-color: #FFFFFF;">
+			<view style="background-color: #FFFFFF;" v-if="false">
 				<u-tabs :list="list1" :activeStyle="{
 				    color: '#303133',
 				    fontWeight: 'bold',
@@ -102,7 +102,7 @@
 				},
 				hospitalName: '',
 				infodata: {},
-				active: 0,
+				active: 2,
 				jcList: [],
 				jyList: [],
 				cfList: [],
@@ -125,7 +125,8 @@
 				this.$data.options=options
 
 				this.healthRecordUserInfo()
-				this.getjxjyList()
+				this.getcfList();
+				// this.getjxjyList()
 			},
 
 			click(item) {

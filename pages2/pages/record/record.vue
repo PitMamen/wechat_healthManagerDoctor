@@ -118,90 +118,88 @@
 
 
 			</view>
-
-			<!-- 问诊信息 -->
+			
 			<view v-if="selectTag==1">
-
-				<view class="base-info" style=" height: 100%; background-color: white;">
-					<view style="display: flex; height: 91rpx;align-items: center;font-size: 32rpx;font-weight: 500;">
-						病情描述
+				<view class="wrap1">
+					<view class="tabs">
+						<view class="tab">检验记录</view>
+						<view class="tab">检查记录</view>
+						<view class="tab">门诊医嘱</view>
 					</view>
-					<view class="rightsdes">{{inputInfo.diseaseDesc}}</view>
-					<view style="display: flex; height: 91rpx;align-items: center;font-size: 32rpx;font-weight: 500;">
-						希望获得帮助
-					</view>
-					<view class="rightsdes">{{inputInfo.appealDesc || '-'}}</view>
-					<view style="display: flex; height: 91rpx;align-items: center;font-size: 32rpx;font-weight: 500;">
-						上传检查报告或患处图片
-					</view>
-					<view class="info-pics">
-						<u-album :previewFullImage="true" :urls="inputInfo.urls" multipleSize="80" space="10"></u-album>
-
-					</view>
-				</view>
-
-			</view>
-
-			<!-- 就医记录 -->
-			<view v-if="selectTag==2" class="cure-list" style=" height: 100%; background-color: white;">
-
-				<block v-if="cureHistoryList.length>0">
-					<view v-for="(item, index) in cureHistoryList" :key="index" class="list-cell"
-						@click="cureHistoryListClick(item)">
-						<view style="display: flex;">
-							<!-- <image class="artical-image" src="/image/hospital_logo.png" style="width: 160rpx;height: 160rpx;"></image> -->
-							<view class="left-content">
-								<view style="display: flex;">
-									<view class="title">中南大学湘雅二医院 </view>
-									<view class="title-tag">
-										<u-tag v-if="item.recordType == 'zhuyuan'" bgColor="#E6FAE1"
-											borderColor="#E6FAE1" color="#2FB315" text="住院"></u-tag>
-										<u-tag v-else type="warning" bgColor="#E5F1FF" borderColor="#E5F1FF"
-											color="#0379FF" text="门诊"></u-tag>
-									</view>
-
+					<view>
+						<view id="wrap1tab1" class="wrap1tab">
+							<view class="title1">检验记录</view>
+							<!-- 检验资料 -->
+							<view>
+								<u-empty v-if=" !jyList || jyList.length == 0 " mode="data" icon="/pages2/static/img/icon_nodata.png"
+									text="无数据" />
+							
+								<view class="row" v-for="(item, index) in jyList" :key="index" @click="goExaminePage(item)" gutter="5">
+									<u-row>
+										<u-col class="rol-l" span="9">{{item.name}}</u-col>
+							
+										<u-col class="rol-r" span="5">{{item.reportTime}}</u-col>
+									</u-row>
 								</view>
-								<view class="content">就诊科室：{{item.deptName}}</view>
-								<view class="cure-result">医生姓名：{{item.doctorName}}</view>
-								<view class="send-time">就诊时间：{{item.admDate}} {{item.admTime}}</view>
+								<view style="height: 80px;"></view>
 							</view>
 						</view>
-						<view style="background-color: #F4F6FA;height: 1rpx;margin-bottom: 0px;"></view>
+						<view id="wrap1tab2" class="wrap1tab">
+							<view class="title1">检查记录</view>
+							<!-- 检查资料 -->
+							<view>
+								<u-empty v-if=" !jcList || jcList.length == 0 " mode="data" icon="/pages2/static/img/icon_nodata.png"
+									text="无数据" />
+								<view class="row" v-for="(item, index) in jcList" :key="index" @click="goInspectionPage(item)"
+									gutter="5">
+									<u-row>
+										<u-col class="rol-l" span="9">{{item.name}}</u-col>
+							
+										<u-col class="rol-r" span="5">{{item.reportTime}}</u-col>
+									</u-row>
+								</view>
+								<view style="height: 80px;"></view>
+							</view>
+						</view>
+						<view id="wrap1tab3" class="wrap1tab">
+							<view class="title1">门诊医嘱</view>
+							<!-- 就医记录 -->
+							<view class="cure-list" style=" height: 100%; background-color: white;">
+							
+								<block v-if="cureHistoryList.length>0">
+									<view v-for="(item, index) in cureHistoryList" :key="index" class="list-cell"
+										@click="cureHistoryListClick(item)">
+										<view style="display: flex;">
+											<!-- <image class="artical-image" src="/image/hospital_logo.png" style="width: 160rpx;height: 160rpx;"></image> -->
+											<view class="left-content">
+												<view style="display: flex;">
+													<view class="title">中南大学湘雅二医院 </view>
+													<view class="title-tag">
+														<u-tag v-if="item.recordType == 'zhuyuan'" bgColor="#E6FAE1"
+															borderColor="#E6FAE1" color="#2FB315" text="住院"></u-tag>
+														<u-tag v-else type="warning" bgColor="#E5F1FF" borderColor="#E5F1FF"
+															color="#0379FF" text="门诊"></u-tag>
+													</view>
+							
+												</view>
+												<view class="content">就诊科室：{{item.deptName}}</view>
+												<view class="cure-result">医生姓名：{{item.doctorName}}</view>
+												<view class="send-time">就诊时间：{{item.admDate}} {{item.admTime}}</view>
+											</view>
+										</view>
+										<view style="background-color: #F4F6FA;height: 1rpx;margin-bottom: 0px;"></view>
+									</view>
+								</block>
+							
+								<u-empty v-else mode="data" icon="/pages2/static/img/icon_nodata.png" text="无记录"></u-empty>
+							
+							</view>
+						</view>
 					</view>
-				</block>
-
-				<u-empty v-else mode="data" icon="/pages2/static/img/icon_nodata.png" text="无记录"></u-empty>
-
+				</view>
 			</view>
-
-			<!-- 检查资料 -->
-			<block v-if="selectTag==3">
-
-				<u-empty v-if=" !jcList || jcList.length == 0 " mode="data" icon="/pages2/static/img/icon_nodata.png"
-					text="无数据" />
-				<view class="row" v-for="(item, index) in jcList" :key="index" @click="goInspectionPage(item)"
-					gutter="5">
-					<u-row>
-						<u-col class="rol-l" span="9">{{item.name}}</u-col>
-
-						<u-col class="rol-r" span="5">{{item.reportTime}}</u-col>
-					</u-row>
-				</view>
-				<view style="height: 80px;"></view>
-			</block>
-			<!-- 检验资料 -->
-			<view v-if="selectTag==4">
-				<u-empty v-if=" !jyList || jyList.length == 0 " mode="data" icon="/pages2/static/img/icon_nodata.png"
-					text="无数据" />
-
-				<view class="row" v-for="(item, index) in jyList" :key="index" @click="goExaminePage(item)" gutter="5">
-					<u-row>
-						<u-col class="rol-l" span="9">{{item.name}}</u-col>
-
-						<u-col class="rol-r" span="5">{{item.reportTime}}</u-col>
-					</u-row>
-				</view>
-				<view style="height: 80px;"></view>
+			<view v-if="selectTag==2">
+				<treat ref="treat"></treat>
 			</view>
 
 
@@ -217,6 +215,7 @@
 </template>
 
 <script>
+	import treat from './treat.vue';
 	// var ForgeUtils = require("../../utils/forgeUtils.js");
 	import commonFormat from "../../utils/common-format.js";
 	export default {
@@ -257,16 +256,15 @@
 						name: '基本信息',
 					},
 					{
-						name: '问诊信息',
+						name: '数据记录',
 					}, {
-						name: '线下就诊记录',
-					}, {
-						name: '检查',
-					}, {
-						name: '检验',
+						name: '问诊记录',
 					}
 				]
 			}
+		},
+		components: {
+			treat
 		},
 		props: {
 
@@ -306,33 +304,20 @@
 				console.log(this.$data.selectTag)
 				switch (item.index) {
 					case 0:
-
 						break;
 					case 1:
-						if (!this.$data.inputInfo) {
-							this.getRightsReqData()
-						}
-
-						break;
-					case 2:
 						if (this.$data.cureHistoryList.length == 0) {
 							this.cureHistoryListQuery()
 						}
-
-						break;
-					case 3:
-						if (this.$data.jcList.length == 0) {
+						if (this.$data.jyList.length==0 || this.$data.jcList.length==0) {
 							this.getjxjyList()
 						}
-
 						break;
-					case 4:
-						if (this.$data.jyList.length == 0) {
-							this.getjxjyList()
-						}
-
+					case 2:
+						this.$nextTick(() => {
+							this.$refs.treat.search();
+						});
 						break;
-
 				}
 			},
 
@@ -571,3 +556,5 @@
 <style>
 	@import './record.css';
 </style>
+<style lang="scss"></style>
+

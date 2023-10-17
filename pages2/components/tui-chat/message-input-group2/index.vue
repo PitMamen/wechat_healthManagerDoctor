@@ -60,6 +60,10 @@
 					<image class="TUI-Extension-icon" src="/pages2/static/static/images/group/chufang.png"></image>
 					<view class="TUI-Extension-slot-name">开具处方</view>
 				</view>
+				<view class="TUI-Extension-slot" @tap="handleGive">
+					<image class="TUI-Extension-icon" src="/pages2/static/static/images/group/give.png"></image>
+					<view class="TUI-Extension-slot-name">赠送追问包</view>
+				</view>
 				<view class="TUI-Extension-slot" @tap="handleFinish">
 					<image class="TUI-Extension-icon" src="/pages2/static/static/images/group/finish.png"></image>
 					<view class="TUI-Extension-slot-name">结束问诊</view>
@@ -414,6 +418,9 @@ export default {
 			}).then(res => {
 				uni.$u.toast('自动通话连接成功!');
 			});
+		},
+		handleGive() {
+			this.$bus.$emit('handleGive', null);
 		},
 		handleFinish() {
 			uni.showModal({

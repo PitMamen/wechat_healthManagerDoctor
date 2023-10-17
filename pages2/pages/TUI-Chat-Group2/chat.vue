@@ -7,7 +7,7 @@
 			</view>
 			<view v-if="tab==='tab2'" class="rights">
 				<view class="text">剩余咨询回合：{{ rights || 0 }}</view>
-				<view class="btn" @click="handleGive()">赠送追问包</view>
+				<view class="btn" @click="handleCard()">问诊信息</view>
 			</view>
 		</view>
 		<block v-if="tab==='tab1'">
@@ -72,7 +72,10 @@
 				this.videoPlay = value.isPlay;
 				this.videoMessage = value.message;
 			});
-
+			
+			this.$bus.$off('handleGive');
+			this.$bus.$on('handleGive', this.handleGive);
+			
 			this.$bus.$off('updateRights');
 			this.$bus.$on('updateRights', this.geneRights);
 		},
@@ -274,6 +277,12 @@
 					}).catch(() => {
 						reject();
 					});
+				});
+			},
+			handleCard() {
+				const taskItem = uni.getStorageSync('taskItem');
+				uni.navigateTo({
+					url: `/pages2/pages/group/card?rightsId=${taskItem.rightsId}&tradeId=${taskItem.id}`
 				});
 			},
 			handleGive() {
