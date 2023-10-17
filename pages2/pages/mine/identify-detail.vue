@@ -86,7 +86,8 @@
 				<view style="color: red;margin-top: 6rpx;">*</view>
 			</view>
 
-			<view v-if="account.roleName=='doctor'" style="display: flex;flex-direction: row;align-items: center;margin-left: 24rpx;margin-top: 20rpx;">
+			<view v-if="account.roleName=='doctor'"
+				style="display: flex;flex-direction: row;align-items: center;margin-left: 24rpx;margin-top: 20rpx;">
 				<view style="display: flex;flex-direction: column;align-items: center;justify-content: center;">
 					<u-upload :fileList="fileList4" @afterRead="afterRead" @delete="deletePic" :maxCount="1" name="4">
 						<view
@@ -102,7 +103,8 @@
 			</view>
 
 			<!-- 分割线 -->
-			<view v-if="account.roleName=='doctor'" style="height: 1rpx;background-color: #E6E6E6;margin: 30rpx 24rpx 24rpx 24rpx;"></view>
+			<view v-if="account.roleName=='doctor'"
+				style="height: 1rpx;background-color: #E6E6E6;margin: 30rpx 24rpx 24rpx 24rpx;"></view>
 
 			<!-- 资格证 -->
 			<view style="display: flex;flex-direction: row;margin-left: 24rpx;">
@@ -145,12 +147,14 @@
 			<view style="height: 1rpx;background-color: #E6E6E6;margin: 30rpx 24rpx 24rpx 24rpx;"></view>
 
 			<!-- 资格证 -->
-			<view v-if="account.roleName=='doctor'|| account.roleName=='nurse'" style="display: flex;flex-direction: row;margin-left: 24rpx;">
+			<view v-if="account.roleName=='doctor'|| account.roleName=='nurse'"
+				style="display: flex;flex-direction: row;margin-left: 24rpx;">
 				<view style="color: #4D4D4D;font-size: 30rpx;">执业证正反面</view>
 				<view style="color: red;margin-top: 6rpx;">*</view>
 			</view>
 
-			<view v-if="account.roleName=='doctor'|| account.roleName=='nurse'" style="display: flex;flex-direction: row;align-items: center;margin-left: 24rpx;margin-top: 20rpx;">
+			<view v-if="account.roleName=='doctor'|| account.roleName=='nurse'"
+				style="display: flex;flex-direction: row;align-items: center;margin-left: 24rpx;margin-top: 20rpx;">
 				<view style="display: flex;flex-direction: column;align-items: center;justify-content: center;">
 					<u-upload :fileList="fileList7" @afterRead="afterRead" @delete="deletePic" :maxCount="1" name="7">
 						<view
@@ -182,7 +186,8 @@
 
 
 			<!-- 分割线 -->
-			<view v-if="account.roleName=='doctor'|| account.roleName=='nurse'" style="height: 1rpx;background-color: #E6E6E6;margin: 30rpx 24rpx 24rpx 24rpx;"></view>
+			<view v-if="account.roleName=='doctor'|| account.roleName=='nurse'"
+				style="height: 1rpx;background-color: #E6E6E6;margin: 30rpx 24rpx 24rpx 24rpx;"></view>
 
 
 			<!-- 擅长领域 -->
@@ -599,12 +604,15 @@
 					this.doctorAuthInfo.idcardF = this.fileList3[0].url
 				}
 
-				if (!this.fileList4[0] || !this.fileList4[0].url) {
-					this.$u.toast("请上传职称证！")
-					return
-				} else {
-					this.doctorAuthInfo.titleZ = this.fileList4[0].url
+				if (this.account.roleName == 'doctor') {
+					if (!this.fileList4[0] || !this.fileList4[0].url) {
+						this.$u.toast("请上传职称证！")
+						return
+					} else {
+						this.doctorAuthInfo.titleZ = this.fileList4[0].url
+					}
 				}
+
 
 				if (!this.fileList5[0] || !this.fileList5[0].url) {
 					this.$u.toast("请上传资格证正面！")
@@ -620,21 +628,22 @@
 					this.doctorAuthInfo.qualificationF = this.fileList6[0].url
 				}
 
+				if (this.account.roleName == 'doctor' || this.account
+					.roleName == 'nurse') {
+					if (!this.fileList7[0] || !this.fileList7[0].url) {
+						this.$u.toast("请上传执业证正面！")
+						return
+					} else {
+						this.doctorAuthInfo.practiceZ = this.fileList7[0].url
+					}
 
-				if (!this.fileList7[0] || !this.fileList7[0].url) {
-					this.$u.toast("请上传执业证正面！")
-					return
-				} else {
-					this.doctorAuthInfo.practiceZ = this.fileList7[0].url
+					if (!this.fileList8[0] || !this.fileList8[0].url) {
+						this.$u.toast("请上传执业证反面！")
+						return
+					} else {
+						this.doctorAuthInfo.practiceF = this.fileList8[0].url
+					}
 				}
-
-				if (!this.fileList8[0] || !this.fileList8[0].url) {
-					this.$u.toast("请上传执业证反面！")
-					return
-				} else {
-					this.doctorAuthInfo.practiceF = this.fileList8[0].url
-				}
-
 
 
 				uni.showLoading({

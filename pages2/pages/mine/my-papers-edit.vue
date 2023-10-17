@@ -561,7 +561,6 @@
 			 */
 			goNext() {
 				// console.log('this.fileList1', this.fileList1)
-				//7个必填项
 				// if (!this.fileList1[0] || !this.fileList1[0].url) {
 				// 	this.$u.toast("请上传头像！")
 				// 	return
@@ -583,11 +582,14 @@
 					this.doctorAuthInfo.idcardF = this.fileList3[0].url
 				}
 
-				if (!this.fileList4[0] || !this.fileList4[0].url) {
-					this.$u.toast("请上传职称证！")
-					return
-				} else {
-					this.doctorAuthInfo.titleZ = this.fileList4[0].url
+				//只有医生需要上传职称证
+				if (this.account.roleName == 'doctor') {
+					if (!this.fileList4[0] || !this.fileList4[0].url) {
+						this.$u.toast("请上传职称证！")
+						return
+					} else {
+						this.doctorAuthInfo.titleZ = this.fileList4[0].url
+					}
 				}
 
 				if (!this.fileList5[0] || !this.fileList5[0].url) {
@@ -604,21 +606,23 @@
 					this.doctorAuthInfo.qualificationF = this.fileList6[0].url
 				}
 
+				//只有医生和护士需要上传执业证
+				if (this.account.roleName == 'doctor' || this.account
+					.roleName == 'nurse') {
+					if (!this.fileList7[0] || !this.fileList7[0].url) {
+						this.$u.toast("请上传执业证正面！")
+						return
+					} else {
+						this.doctorAuthInfo.practiceZ = this.fileList7[0].url
+					}
 
-				if (!this.fileList7[0] || !this.fileList7[0].url) {
-					this.$u.toast("请上传执业证正面！")
-					return
-				} else {
-					this.doctorAuthInfo.practiceZ = this.fileList7[0].url
+					if (!this.fileList8[0] || !this.fileList8[0].url) {
+						this.$u.toast("请上传执业证反面！")
+						return
+					} else {
+						this.doctorAuthInfo.practiceF = this.fileList8[0].url
+					}
 				}
-
-				if (!this.fileList8[0] || !this.fileList8[0].url) {
-					this.$u.toast("请上传执业证反面！")
-					return
-				} else {
-					this.doctorAuthInfo.practiceF = this.fileList8[0].url
-				}
-
 
 
 				uni.showLoading({
@@ -681,6 +685,11 @@
 		background-color: white;
 		align-items: center;
 		flex-direction: column;
+
+		.u-upload__deletable {
+			width: 20rpx;
+			height: 20rpx;
+		}
 
 		.view-base {
 			width: 100vw;
