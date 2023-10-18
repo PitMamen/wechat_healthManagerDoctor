@@ -265,7 +265,7 @@
 						
 						list.forEach(item=>{
 							if(item.order){
-                                item.order.docName = item.order.doctorName;
+                                item.order.docName = item.order.doctorName
 								item.order.rightsId=item.order.id
 								item.order.id=item.order.chartId
 								item.order.userInfo={
