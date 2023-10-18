@@ -6,15 +6,20 @@
 		<view class="page">
 			<u-sticky style="top:0">
 
-				<view style="background-color: #FFFFFF;">
+				<view style="position: relative;background-color: #FFFFFF;">
 					<u-tabs :list="list1" :lineWidth="40" :activeStyle="{
 				    color: '#303133',
 				    fontWeight: 'bold',
 				    transform: 'scale(1.05)'
 				}" @click="click"></u-tabs>
+				
+				<view class="tabs" v-if="selectTag==1">
+					<view class="tab" :class="{active: tab===0}" @click="tabClick(0)">检验记录</view>
+					<view class="tab" :class="{active: tab===1}" @click="tabClick(1)">检查记录</view>
+					<view class="tab" :class="{active: tab===2}" @click="tabClick(2)">门诊医嘱</view>
+				</view>
 				</view>
 				<view class="diver"></view>
-
 			</u-sticky>
 			<!-- 基本信息 -->
 			<view v-if="selectTag==0">
@@ -121,11 +126,6 @@
 			
 			<view v-if="selectTag==1">
 				<view class="wrap1">
-					<view class="tabs">
-						<view class="tab" :class="{active: tab===0}" @click="tabClick(0)">检验记录</view>
-						<view class="tab" :class="{active: tab===1}" @click="tabClick(1)">检查记录</view>
-						<view class="tab" :class="{active: tab===2}" @click="tabClick(2)">门诊医嘱</view>
-					</view>
 					<view class="wrap1-content">
 						<view id="wrap1tab1" class="wrap1tab">
 							<view class="title1">检验记录</view>
@@ -551,31 +551,8 @@
 	.wrap1 {
 		padding: 20rpx 24rpx;
 		background: #F5F5F5;
-		.tabs {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			border-radius: 4rpx;
-			.tab {
-				flex: 1;
-				font-size: 30rpx;
-				font-weight: 400;
-				color: #4D4D4D;
-				line-height: 68rpx;
-				text-align: center;
-				background: #FFFFFF;
-				border-right: 1rpx solid #CCCCCC;
-				&:last-child {
-					border-right: none;
-				}
-				&.active {
-					color: #FFFFFF;
-					background: #3894FF;
-					border-right: 1rpx solid #3894FF;
-				}
-			}
-		}
 		.wrap1-content {
+			padding-top: 68rpx;
 		}
 		.wrap1tab {
 			background: #FFFFFF;
@@ -586,6 +563,36 @@
 				color: #1A1A1A;
 				line-height: 72rpx;
 				background: #F5F5F5;
+			}
+		}
+	}
+	.tabs {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: absolute;
+		width: 100%;
+		bottom: -108rpx;
+		padding: 20rpx 24rpx;
+		border-radius: 4rpx;
+		box-sizing: border-box;
+		background: #F5F5F5;
+		.tab {
+			flex: 1;
+			font-size: 30rpx;
+			font-weight: 400;
+			color: #4D4D4D;
+			line-height: 68rpx;
+			text-align: center;
+			background: #FFFFFF;
+			border-right: 1rpx solid #CCCCCC;
+			&:last-child {
+				border-right: none;
+			}
+			&.active {
+				color: #FFFFFF;
+				background: #3894FF;
+				border-right: 1rpx solid #3894FF;
 			}
 		}
 	}
