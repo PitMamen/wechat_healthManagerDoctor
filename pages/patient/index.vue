@@ -269,6 +269,7 @@
 								item.order.rightsId=item.order.id
 								item.order.id=item.order.chartId
 								item.order.userInfo={
+                                    userId:item.userId,
 									userName:item.user_name,
 									userSex:item.user_sex,
 									userAge:item.birthday,
