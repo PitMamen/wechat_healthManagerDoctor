@@ -598,12 +598,14 @@
 				"text": "工作室"
 			},
 			{
+				"costom":true,
 				"pagePath": "pages/patient/index",
 				"iconPath": "static/img/tab_hzgl_n.png",
 				"selectedIconPath": "static/img/tab_hzgl_s.png",
 				"text": "患者管理"
 			},
 			{
+				
 				"pagePath": "pages/mine/index",
 				"text": "我的",
 				"iconPath": "/static/img/tab_me_n.png",

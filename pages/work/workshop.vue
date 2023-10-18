@@ -182,6 +182,7 @@
 					this.$refs.caCheck.check();
 				});
 			}
+			
 		},
 		methods: {
 			refreshBindStatus() {

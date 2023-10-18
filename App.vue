@@ -170,8 +170,41 @@
 							ext3: `${SDKAppID}`,
 						})
 					})
+					
+					
+					// uni.addInterceptor('switchTab', {
+					// 	// tabbar页面跳转前进行拦截
+					// 	invoke(e) {		
+					// 		console.log("UUUU:",userInfo)
+					// 		// pharmacist
+					// 		if (userInfo.roleName=='doctor') {
+					// 			uni.showToast({					// 					title: '对不起，您的身份是药技师，无权进行该操作',					// 					icon: 'none'					// 				});
+								
+					// 			return false
+					// 		} else {
+					// 			return true
+					// 		}
+					// 	},
+					// 	success(e) {
+					// 		// console.log(e)
+					// 	},
+					// 	fail(err){
+					// 	    // console.log(err)
+					// 	}
+					// })
+					
+					
 				}
 			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
 		}
 	};
 </script>
