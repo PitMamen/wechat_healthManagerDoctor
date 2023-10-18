@@ -103,7 +103,8 @@
 
 			<!-- 资格证 -->
 			<view style="display: flex;flex-direction: row;margin-left: 24rpx;margin-top: 30rpx;">
-				<view style="color: #4D4D4D;font-size: 30rpx;">资格证</view>
+				<!-- <view style="color: #4D4D4D;font-size: 30rpx;">资格证</view> -->
+				<view style="color: #4D4D4D;font-size: 30rpx;">{{zigeName}}</view>
 			</view>
 
 			<view style="display: flex;flex-direction: row;align-items: center;margin-left: 24rpx;margin-top: 20rpx;">
@@ -145,7 +146,8 @@
 			<!-- 资格证 -->
 			<view v-if="account.roleName=='doctor'|| account.roleName=='nurse'"
 				style="display: flex;flex-direction: row;margin-left: 24rpx;margin-top: 30rpx;">
-				<view style="color: #4D4D4D;font-size: 30rpx;">执业证</view>
+				<!-- <view style="color: #4D4D4D;font-size: 30rpx;">执业证</view> -->
+				<view style="color: #4D4D4D;font-size: 30rpx;">{{zhiyeName}}</view>
 			</view>
 
 			<view v-if="account.roleName=='doctor'|| account.roleName=='nurse'"
@@ -209,6 +211,8 @@
 			return {
 				title: '',
 				content: '',
+				zigeName: '资格证',
+				zhiyeName: '执业证',
 				auditStatus: '',
 				watchNo: '1', //审核通过仅显示一次,用两次字符串不一样区分
 				failReason: '',
@@ -258,6 +262,16 @@
 			this.account = uni.getStorageSync('account');
 			this.watchNo = uni.getStorageSync('watchNo');
 			console.log('watchNo get', this.watchNo)
+
+			//不同身份证件名称不一样
+			if (this.account.roleName == 'nurse') {
+				this.zigeName = '护士资格证'
+				this.zhiyeName = '护士执业证'
+			} else if (this.account.roleName == 'pharmacist') { //药剂师 pharmacist
+				this.zigeName = '执业药师证'
+			} else if (this.account.roleName == 'medTechnician') { //技师 medTechnician
+				this.zigeName = '执业服务资格证'
+			}
 
 			this.auditStatus = option.auditStatus
 			if (this.auditStatus == 3) {
