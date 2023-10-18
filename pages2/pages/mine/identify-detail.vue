@@ -108,7 +108,8 @@
 
 			<!-- 资格证 -->
 			<view style="display: flex;flex-direction: row;margin-left: 24rpx;">
-				<view style="color: #4D4D4D;font-size: 30rpx;">资格证正反面</view>
+				<!-- <view style="color: #4D4D4D;font-size: 30rpx;">资格证正反面</view> -->
+				<view style="color: #4D4D4D;font-size: 30rpx;">{{zigeName}}</view>
 				<view style="color: red;margin-top: 6rpx;">*</view>
 			</view>
 
@@ -149,7 +150,8 @@
 			<!-- 资格证 -->
 			<view v-if="account.roleName=='doctor'|| account.roleName=='nurse'"
 				style="display: flex;flex-direction: row;margin-left: 24rpx;">
-				<view style="color: #4D4D4D;font-size: 30rpx;">执业证正反面</view>
+				<!-- <view style="color: #4D4D4D;font-size: 30rpx;">执业证正反面</view> -->
+				<view style="color: #4D4D4D;font-size: 30rpx;">{{zhiyeName}}</view>
 				<view style="color: red;margin-top: 6rpx;">*</view>
 			</view>
 
@@ -186,7 +188,7 @@
 
 
 			<!-- 分割线 -->
-			<view v-if="account.roleName=='doctor'|| account.roleName=='nurse'"
+			<view v-if="account.roleName=='doctor'|| account.roleName == 'nurse'"
 				style="height: 1rpx;background-color: #E6E6E6;margin: 30rpx 24rpx 24rpx 24rpx;"></view>
 
 
@@ -269,6 +271,8 @@
 				imgSrc: 'https://hmg.mclouds.org.cn/content-api/file/I20230831105218879DJJBP3PPFSZMLQ-zhiyezheng_Z.jpg',
 				title: '',
 				content: '',
+				zigeName: '资格证正反面',
+				zhiyeName: '执业证正反面',
 				showImg: false,
 				account: '',
 				baseData: {
@@ -315,6 +319,16 @@
 		},
 		onLoad(option) {
 			this.account = uni.getStorageSync('account');
+
+			//不同身份证件名称不一样
+			if (this.account.roleName == 'nurse') {
+				this.zigeName = '护士资格证正反面'
+				this.zhiyeName = '护士执业证正反面'
+			} else if (this.account.roleName == 'pharmacist') { //药剂师 pharmacist
+				this.zigeName = '执业药师证正反面'
+			} else if (this.account.roleName == 'medTechnician') { //技师 medTechnician
+				this.zigeName = '执业服务资格证正反面'
+			}
 
 			this.headers.Authorization = uni.getStorageSync('bussinessToken')
 
