@@ -178,6 +178,7 @@
 	export default {
 		data() {
 			return {
+					account:uni.getStorageSync('account'),
 				serviceItemType: '',
 				broadClassify: 4,
 				status: '',
@@ -323,6 +324,23 @@
 				this.showEnd = true;
 			},
 			goChufang(item) {
+				
+				if(this.account.roleName=='nurse'){
+									uni.showToast({
+										title: '对不起，您的身份是护士，无权进行该操作',
+										icon: 'none'
+									});
+									return
+								}else if(this.account.roleName=='medTechnician'){
+									uni.showToast({
+										title: '对不起，您的身份是技师，无权进行该操作',
+										icon: 'none'
+									});
+									return
+								}
+				
+				
+				
 				uni.setStorageSync('taskItem', item);
 				uni.navigateTo({
 					url: `/pages2/pages/chufang2/cf-add?preType=${item.broadClassify===4 ? 'appPrePrescription' : 'consultOrderPrescription'}`

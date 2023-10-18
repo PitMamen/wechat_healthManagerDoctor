@@ -149,6 +149,7 @@ export default {
 			// todo  conversation
 			// conversation: {},
 			taskItem: uni.getStorageSync('taskItem'),
+				account: uni.getStorageSync('account'),
 			firstSendMessage: true,
 			inputText: '',
 			extensionArea: false,
@@ -383,6 +384,21 @@ export default {
 		},
 
 		handleChuFang() {
+			if(this.account.roleName=='nurse'){
+							uni.showToast({
+								title: '对不起，您的身份是护士，无权进行该操作',
+								icon: 'none'
+							});
+							return
+						}else if(this.account.roleName=='medTechnician'){
+							uni.showToast({
+								title: '对不起，您的身份是技师，无权进行该操作',
+								icon: 'none'
+							});
+							return
+						}
+			
+			
 			uni.navigateTo({
 				url: `/pages2/pages/chufang2/cf-add?preType=${this.taskItem.broadClassify===4 ? 'appPrePrescription' : 'consultOrderPrescription'}`
 			});

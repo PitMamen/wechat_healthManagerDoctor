@@ -586,6 +586,22 @@
 			},
 
 			goChufang(item, index) {
+				
+				if(this.account.roleName=='nurse'){
+									uni.showToast({
+										title: '对不起，您的身份是护士，无权进行该操作',
+										icon: 'none'
+									});
+									return
+								}else if(this.account.roleName=='medTechnician'){
+									uni.showToast({
+										title: '对不起，您的身份是技师，无权进行该操作',
+										icon: 'none'
+									});
+									return
+								}
+				
+				
 				this.choseOne = JSON.parse(JSON.stringify(this.listData[index]))
 				uni.setStorageSync('taskItem', this.choseOne);
 				// 图文  电话  视频 传consultOrderPrescription  ；复诊续方传 appPrePrescription
