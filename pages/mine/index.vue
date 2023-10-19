@@ -411,25 +411,25 @@
 				
 				
 				
-				if(this.account.roleName=='nurse'){
-									uni.showToast({
-										title: '对不起，您的身份是护士，无权进行该操作',
-										icon: 'none'
-									});
-									return
-								}else if(this.account.roleName=='pharmacist'){
-									uni.showToast({
-										title: '对不起，您的身份是药剂师，无权进行该操作',
-										icon: 'none'
-									});
-									return
-								}else if(this.account.roleName=='medTechnician'){
-									uni.showToast({
-										title: '对不起，您的身份是技师，无权进行该操作',
-										icon: 'none'
-									});
-									return
-								}
+				// if(this.account.roleName=='nurse'){
+				// 					uni.showToast({
+				// 						title: '对不起，您的身份是护士，无权进行该操作',
+				// 						icon: 'none'
+				// 					});
+				// 					return
+				// 				}else if(this.account.roleName=='pharmacist'){
+				// 					uni.showToast({
+				// 						title: '对不起，您的身份是药剂师，无权进行该操作',
+				// 						icon: 'none'
+				// 					});
+				// 					return
+				// 				}else if(this.account.roleName=='medTechnician'){
+				// 					uni.showToast({
+				// 						title: '对不起，您的身份是技师，无权进行该操作',
+				// 						icon: 'none'
+				// 					});
+				// 					return
+				// 				}
 
 				uni.$u.http.get('/account-api/accountInfo/getDoctorAuthStatus', {
 					params: {}
