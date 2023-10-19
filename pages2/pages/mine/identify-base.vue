@@ -14,7 +14,7 @@
 
 			<view class="info-item">
 				<view class="info-item-content">
-					<view style="flex: 1;display: flex;flex-direction: row;" @click="goChooseType">
+					<view style="flex: 1;display: flex;flex-direction: row;align-items: center;" @click="goChooseType">
 						<view style="color: #1A1A1A;font-size: 32rpx;width: 135rpx;">
 							类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型
 						</view>
@@ -34,7 +34,7 @@
 
 			<view class="info-item">
 				<view class="info-item-content">
-					<view style="flex: 1;display: flex;flex-direction: row;">
+					<view style="flex: 1;display: flex;flex-direction: row;align-items: center;">
 						<view style="color: #1A1A1A;font-size: 32rpx;width: 135rpx;">
 							姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名
 						</view>
@@ -51,7 +51,7 @@
 			</view>
 			<view class="info-item">
 				<view class="info-item-content">
-					<view style="flex: 1;display: flex;flex-direction: row;">
+					<view style="flex: 1;display: flex;flex-direction: row;align-items: center;">
 						<view style="color: #1A1A1A;font-size: 32rpx;width: 135rpx;">身份证号</view>
 						<view style="color: red;padding-top: 5rpx;">*</view>
 						<view style="margin-left: 30rpx;">
@@ -68,7 +68,7 @@
 			</view>
 			<view class="info-item">
 				<view class="info-item-content">
-					<view style="flex: 1;display: flex;flex-direction: row;">
+					<view style="flex: 1;display: flex;flex-direction: row;align-items: center;">
 						<view style="color: #1A1A1A;font-size: 32rpx;width: 135rpx;">手&nbsp;&nbsp;机&nbsp;&nbsp;号</view>
 						<view style="color: red;padding-top: 5rpx;">*</view>
 						<view style="margin-left: 30rpx;">
@@ -81,7 +81,7 @@
 
 			<view class="info-item" v-if="needShowGetCode">
 				<view class="info-item-content">
-					<view style="flex: 1;display: flex;flex-direction: row;">
+					<view style="flex: 1;display: flex;flex-direction: row;align-items: center;">
 						<view style="color: #1A1A1A;font-size: 32rpx;width: 135rpx;">校&nbsp;&nbsp;验&nbsp;&nbsp;码</view>
 						<view style="color: red;padding-top: 5rpx;">*</view>
 						<view style="margin-left: 30rpx;">
@@ -102,7 +102,7 @@
 
 			<view class="info-item">
 				<view class="info-item-content">
-					<view style="flex: 1;display: flex;flex-direction: row;" @click="goChooseHospital">
+					<view style="flex: 1;display: flex;flex-direction: row;align-items: center;" @click="goChooseHospital">
 						<view style="color: #1A1A1A;font-size: 32rpx;width: 135rpx;">所在医院</view>
 						<view style="color: red;padding-top: 5rpx;">*</view>
 						<view style="margin-left: 30rpx;color: #999;font-size: 28rpx;padding-top: 5rpx;"
@@ -121,7 +121,7 @@
 
 			<view class="info-item">
 				<view class="info-item-content">
-					<view style="flex: 1;display: flex;flex-direction: row;" @click="goChooseDept">
+					<view style="flex: 1;display: flex;flex-direction: row;align-items: center;" @click="goChooseDept">
 						<view style="color: #1A1A1A;font-size: 32rpx;width: 135rpx;">
 							科&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;室
 						</view>
@@ -141,7 +141,7 @@
 
 			<view v-if="typeItem.typeCode == 'doctor'|| typeItem.typeCode == 'nurse' " class="info-item">
 				<view class="info-item-content">
-					<view style="flex: 1;display: flex;flex-direction: row;" @click="goChoosePro">
+					<view style="flex: 1;display: flex;flex-direction: row;align-items: center;" @click="goChoosePro">
 						<view style="color: #1A1A1A;font-size: 32rpx;width: 135rpx;">
 							职&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称
 						</view>
