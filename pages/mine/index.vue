@@ -513,9 +513,9 @@
 				});
 			},
 			goCom() { //临时加入口的测试代码
-				uni.navigateTo({
-					url: '/pages2/pages/mine/identify-base'
-				})
+				// uni.navigateTo({
+				// 	url: '/pages2/pages/mine/identify-base'
+				// })
 
 				// uni.navigateTo({
 				// 	url: '/pages3/pages/record/choose-patient'

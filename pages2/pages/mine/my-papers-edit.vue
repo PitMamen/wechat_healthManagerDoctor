@@ -641,6 +641,7 @@
 				uni.showLoading({
 					title: '正在加载'
 				});
+				console.log('submitDoctorAuthInfo',JSON.stringify(this.doctorAuthInfo))
 				uni.$u.http.post('/account-api/accountInfo/submitDoctorAuthInfo', this.doctorAuthInfo).then(res => {
 					if (res.code == 0) {
 						this.$u.toast("操作成功！")
