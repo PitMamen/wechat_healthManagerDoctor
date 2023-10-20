@@ -64,7 +64,7 @@
 
 		</view>
 		<view class="itemviewcard">
-			<view class="itemview" @click="goTuwen">
+			<view v-if="loginAccount.roleName=='nurse'||loginAccount.roleName=='doctor'" class="itemview" @click="goTuwen">
 				<image src="/pages2/static/static/images/textNum.png" style="float: left;width: 40rpx;height: 40rpx;">
 				</image>
 
@@ -82,13 +82,9 @@
 						style="width: 10px;height: 10px;margin-left: auto;margin-top: 20rpx;color=#333"></u-icon>
 				</view>
 				
-				
-				 
-				
-
 			</view>
-			<view style="height: 0.5px;background: #E6E6E6;margin-left: 30rpx;margin-right: 30rpx;"></view>
-			<view class="itemview" @click="goDianhua">
+			<view v-if="loginAccount.roleName=='nurse'||loginAccount.roleName=='doctor'" style="height: 0.5px;background: #E6E6E6;margin-left: 30rpx;margin-right: 30rpx;"></view>
+			<view v-if="loginAccount.roleName=='doctor'" class="itemview" @click="goDianhua">
 				<image src="/pages2/static/static/images/telNum.png" style="float: left;width: 40rpx;height: 40rpx;">
 				</image>
 
@@ -100,14 +96,14 @@
 					<view style="float: left;margin-left: 10px;font-size: 12px;color: #999999;margin-top: 10rpx;">
 						预约时段接听医生，沟通更直接</view>
 				</view>
-			<view style="margin-left: auto;margin-top: 15px;">
+			<view v-if="loginAccount.roleName=='doctor'" style="margin-left: auto;margin-top: 15px;">
 				<u-icon name="arrow-right"
 					style="width: 10px;height: 10px;margin-left: auto;margin-top: 20rpx;color=#333"></u-icon>
 			</view>
 
 			</view>
-			<view style="height: 0.5px;background: #E6E6E6;margin-left: 30rpx;margin-right: 30rpx;"></view>
-			<view class="itemview" @click="goShipin">
+			<view v-if="loginAccount.roleName=='doctor'" style="height: 0.5px;background: #E6E6E6;margin-left: 30rpx;margin-right: 30rpx;"></view>
+			<view v-if="loginAccount.roleName=='doctor'" class="itemview" @click="goShipin">
 				<image src="/pages2/static/static/images/videoNum.png" style="float: left;width: 40rpx;height: 40rpx;">
 				</image>
 
@@ -119,14 +115,14 @@
 					<view style="float: left;margin-left: 10px;font-size: 12px;color: #999999;margin-top: 10rpx;">
 						预约时间，医生根据情况与患者视频交流</view>
 				</view>
-			<view style="margin-left: auto;margin-top: 15px;">
+			<view v-if="loginAccount.roleName=='doctor'" style="margin-left: auto;margin-top: 15px;">
 				<u-icon name="arrow-right"
 					style="width: 10px;height: 10px;margin-left: auto;margin-top: 20rpx;color=#333"></u-icon>
 			</view>
 
 			</view>
-			<view style="height: 0.5px;background: #E6E6E6;margin-left: 30rpx;margin-right: 30rpx;"></view>
-			<view class="itemview" @click="goSuiz">
+			<view v-if="loginAccount.roleName=='doctor'" style="height: 0.5px;background: #E6E6E6;margin-left: 30rpx;margin-right: 30rpx;"></view>
+			<view v-if="loginAccount.roleName=='doctor'" class="itemview" @click="goSuiz">
 				<image src="/pages2/static/static/images/suizNum.png" style="float: left;width: 40rpx;height: 40rpx;">
 				</image>
 			
@@ -136,7 +132,7 @@
 					<view style="float: left;margin-left: 10px;font-size: 12px;color: #999999;margin-top: 10rpx;">
 						轻松管理诊后患者，提升个人品牌价值</view>
 				</view>
-			<view style="margin-left: auto;margin-top: 15px;">
+			<view v-if="loginAccount.roleName=='doctor'" style="margin-left: auto;margin-top: 15px;">
 				<u-icon name="arrow-right"
 					style="width: 10px;height: 10px;margin-left: auto;margin-top: 20rpx;color=#333"></u-icon>
 			</view>
@@ -154,6 +150,7 @@
 		data() {
 			return {
 				title: 'Hello',
+				loginAccount:uni.getStorageSync('account')||'',
 				account: {},
 				infosText: '',
 				taskList: [],
@@ -170,6 +167,7 @@
 		},
 		onShow() {
 			this.getData()
+			console.log("YYY:",this.loginAccount)
 		},
 		methods: {
 			getData() {
@@ -201,7 +199,9 @@
 			
 			//完善个人资料
 			gowsgrzl() {
-
+				uni.navigateTo({
+					url: '/pages2/pages/mine/edit'
+				});
 			},
 			goTuwen() {
 				uni.navigateTo({

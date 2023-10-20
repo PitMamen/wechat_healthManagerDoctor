@@ -182,6 +182,7 @@
 					this.$refs.caCheck.check();
 				});
 			}
+			
 		},
 		methods: {
 			refreshBindStatus() {
@@ -311,11 +312,28 @@
 				});
 			},
 			goCard2() {
+				
+				if(this.account.roleName=='pharmacist'){
+									uni.showToast({
+										title: '对不起，您的身份是药剂师，无权进行该操作',
+										icon: 'none'
+									});
+									return
+								}
 				uni.navigateTo({
 					url: '/pages2/pages/work/treat?tab=2'
 				});
 			},
 			goCard3() {
+				if(this.account.roleName=='pharmacist'){
+									uni.showToast({
+										title: '对不起，您的身份是药剂师，无权进行该操作',
+										icon: 'none'
+									});
+									return
+								}
+				
+				
 				uni.navigateTo({
 					url: '/pages2/pages/work/treat?tab=3'
 				});
@@ -331,11 +349,43 @@
 				});
 			},
 			goApps1() {
+				
+				if(this.account.roleName=='nurse'){
+									uni.showToast({
+										title: '对不起，您的身份是护士，无权进行该操作',
+										icon: 'none'
+									});
+									return
+								}else if(this.account.roleName=='pharmacist'){
+									uni.showToast({
+										title: '对不起，您的身份是药剂师，无权进行该操作',
+										icon: 'none'
+									});
+									return
+								}else if(this.account.roleName=='medTechnician'){
+									uni.showToast({
+										title: '对不起，您的身份是技师，无权进行该操作',
+										icon: 'none'
+									});
+									return
+								}
+				
+				
 				uni.navigateTo({
 					url: '/pages2/pages/chufang2/mode-list'
 				});
 			},
 			goApps2() {
+				
+				if(this.account.roleName=='medTechnician'){
+									uni.showToast({
+										title: '对不起，您的身份是技师，无权进行该操作',
+										icon: 'none'
+									});
+									return
+								}
+				
+				
 				uni.navigateTo({
 					url: '/pages/follow/current-follow-list'
 				});

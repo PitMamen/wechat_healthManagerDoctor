@@ -14,7 +14,27 @@
 
 			<view class="info-item">
 				<view class="info-item-content">
-					<view style="flex: 1;display: flex;flex-direction: row;">
+					<view style="flex: 1;display: flex;flex-direction: row;align-items: center;" @click="goChooseType">
+						<view style="color: #1A1A1A;font-size: 32rpx;width: 135rpx;">
+							类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型
+						</view>
+						<view style="color: red;padding-top: 5rpx;">*</view>
+						<view style="margin-left: 30rpx;color: #999;font-size: 28rpx;padding-top: 5rpx;"
+							v-if="!typeTitle">请选择</view>
+						<view style="margin-left: 30rpx;font-size: 28rpx;padding-top: 5rpx;" v-else>
+							{{ typeTitle || '~' }}
+						</view>
+					</view>
+
+					<u-icon name="arrow-right" color="#333"
+						style="width: 10rpx;height: 10rpx;float: right;margin-right: 10rpx;margin-top: 6.5rpx;"></u-icon>
+
+				</view>
+			</view>
+
+			<view class="info-item">
+				<view class="info-item-content">
+					<view style="flex: 1;display: flex;flex-direction: row;align-items: center;">
 						<view style="color: #1A1A1A;font-size: 32rpx;width: 135rpx;">
 							姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名
 						</view>
@@ -31,7 +51,7 @@
 			</view>
 			<view class="info-item">
 				<view class="info-item-content">
-					<view style="flex: 1;display: flex;flex-direction: row;">
+					<view style="flex: 1;display: flex;flex-direction: row;align-items: center;">
 						<view style="color: #1A1A1A;font-size: 32rpx;width: 135rpx;">身份证号</view>
 						<view style="color: red;padding-top: 5rpx;">*</view>
 						<view style="margin-left: 30rpx;">
@@ -48,7 +68,7 @@
 			</view>
 			<view class="info-item">
 				<view class="info-item-content">
-					<view style="flex: 1;display: flex;flex-direction: row;">
+					<view style="flex: 1;display: flex;flex-direction: row;align-items: center;">
 						<view style="color: #1A1A1A;font-size: 32rpx;width: 135rpx;">手&nbsp;&nbsp;机&nbsp;&nbsp;号</view>
 						<view style="color: red;padding-top: 5rpx;">*</view>
 						<view style="margin-left: 30rpx;">
@@ -61,7 +81,7 @@
 
 			<view class="info-item" v-if="needShowGetCode">
 				<view class="info-item-content">
-					<view style="flex: 1;display: flex;flex-direction: row;">
+					<view style="flex: 1;display: flex;flex-direction: row;align-items: center;">
 						<view style="color: #1A1A1A;font-size: 32rpx;width: 135rpx;">校&nbsp;&nbsp;验&nbsp;&nbsp;码</view>
 						<view style="color: red;padding-top: 5rpx;">*</view>
 						<view style="margin-left: 30rpx;">
@@ -82,7 +102,7 @@
 
 			<view class="info-item">
 				<view class="info-item-content">
-					<view style="flex: 1;display: flex;flex-direction: row;" @click="goChooseHospital">
+					<view style="flex: 1;display: flex;flex-direction: row;align-items: center;" @click="goChooseHospital">
 						<view style="color: #1A1A1A;font-size: 32rpx;width: 135rpx;">所在医院</view>
 						<view style="color: red;padding-top: 5rpx;">*</view>
 						<view style="margin-left: 30rpx;color: #999;font-size: 28rpx;padding-top: 5rpx;"
@@ -101,7 +121,7 @@
 
 			<view class="info-item">
 				<view class="info-item-content">
-					<view style="flex: 1;display: flex;flex-direction: row;" @click="goChooseDept">
+					<view style="flex: 1;display: flex;flex-direction: row;align-items: center;" @click="goChooseDept">
 						<view style="color: #1A1A1A;font-size: 32rpx;width: 135rpx;">
 							科&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;室
 						</view>
@@ -119,9 +139,9 @@
 				</view>
 			</view>
 
-			<view class="info-item">
+			<view v-if="typeItem.typeCode == 'doctor'|| typeItem.typeCode == 'nurse' " class="info-item">
 				<view class="info-item-content">
-					<view style="flex: 1;display: flex;flex-direction: row;" @click="goChoosePro">
+					<view style="flex: 1;display: flex;flex-direction: row;align-items: center;" @click="goChoosePro">
 						<view style="color: #1A1A1A;font-size: 32rpx;width: 135rpx;">
 							职&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称
 						</view>
@@ -155,8 +175,13 @@
 		<u-picker :show="showChooseDept" :columns="columnsDept" @cancel="cancelDept" @confirm="confirmDept"
 			keyName="departmentName"></u-picker>
 
+		<!-- 选择职称弹窗 -->
 		<u-picker :show="showChoosePro" :columns="columnsPro" @cancel="cancelPro" @confirm="confirmPro"
 			keyName="value"></u-picker>
+
+		<!-- 选择类型弹窗 -->
+		<u-picker :show="showChooseType" :columns="columnsType" @cancel="cancelType" @confirm="confirmType"
+			keyName="typeName"></u-picker>
 
 	</view>
 </template>
@@ -174,6 +199,7 @@
 					identificationNo: "",
 					phone: "",
 					professionalTitle: "",
+					userType: "",
 					userName: ""
 				},
 				modifyData: undefined,
@@ -183,26 +209,58 @@
 				deptItem: undefined,
 				deptName: '',
 				profItem: undefined,
+				typeItem: {
+					typeName: '医生',
+					typeCode: 'doctor'
+				},
 				professionalTitle: '',
+				typeTitle: '',
 				canModify: true,
+				modifyFlag: 2, //审核不通过修改的时候进来，不允许修改身份类型   1不可以修改  2可以修改
 				isShow: true, //是否已经点击了获取验证码 false为点击了，true为倒计时结束
 				needShowGetCode: false, //是否显示获取验证码整行布局
 				countSecond: 60,
 				timer: null,
 				showChooseDept: false,
 				showChoosePro: false,
+				showChooseType: false,
 				columnsDept: [
 					[]
 				],
 				columnsPro: [
 					[]
 				],
+				columnsDoc: [
+					[]
+				],
+				columnsNurse: [
+					[]
+				],
+				columnsType: [
+					[{
+						typeName: '医生',
+						typeCode: 'doctor'
+					}, {
+						typeName: '护士',
+						typeCode: 'nurse'
+					}, {
+						typeName: '药剂师',
+						typeCode: 'pharmacist'
+					}, {
+						typeName: '技师',
+						typeCode: 'medTechnician'
+					}]
+				],
 			}
 		},
 		onLoad(option) {
 			this.account = uni.getStorageSync('account');
 			uni.removeStorageSync('choose_hospital');
+			////审核不通过修改的时候进来，不允许修改身份类型   1不可以修改  2可以修改   modifyFlag没传的话就是首次实名认证，不是审核不通过的修改
+			this.modifyFlag = option.modifyFlag || 2//测试代码，正常不能注释
 			console.log('this.account', this.account)
+			console.log('this.columnsType[0][0]', this.columnsType[0][0])
+			console.log('this.columnsType[0]', this.columnsType[0])
 			//如果没有手机号，直接显示获取验证码
 
 			this.getIdentifyInfo()
@@ -286,6 +344,8 @@
 
 							this.professionalTitle = this.profItem.value
 
+
+
 						} else { //新增的实名认证信息情况，直接取baseInfo的phone
 							if (!baseInfo.phone) {
 								this.needShowGetCode = true
@@ -293,7 +353,20 @@
 								this.baseData.phone = baseInfo.phone //新用户可能没有创建用户
 							}
 						}
-						this.getProf()
+						//TODO初始化类型
+						//用户类型新增和详情接口不是一个人做的，所以字段名不一样，这里需要转换
+						this.$set(baseInfo, 'userType', baseInfo.personType)
+						this.$set(this.baseData, 'userType', baseInfo.personType)
+						let getOne = this.columnsType[0].find((item) => item.typeCode == baseInfo.userType)
+						console.log('initTitles getOne', getOne)
+						if (getOne) {
+							this.typeTitle = getOne.typeName
+							this.typeItem = JSON.parse(JSON.stringify(getOne))
+						}
+
+						// this.initTitles()
+						this.getProf(2)
+						this.getProf(3)
 
 					} else {
 						this.$u.toast(res.message)
@@ -333,16 +406,45 @@
 
 			},
 
-			getProf() {
+			async initTitles() {
+				await this.getProf(2)
+				await this.getProf(3)
+
+				console.log('initTitles typeCode', this.typeItem.typeCode)
+				if (this.typeItem.typeCode == 'doctor') {
+					this.columnsPro = JSON.parse(JSON.stringify(this.columnsDoc))
+					console.log('initTitles doctor', JSON.stringify(this.columnsPro))
+				} else if (this.typeItem.typeCode == 'nurse') {
+					this.columnsPro = JSON.parse(JSON.stringify(this.columnsNurse))
+				}
+			},
+
+			/**
+			 * @param {Object} getType  区分获取医生职称和护士职称列表 2医生  3护士
+			 */
+			getProf(getType) {
 
 				uni.$u.http.get('/account-api/accountDict/professionalTitles', {
 					params: {
-						type: 2
+						type: getType
 					}
 				}).then(res => {
+					console.log('getType', getType)
 					if (res.code == 0) {
+						if (getType == 2) {
+							this.columnsDoc = [res.data]
+							console.log('initTitles columnsDoc', JSON.stringify(this.columnsDoc))
+						} else if (getType == 3) {
+							this.columnsNurse = [res.data]
+						}
 
-						this.columnsPro = [res.data]
+						if (this.typeItem.typeCode == 'doctor') {
+							this.columnsPro = JSON.parse(JSON.stringify(this.columnsDoc))
+							console.log('initTitles doctor', JSON.stringify(this.columnsPro))
+						} else if (this.typeItem.typeCode == 'nurse') {
+							this.columnsPro = JSON.parse(JSON.stringify(this.columnsNurse))
+						}
+						// this.columnsPro = [res.data]
 					} else {
 						this.$u.toast(res.message)
 					}
@@ -387,6 +489,15 @@
 			},
 			goChoosePro() {
 				this.showChoosePro = true;
+				this.hideKeyboard();
+			},
+			goChooseType() {
+				//审核不通过不能修改身份
+				if (this.modifyFlag == 1) {
+					this.$u.toast("不支持修改类型！")
+					return
+				}
+				this.showChooseType = true;
 				this.hideKeyboard();
 			},
 
@@ -438,7 +549,40 @@
 				// this.$set(this.item, 'useFrequencyName', e.value[0].id);
 			},
 
+			cancelType() {
+				console.log('cancelPro')
+				this.showChooseType = false;
+			},
+
+			// {
+			//    "value": "正主任医生",
+			//    "description": "正主任医生"
+			//  }
+			confirmType(e) {
+				console.log('confirmType', e.value)
+				if (this.typeItem.typeCode != e.value[0].typeCode) {
+					this.professionalTitle = ''
+					this.profItem = undefined
+				}
+				this.typeItem = e.value[0]
+				this.cancelType();
+				this.typeTitle = this.typeItem.typeName
+				this.baseData.userType = this.typeItem.typeCode
+				if (this.typeItem.typeCode == 'doctor') {
+					this.columnsPro = JSON.parse(JSON.stringify(this.columnsDoc))
+				} else if (this.typeItem.typeCode == 'nurse') {
+					this.columnsPro = JSON.parse(JSON.stringify(this.columnsNurse))
+				}
+
+				// this.columnsPro = [res.data]
+				// this.$set(this.item, 'useFrequencyName', e.value[0].id);
+			},
+
 			goNext() {
+				if (!this.typeItem) {
+					this.$u.toast("请选择类型！")
+					return
+				}
 				if (!this.baseData.userName) {
 					this.$u.toast("请输入真实姓名！")
 					return
@@ -463,7 +607,7 @@
 					this.$u.toast("请选择科室！")
 					return
 				}
-				if (!this.profItem) {
+				if (!this.profItem && (this.typeItem.typeCode == 'doctor' || this.typeItem.typeCode == 'nurse')) {
 					this.$u.toast("请选择职称！")
 					return
 				}
@@ -479,7 +623,9 @@
 				let param = JSON.parse(JSON.stringify(this.baseData))
 				this.$set(param, 'hospitalCode', this.hospitalItem.hospitalCode)
 				this.$set(param, 'departmentId', this.deptItem.departmentId)
-				this.$set(param, 'professionalTitle', this.profItem.value)
+				if (this.typeItem.typeCode == 'doctor' || this.typeItem.typeCode == 'nurse') {
+					this.$set(param, 'professionalTitle', this.profItem.value)
+				}
 				this.$set(param, 'appId', uni.getAccountInfoSync().miniProgram.appId)
 				console.log('param', JSON.stringify(param))
 				uni.showLoading({
@@ -491,6 +637,8 @@
 						uni.navigateTo({
 							url: '/pages2/pages/mine/identify-detail'
 						})
+						this.account.roleName = this.typeItem.typeCode //更改身份后保存到本地
+						uni.setStorageSync('account', this.account); //存数据
 					} else {
 						that.$u.toast(res.message)
 					}

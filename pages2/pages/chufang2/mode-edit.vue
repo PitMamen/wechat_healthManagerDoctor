@@ -316,30 +316,36 @@
 
 			//删除模板
 			deleteMode() {
-				if(!this.id){
-					return
+				if (!this.id){
+					return;
 				}
-				uni.showLoading({
-					title: '删除中'
-				});
-				uni.$u.http.get('/medical-api/medical/delMedicalTempById', {
-					params: {
-						id: this.id
+				uni.showModal({
+					title: '温馨提示',
+					content: '是否确定删除？',
+					showCancel: true,
+					success: (res) => {
+						if (res.confirm){
+							uni.showLoading({
+								title: '删除中'
+							});
+							uni.$u.http.get('/medical-api/medical/delMedicalTempById', {
+								params: {
+									id: this.id
+								}
+							}).then(res => {
+								uni.hideLoading();
+								uni.removeStorageSync('cf-info');
+								uni.showToast({
+									title: '删除成功',
+									icon: 'success'
+								});
+								setTimeout(()=>{
+									uni.navigateBack();
+								}, 1500);
+							});
+						}
 					}
-				}).then(res => {
-					
-					uni.hideLoading();
-					uni.removeStorageSync('cf-info');
-					uni.showToast({
-						title: '删除成功',
-						icon: 'success'
-					});
-					setTimeout(()=>{
-						uni.navigateBack()
-					},1500)
 				});
-
-			
 			},
 
 

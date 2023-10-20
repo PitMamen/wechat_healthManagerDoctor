@@ -6,11 +6,10 @@
 
 
 		<view class="view-base">
-			<view style="color: #1A1A1A;font-size: 32rpx;font-weight: bold;margin-left: 24rpx;">完成资质认证，开通问诊服务</view>
+			<!-- 	<view style="color: #1A1A1A;font-size: 32rpx;font-weight: bold;margin-left: 24rpx;">完成资质认证，开通问诊服务</view>
 
 			<view class="view-head">
 				<u-upload :fileList="fileList1" @afterRead="afterRead" @delete="deletePic" :maxCount="1" name="1">
-					<!-- 					multiple :maxCount="10"> -->
 					<view style="display: flex;flex-direction: row;align-items: center;">
 						<view style="width: 128rpx;height: 128rpx;background-color: #F2F2F2;border-radius: 64rpx;">
 						</view>
@@ -26,7 +25,6 @@
 
 			<view style="color: #4D4D4D;font-size: 30rpx;margin-left: 24rpx;margin-top: 30rpx;">上传头像示例:</view>
 
-			<!-- 头像示例 -->
 			<view style="display: flex;flex-direction: row;align-items: center;margin-left: 24rpx;margin-top: 20rpx;">
 				<image
 					src="https://hmg.mclouds.org.cn/content-api/file/I20230830160747241CXMHU0IEPSV6U5-doctorM_20230830160445.png"
@@ -38,8 +36,8 @@
 				</image>
 			</view>
 
+			<view style="height: 1rpx;background-color: #E6E6E6;margin: 30rpx 24rpx 24rpx 24rpx;"></view> -->
 			<!-- 分割线 -->
-			<view style="height: 1rpx;background-color: #E6E6E6;margin: 30rpx 24rpx 24rpx 24rpx;"></view>
 
 			<!-- 身份证 -->
 			<view style="display: flex;flex-direction: row;margin-left: 24rpx;">
@@ -147,7 +145,7 @@
 			<!-- 分割线 -->
 			<view style="height: 1rpx;background-color: #E6E6E6;margin: 30rpx 24rpx 24rpx 24rpx;"></view>
 
-			<!-- 资格证 -->
+			<!-- 执业证 -->
 			<view v-if="account.roleName=='doctor'|| account.roleName=='nurse'"
 				style="display: flex;flex-direction: row;margin-left: 24rpx;">
 				<!-- <view style="color: #4D4D4D;font-size: 30rpx;">执业证正反面</view> -->
@@ -187,12 +185,9 @@
 			</view>
 
 
-			<!-- 分割线 -->
-			<view v-if="account.roleName=='doctor'|| account.roleName == 'nurse'"
-				style="height: 1rpx;background-color: #E6E6E6;margin: 30rpx 24rpx 24rpx 24rpx;"></view>
+			<!-- 			<view style="height: 1rpx;background-color: #E6E6E6;margin: 30rpx 24rpx 24rpx 24rpx;"></view>
 
 
-			<!-- 擅长领域 -->
 			<view style="display: flex;flex-direction: row;margin-left: 24rpx;margin-right: 24rpx;">
 				<view style="color: #4D4D4D;font-size: 30rpx;flex: 1;">擅长领域（选填）</view>
 				<view>{{countExpert}}/300</view>
@@ -204,11 +199,9 @@
 					placeholder="请描述您的专业领域、擅长疾病；如：擅长高血压、 冠心病等疾病的专断和治疗；擅长CT诊断，由其对 心血管疾病对影像诊断。"></u--textarea>
 			</view>
 
-			<!-- 分割线 -->
 			<view style="height: 1rpx;background-color: #E6E6E6;margin: 10rpx 24rpx 24rpx 24rpx;"></view>
 
 
-			<!-- 个人简介 -->
 			<view style="display: flex;flex-direction: row;margin-left: 24rpx;margin-right: 24rpx;">
 				<view style="color: #4D4D4D;font-size: 30rpx;flex: 1;">个人简介（选填）</view>
 				<view>{{countBrief}}/1000</view>
@@ -220,20 +213,19 @@
 					placeholder="填写要求：\n 1.简介内容：从业年限，毕业学校，进修经历，学术， 科研成果，所获奖项，社会任职等 2.不包含敏感词汇，黄赌毒、反党、不文明用语 3.不虚假、不夸大"></u--textarea>
 			</view>
 
-			<!-- 分割线 -->
 			<view style="height: 1rpx;background-color: #E6E6E6;margin: 10rpx 24rpx 24rpx 24rpx;"></view>
 			<view style="display: flex;flex-direction: row;margin-left: 24rpx;background-color: white;">
 				<image src="../../static/static/images/icon_blue.png" style="width: 28rpx;height: 28rpx;">
 				</image>
 				<view style="color: #3894FF;font-size: 24rpx;margin-left: 3rpx;">所有证件照仅用于认证，雅医互联网医院严格保证您等信息安全</view>
-			</view>
+			</view> -->
 
 			<!-- 底部按钮 下一步按钮-->
 			<view
 				style="width: 100vw;display: flex;flex-direction: row;align-items: center;justify-content: center;margin-top: 60rpx;">
 				<view @click="goNext"
 					style="color: white;background-color: #3894FF;width: 90vw;padding: 20rpx 0;border-radius: 8rpx;text-align: center;font-size: 30rpx;">
-					提交资质认证</view>
+					提交</view>
 			</view>
 
 			<view style="height: 30rpx;"></view>
@@ -241,8 +233,8 @@
 		</view>
 
 		<!-- 选择器，参看yp-edit.vue -->
-		<u-picker :show="showChooseHospital" :columns="columnsHospital" @cancel="cancelHospital"
-			@confirm="confirmHospital" keyName="text"></u-picker>
+		<!-- 		<u-picker :show="showChooseHospital" :columns="columnsHospital" @cancel="cancelHospital"
+			@confirm="confirmHospital" keyName="text"></u-picker> -->
 
 		<u-modal :footer="null" :show="showImg" :title="title" :content='content' closeOnClickOverlay
 			@close="() => showImg = false">
@@ -285,7 +277,7 @@
 				headers: {
 					Authorization: '',
 				},
-				fileList1: [],
+				// fileList1: [],
 				fileList2: [],
 				fileList3: [],
 				fileList4: [],
@@ -294,14 +286,14 @@
 				fileList7: [],
 				fileList8: [],
 				showChooseHospital: false,
-				countExpert: 0,
-				countBrief: 0,
+				// countExpert: 0,
+				// countBrief: 0,
 				modifyData: undefined,
 				doctorAuthInfo: {
 					avatarUrl: "",
 
-					doctorBrief: "",
-					expertInDisease: "", //擅长
+					// doctorBrief: "",
+					// expertInDisease: "", //擅长
 
 					idcardF: "",
 					idcardZ: "",
@@ -319,7 +311,6 @@
 		},
 		onLoad(option) {
 			this.account = uni.getStorageSync('account');
-
 			//不同身份证件名称不一样
 			if (this.account.roleName == 'nurse') {
 				this.zigeName = '护士资格证正反面'
@@ -371,14 +362,14 @@
 							this.doctorAuthInfo.qualificationF = baseInfo.qualificationF
 							this.doctorAuthInfo.practiceZ = baseInfo.practiceZ
 							this.doctorAuthInfo.practiceF = baseInfo.practiceF
-							this.doctorAuthInfo.doctorBrief = baseInfo.doctorBrief
-							this.doctorAuthInfo.expertInDisease = baseInfo.expertInDisease
+							// this.doctorAuthInfo.doctorBrief = baseInfo.doctorBrief
+							// this.doctorAuthInfo.expertInDisease = baseInfo.expertInDisease
 
-							this.fileList1 = [{
-								url: baseInfo.avatarUrl,
-								status: 'success',
-								message: '',
-							}]
+							// this.fileList1 = [{
+							// 	url: baseInfo.avatarUrl,
+							// 	status: 'success',
+							// 	message: '',
+							// }]
 							this.fileList2 = [{
 								url: baseInfo.idcardZ,
 								status: 'success',
@@ -415,8 +406,8 @@
 								message: '',
 							}]
 
-							this.countExpert = (this.doctorAuthInfo.expertInDisease || '').length
-							this.countBrief = (this.doctorAuthInfo.doctorBrief || '').length
+							// this.countExpert = (this.doctorAuthInfo.expertInDisease || '').length
+							// this.countBrief = (this.doctorAuthInfo.doctorBrief || '').length
 
 						} else { //新增的实名认证信息情况，
 							// this.getProf()
@@ -430,19 +421,6 @@
 					uni.hideLoading();
 				});
 
-			},
-			onInputChange(type) {
-				console.log('onInputChange', type)
-				switch (type) {
-					case 1:
-						this.countExpert = this.doctorAuthInfo.expertInDisease.length
-						break;
-					case 2:
-						this.countBrief = this.doctorAuthInfo.doctorBrief.length
-						break;
-					default:
-						break;
-				}
 			},
 
 			showExample(type) {
@@ -595,14 +573,13 @@
 							},
 			 */
 			goNext() {
-				console.log('this.fileList1', this.fileList1)
-				//8个必填项
-				if (!this.fileList1[0] || !this.fileList1[0].url) {
-					this.$u.toast("请上传头像！")
-					return
-				} else {
-					this.doctorAuthInfo.avatarUrl = this.fileList1[0].url
-				}
+				// console.log('this.fileList1', this.fileList1)
+				// if (!this.fileList1[0] || !this.fileList1[0].url) {
+				// 	this.$u.toast("请上传头像！")
+				// 	return
+				// } else {
+				// 	this.doctorAuthInfo.avatarUrl = this.fileList1[0].url
+				// }
 
 				if (!this.fileList2[0] || !this.fileList2[0].url) {
 					this.$u.toast("请上传身份证正面！")
@@ -618,6 +595,7 @@
 					this.doctorAuthInfo.idcardF = this.fileList3[0].url
 				}
 
+				//只有医生需要上传职称证
 				if (this.account.roleName == 'doctor') {
 					if (!this.fileList4[0] || !this.fileList4[0].url) {
 						this.$u.toast("请上传职称证！")
@@ -626,7 +604,6 @@
 						this.doctorAuthInfo.titleZ = this.fileList4[0].url
 					}
 				}
-
 
 				if (!this.fileList5[0] || !this.fileList5[0].url) {
 					this.$u.toast("请上传资格证正面！")
@@ -642,6 +619,7 @@
 					this.doctorAuthInfo.qualificationF = this.fileList6[0].url
 				}
 
+				//只有医生和护士需要上传执业证
 				if (this.account.roleName == 'doctor' || this.account
 					.roleName == 'nurse') {
 					if (!this.fileList7[0] || !this.fileList7[0].url) {
@@ -663,11 +641,12 @@
 				uni.showLoading({
 					title: '正在加载'
 				});
+				console.log('submitDoctorAuthInfo',JSON.stringify(this.doctorAuthInfo))
 				uni.$u.http.post('/account-api/accountInfo/submitDoctorAuthInfo', this.doctorAuthInfo).then(res => {
 					if (res.code == 0) {
 						this.$u.toast("操作成功！")
 						uni.navigateTo({
-							url: '/pages2/pages/mine/identify-result?type=1&jumpFrom=2'
+							url: '/pages2/pages/mine/identify-result?type=1&jumpFrom=2&useFor=1'
 						})
 					} else {
 						this.$u.toast(res.message)
@@ -720,6 +699,11 @@
 		background-color: white;
 		align-items: center;
 		flex-direction: column;
+
+		.u-upload__deletable {
+			width: 20rpx;
+			height: 20rpx;
+		}
 
 		.view-base {
 			width: 100vw;

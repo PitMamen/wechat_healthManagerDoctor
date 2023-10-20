@@ -12,7 +12,9 @@
 					{{account.user.userName}}
 				</view>
 				<view class="v-right-hor">
-					<view style="color: #141418;font-weight: 700;" @click="goCom">{{account.user.professionalTitle || ''}}</view>
+					<view style="color: #141418;font-weight: 700;" @click="goCom">
+						{{account.user.professionalTitle || ''}}
+					</view>
 					<view style="color: #1A1A1A;margin-left: 20rpx;">{{account.user.departmentName || ''}}</view>
 				</view>
 				<view style="color: #999999;font-size: 24rpx;width: 100%;margin-top: 10rpx;">
@@ -170,6 +172,20 @@
 			</view>
 		</view>
 
+		<view class="v-items" @click="goMyPapers">
+			<image src="/static/static/images/mine_papers.png"
+				style="float: left;width: 56rpx;height: 56rpx;margin-left: 2vw;">
+			</image>
+
+			<view style="margin-left: 10px;font-size: 30rpx;flex: 1;">我的证件</view>
+
+			<view style="display: flex;flex-direction: row;">
+				<!-- <span style="float: right;font-size: 14px;">全部</span> -->
+				<u-icon name="arrow-right" color="#333"
+					style="width: 10px;height: 10px;float: right;margin-right: 10px;margin-top: 6.5px;"></u-icon>
+			</view>
+		</view>
+
 		<!-- <view class="v-items" @click="goIdentify">
 			<image src="/static/static/images/mine-srrz.png"
 				style="float: left;width: 56rpx;height: 56rpx;margin-left: 2vw;">
@@ -184,8 +200,8 @@
 			</view>
 		</view> -->
 
-		
-		
+
+
 	</view>
 </template>
 
@@ -195,6 +211,7 @@
 			return {
 				showCa: false,
 				cashEye: true,
+				has: true, //是否有证照信息
 				title: 'Hello',
 				account: {
 					name: '李雅',
@@ -216,6 +233,7 @@
 			// 	console.log('res', res)
 			// })
 			this.account = uni.getStorageSync('account');
+			console.log('me account', JSON.stringify(this.account))
 
 		},
 		onShow() {
@@ -224,6 +242,7 @@
 			}
 			this.getInfo();
 			this.refreshBindStatus();
+			this.getIdentifyInfo();
 		},
 		methods: {
 			jump() {
@@ -308,17 +327,20 @@
 					uni.hideLoading();
 				});
 			},
-			
-			refreshBindStatus(){
+
+			refreshBindStatus() {
 				uni.$u.http.get('/account-api/accountInfo/getDoctorAuthStatus', {
 					params: {}
 				}).then(res => {
 					if (res.code == 0) {
-						this.account.bindStatus =res.data.bindStatus
+						if (res.data.auditStatus == 3) {
+							uni.setStorageSync('watchNo', '1');
+						}
+						this.account.bindStatus = res.data.bindStatus
 					} else {
 						this.$u.toast(res.message)
 					}
-				
+
 				}).finally(() => {
 					uni.hideLoading();
 				});
@@ -339,6 +361,24 @@
 				if (!this.checkAuth()) {
 					return
 				}
+				
+				if(this.account.roleName=='pharmacist'){
+									uni.showToast({
+										title: '对不起，您的身份是药剂师，无权进行该操作',
+										icon: 'none'
+									});
+									return
+								}else if(this.account.roleName=='medTechnician'){
+									uni.showToast({
+										title: '对不起，您的身份是技师，无权进行该操作',
+										icon: 'none'
+									});
+									return
+								}
+				
+				
+				
+				
 				uni.navigateTo({
 					url: '/pages2/pages/follow/history-follow-list'
 				})
@@ -364,27 +404,122 @@
 					url: '/pages2/pages/login/update'
 				})
 			},
+			goMyPapers() {
+				if (!this.checkAuth()) {
+					return
+				}
+				
+				
+				
+				// if(this.account.roleName=='nurse'){
+				// 					uni.showToast({
+				// 						title: '对不起，您的身份是护士，无权进行该操作',
+				// 						icon: 'none'
+				// 					});
+				// 					return
+				// 				}else if(this.account.roleName=='pharmacist'){
+				// 					uni.showToast({
+				// 						title: '对不起，您的身份是药剂师，无权进行该操作',
+				// 						icon: 'none'
+				// 					});
+				// 					return
+				// 				}else if(this.account.roleName=='medTechnician'){
+				// 					uni.showToast({
+				// 						title: '对不起，您的身份是技师，无权进行该操作',
+				// 						icon: 'none'
+				// 					});
+				// 					return
+				// 				}
+
+				uni.$u.http.get('/account-api/accountInfo/getDoctorAuthStatus', {
+					params: {}
+				}).then(res => {
+					if (res.code == 0) {
+
+						if (this.has) {
+							uni.navigateTo({
+								url: '/pages2/pages/mine/my-papers?auditStatus=' + res.data.auditStatus
+							})
+						} else {
+							uni.navigateTo({
+								url: '/pages2/pages/mine/my-papers-none'
+							})
+						}
+
+						//2审核通过
+						// if (res.data.auditStatus == 1) { //审核中
+						// 	uni.navigateTo({
+						// 		url: '/pages2/pages/mine/identify-result?type=1&jumpFrom=1'
+						// 	})
+						// } else if (res.data.auditStatus == 3) { //审核不通过
+						// 	uni.navigateTo({
+						// 		url: '/pages2/pages/mine/identify-result?type=2&jumpFrom=1'
+						// 	})
+						// } else { // 0待完善   进去后查询数据来确定填充信息还是完全的新增
+						// 	uni.navigateTo({
+						// 		url: '/pages2/pages/mine/identify-base'
+						// 	})
+						// }
+
+					} else {
+						this.$u.toast(res.message)
+					}
+
+				}).finally(() => {
+					// uni.hideLoading();
+				});
+
+
+
+			},
+
+			getIdentifyInfo() {
+				// uni.showLoading({
+				// 	title: '正在加载'
+				// });
+				uni.$u.http.get('/account-api/accountInfo/getDoctorAuthInfo', {
+					params: {}
+				}).then(res => {
+					if (res.code == 0) {
+						let baseInfo = res.data
+						if (baseInfo.idcardZ) { //填过实名认证信息，需要填充数据
+							this.has = true
+						} else { //新增的实名认证信息  没有提交证件信息
+							// this.getProf()
+							this.has = false
+						}
+
+					} else {
+						this.$u.toast(res.message)
+					}
+
+				}).finally(() => {
+					// uni.hideLoading();
+				});
+
+			},
+
 			goMyCertificate() {
 				if (!this.checkAuth()) {
 					return
 				}
 			},
-		
-			
+
+
 			getShowCa() {
 
 				uni.$u.http.get(`/info-api/sysConfigData/getConfig/CA_AUTH_FLAG`).then(res => {
 					this.showCa = res.data.value === '1';
 				});
 			},
-			goCom(){//临时加入口的测试代码
+			goCom() { //临时加入口的测试代码
 				// uni.navigateTo({
-				// 	url: '/pages2/pages/work/treat'
+				// 	url: '/pages2/pages/mine/identify-base'
 				// })
-				
-				uni.navigateTo({
-					url: '/pages3/pages/record/choose-patient'
-				})
+
+				// uni.navigateTo({
+				// 	url: '/pages3/pages/record/choose-patient'
+				// })
 			},
 
 			quit() {
@@ -457,14 +592,30 @@
 				if (!this.checkAuth()) {
 					return
 				}
+				
+				if(this.account.roleName=='pharmacist'){
+									uni.showToast({
+										title: '对不起，您的身份是药剂师，无权进行该操作',
+										icon: 'none'
+									});
+									return
+								}
 				uni.navigateTo({
 					url: '/pages3/pages/cash/detail'
 				});
 			},
 			goCashPack() {
-				if(!this.checkAuth()){
+				if (!this.checkAuth()) {
 					return
 				}
+				
+				if(this.account.roleName=='pharmacist'){
+									uni.showToast({
+										title: '对不起，您的身份是药剂师，无权进行该操作',
+										icon: 'none'
+									});
+									return
+								}
 				uni.navigateTo({
 					url: '/pages3/pages/cash/pack'
 				});

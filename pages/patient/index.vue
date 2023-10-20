@@ -1,5 +1,5 @@
 <template>
-	<view class="wrap">
+	<view v-if="account.roleName!='pharmacist'" class="wrap">
 		<u-sticky v-if="account && account.accountId && account.bindStatus == 0">
 			<view class="wrap-search">
 				<image @click="showMenuBtn()" src="/static/static/images/icon_dot.png" style="width: 36rpx;height: 36rpx;padding-left: 30rpx;">
@@ -201,7 +201,13 @@
 		
 		 //监听 TabBar 切换点击	 
 		onTabItemTap(item) {
-			console.log(item)
+			console.log("VVVV:",item)
+			// medTechnician
+			if(this.account.roleName=='pharmacist'){
+				uni.showToast({										title: '对不起，您的身份是药技师，无权进行该操作',										icon: 'none'									});
+				return
+			}
+			
 			this.getTagList()
 			this.getData(true)
 		},
@@ -265,13 +271,15 @@
 						
 						list.forEach(item=>{
 							if(item.order){
-								item.order.rightsId=item.order.id
-								item.order.id=item.order.chartId
+                                item.order.docName = item.order.doctorName;
+								item.order.rightsId=item.order.id;
+								item.order.id=item.order.chartId;
 								item.order.userInfo={
+                                    userId:item.userId,
 									userName:item.user_name,
 									userSex:item.user_sex,
 									userAge:item.birthday,
-								}
+								};
 							}
 							
 						})
@@ -397,7 +405,10 @@
 			},
 			//点击问卷评估
 			onWJPGclick(){
-				this.showMenu=false
+				this.showMenu=false;
+				uni.navigateTo({
+					url: '/pages3/pages/group/paper'
+				});
 			},
 
 			goIdentify() {

@@ -133,6 +133,12 @@
 					}
 				},
 				{
+					"path": "pages/mine/edit",
+					"style": {
+						"navigationBarTitleText": "个人资料"
+					}
+				},
+				{
 					"path": "pages/mine/identify-base",
 					"style": {
 						"navigationBarTitleText": "实名认证"
@@ -149,6 +155,24 @@
 					"style": {
 						"navigationStyle": "custom",
 						"navigationBarTitleText": "实名认证"
+					}
+				},
+				{
+					"path": "pages/mine/my-papers",
+					"style": {
+						"navigationBarTitleText": "我的证件"
+					}
+				},
+				{
+					"path": "pages/mine/my-papers-none",
+					"style": {
+						"navigationBarTitleText": "我的证件"
+					}
+				},
+				{
+					"path": "pages/mine/my-papers-edit",
+					"style": {
+						"navigationBarTitleText": "我的证件"
 					}
 				},
 				{
@@ -529,6 +553,18 @@
 					}
 				},
 				{
+					"path": "pages/group/paper",
+					"style": {
+						"navigationBarTitleText": "发送问卷"
+					}
+				},
+				{
+					"path": "pages/group/paper-info",
+					"style": {
+						"navigationBarTitleText": "问卷详情"
+					}
+				},
+				{
 					"path" : "pages/record/mass",
 					"style" : {
 						"enablePullDownRefresh":true,
@@ -562,12 +598,14 @@
 				"text": "工作室"
 			},
 			{
+				"costom":true,
 				"pagePath": "pages/patient/index",
 				"iconPath": "static/img/tab_hzgl_n.png",
 				"selectedIconPath": "static/img/tab_hzgl_s.png",
 				"text": "患者管理"
 			},
 			{
+				
 				"pagePath": "pages/mine/index",
 				"text": "我的",
 				"iconPath": "/static/img/tab_me_n.png",

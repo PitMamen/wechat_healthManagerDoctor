@@ -369,7 +369,7 @@
 				uni.$u.http.post(`/account-api/tdUserTags/getUserTagsDoctor`, {
 					pageNo: 1,
 					pageSize: 10000,
-					tagsType: 2
+					// tagsType: 2
 					// userIds: 355, //TODO 调试测试代码，后期注释,不需要这个参数
 				}).then(res => {
 					if (res.code == 0) {
@@ -514,6 +514,34 @@
 					uni.$u.http.post('/medical-api/tlSendImMessageLog/addImMessageLog', {
 						...uni.getStorageSync('articleMsgReq'),
 						messageType: 2,
+						sendUserIds: this.patientListChose.map(item => {
+							return item.patient_user_id
+						})
+					}).then(res => {
+						uni.hideLoading();
+						uni.showToast({
+							title: '发送成功',
+							icon: 'success'
+						});
+						setTimeout(() => {
+							uni.navigateBack({
+								delta: 1
+							});
+						}, 1500);
+					}).catch(err => {
+						this.flag = false;
+					});
+				} else if (this.options.type == 'PaperMessage') {
+					if (this.flag) {
+						return;
+					}
+					this.flag = true;
+					uni.showLoading({
+						title: '发送中'
+					});
+					uni.$u.http.post('/medical-api/tlSendImMessageLog/addImMessageLog', {
+						...uni.getStorageSync('paperMsgReq'),
+						messageType: 3,
 						sendUserIds: this.patientListChose.map(item => {
 							return item.patient_user_id
 						})

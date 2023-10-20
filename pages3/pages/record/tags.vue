@@ -61,6 +61,7 @@
 				let postData = {
 					pageNo: 1,
 					pageSize: 10000,
+					tagsType: 2
 				}
 				uni.$u.http.post('/account-api/tdUserTags/getUserTagsDoctor', postData).then(res => {
 					this.tagsData = res.data.records || []
