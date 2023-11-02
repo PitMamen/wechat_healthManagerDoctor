@@ -26,13 +26,17 @@
 		<view class="v-package">
 			<view class="v-p-name">套餐信息</view>
 			<view class="v-line"></view>
-			<view class="v-p-item">
+			<view class="v-p-item" v-if="rightDetail.broadClassify != 4">
 				<view class="v-item-name">套餐名称：</view>
 				<view class="v-item-value">{{rightDetail.commodityName}}</view>
 			</view>
 			<view class="v-p-item">
 				<view class="v-item-name">咨询类型：</view>
 				<view class="v-item-value">{{rightDetail.commodityClassName}}</view>
+			</view>
+			<view class="v-p-item" v-if="rightDetail.broadClassify == 4">
+				<view class="v-item-name">咨询方式：</view>
+				<view class="v-item-value">{{rightDetail.serviceTypeDesc}}</view>
 			</view>
 			<view class="v-p-item">
 				<view class="v-item-name">购买时长：</view>

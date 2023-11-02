@@ -26,7 +26,8 @@
 				<view class="item" v-for="item in list" :key="item.id" @click="itemClick(item)">
 					<view class="top">
 						<view class="left">
-							<text class="name" v-if="item.broadClassify === 4">复诊续方</text>
+							<text class="name" v-if="item.broadClassify===4 && item.serviceItemType===101">复诊续方</text>
+							<text class="name" v-else-if="item.broadClassify===4 && item.serviceItemType===103">特需心理咨询</text>
 							<text class="name" v-else>{{getTypeName(item.serviceItemType)}}</text>
 							<text class="price">￥{{item.orderTotal}}</text>
 						</view>
@@ -50,7 +51,8 @@
 						<view class="line" v-if="item.broadClassify === 4">
 							<view class="title">预约时间：</view>
 							<view class="desc">
-								<text>{{item.createdTime}}</text>
+								<text v-if="item.serviceItemType === 101">{{item.createdTime}}</text>
+								<text v-else>{{item.appointTimePeriod}}</text>
 							</view>
 						</view>
 						<view class="line" v-else-if="item.serviceItemType === 101">
@@ -67,18 +69,34 @@
 						</view>
 					</view>
 					<view class="bottom" v-if="item.broadClassify === 4">
-						<block v-if="item.status === 2">
-							<view class="btn btn2" @click.stop="onTextRefuse(item)">拒诊</view>
-							<view class="btn btn1" @click.stop="onTextGoOn(item)">接诊</view>
+						<block v-if="item.serviceItemType === 101">
+							<block v-if="item.status === 2">
+								<view class="btn btn2" @click.stop="onTextRefuse(item)">拒诊</view>
+								<view class="btn btn1" @click.stop="onTextGoOn(item)">接诊</view>
+							</block>
+							<block v-if="item.status === 3">
+								<view class="btn btn2" @click.stop="goPopEnd(item)">结束问诊</view>
+								<view class="btn btn1" @click.stop="goChufang(item)" v-if="item.diagnosisFlag.value === 1">开具处方</view>
+								<view class="btn btn1" @click.stop="goChatClick(item)">进入诊室</view>
+							</block>
+							<block v-if="item.status===4 || item.status===5">
+								<view class="btn btn2" @click.stop="showComments(item)" v-if="item.appraiseId">查看评价</view>
+								<view class="btn btn2" @click.stop="goChatHistory(item)">查看记录</view>
+							</block>
 						</block>
-						<block v-if="item.status === 3">
-							<view class="btn btn2" @click.stop="goPopEnd(item)">结束问诊</view>
-							<view class="btn btn1" @click.stop="goChufang(item)" v-if="item.diagnosisFlag.value === 1">开具处方</view>
-							<view class="btn btn1" @click.stop="goChatClick(item)">进入诊室</view>
-						</block>
-						<block v-if="item.status===4 || item.status===5">
-							<view class="btn btn2" @click.stop="showComments(item)" v-if="item.appraiseId">查看评价</view>
-							<view class="btn btn2" @click.stop="goChatHistory(item)">查看记录</view>
+						<block v-else>
+							<block v-if="item.status === 2">
+								<view class="btn btn2" @click.stop="onTextRefuse(item)">拒诊</view>
+								<view class="btn btn1" @click.stop="onTextGoOn(item)">接诊</view>
+							</block>
+							<block v-if="item.status === 3">
+								<view class="btn btn2" @click.stop="goPopEnd(item)">结束问诊</view>
+								<view class="btn btn1" @click.stop="goChufang(item)" v-if="item.diagnosisFlag.value === 1">开具处方</view>
+								<view class="btn btn1" @click.stop="goCallVideo(item)">发起视频</view>
+							</block>
+							<block v-if="item.status===4 || item.status===5">
+								<view class="btn btn2" @click.stop="showComments(item)" v-if="item.appraiseId">查看评价</view>
+							</block>
 						</block>
 					</view>
 					<view class="bottom" v-else-if="item.serviceItemType === 101">
@@ -296,8 +314,10 @@
 			},
 			itemClick(item) {
 				let pageName = '';
-				if (item.broadClassify === 4){
+				if (item.broadClassify===4 && item.serviceItemType===101){
 					pageName = 'detailFz';
+				}else if (item.broadClassify===4 && item.serviceItemType===103){
+					pageName = 'detailVideo';
 				}else if (item.serviceItemType === 101){
 					pageName = 'detailImg';
 				}else if (item.serviceItemType === 102){
@@ -324,23 +344,19 @@
 				this.showEnd = true;
 			},
 			goChufang(item) {
-				
 				if(this.account.roleName=='nurse'){
-									uni.showToast({
-										title: '对不起，您的身份是护士，无权进行该操作',
-										icon: 'none'
-									});
-									return
-								}else if(this.account.roleName=='medTechnician'){
-									uni.showToast({
-										title: '对不起，您的身份是技师，无权进行该操作',
-										icon: 'none'
-									});
-									return
-								}
-				
-				
-				
+					uni.showToast({
+						title: '对不起，您的身份是护士，无权进行该操作',
+						icon: 'none'
+					});
+					return;
+				}else if(this.account.roleName=='medTechnician'){
+					uni.showToast({
+						title: '对不起，您的身份是技师，无权进行该操作',
+						icon: 'none'
+					});
+					return;
+				}
 				uni.setStorageSync('taskItem', item);
 				uni.navigateTo({
 					url: `/pages2/pages/chufang2/cf-add?preType=${item.broadClassify===4 ? 'appPrePrescription' : 'consultOrderPrescription'}`
@@ -356,7 +372,6 @@
 				});
 			},
 			showComments(item) {
-				console.log("FFFF:",item)
 				this.$refs.TUIViewRate.open(item.orderId);
 			},
 			goChatHistory(item) {
