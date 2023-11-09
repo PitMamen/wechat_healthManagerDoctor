@@ -147,7 +147,7 @@
 			<!-- 分割线 -->
 			<view style="height: 1rpx;background-color: #E6E6E6;margin: 30rpx 24rpx 24rpx 24rpx;"></view>
 
-			<!-- 资格证 -->
+			<!-- 职业证 -->
 			<view v-if="account.roleName=='doctor'|| account.roleName=='nurse'"
 				style="display: flex;flex-direction: row;margin-left: 24rpx;">
 				<!-- <view style="color: #4D4D4D;font-size: 30rpx;">执业证正反面</view> -->
@@ -459,11 +459,16 @@
 						this.imgSrc =
 							'https://hmg.mclouds.org.cn/content-api/file/I20230831105306361R4SKIX2PYMFUYG-zhicheng_Z.jpg'
 						break;
-					case 4:
-						this.imgSrc =
-							'https://hmg.mclouds.org.cn/content-api/file/I20230831105355758RXFRVRZAKPAHAC-zige_Z.jpg'
+					case 4: //资格证正面示例图片，医生 护士 药剂师 技师 都不一样,这里产品先提供的技师的，先改了技师的；所有示例图片默认都是医生的，原来就有
+						if (this.account.roleName == 'medTechnician') { //技师的
+							this.imgSrc =
+								'https://hmg.mclouds.org.cn/content-api/file/I20231109154956871JXW4XJ8LCTSXHZ-kfs_20231109154941.jpg'
+						} else { //医生的
+							this.imgSrc =
+								'https://hmg.mclouds.org.cn/content-api/file/I20230831105355758RXFRVRZAKPAHAC-zige_Z.jpg'
+						}
 						break;
-					case 5:
+					case 5://资格证正面示例图片
 						this.imgSrc =
 							'https://hmg.mclouds.org.cn/content-api/file/I202308311054214918W47T0XDA0UN8R-zige_F.jpg'
 						break;

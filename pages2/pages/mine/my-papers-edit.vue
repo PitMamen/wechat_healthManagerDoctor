@@ -437,11 +437,16 @@
 						this.imgSrc =
 							'https://hmg.mclouds.org.cn/content-api/file/I20230831105306361R4SKIX2PYMFUYG-zhicheng_Z.jpg'
 						break;
-					case 4:
-						this.imgSrc =
-							'https://hmg.mclouds.org.cn/content-api/file/I20230831105355758RXFRVRZAKPAHAC-zige_Z.jpg'
+					case 4: //资格证示例图片，医生 护士 药剂师 技师 都不一样,这里产品先提供的技师的，先改了技师的；所有示例图片默认都是医生的
+						if (this.account.roleName == 'medTechnician') { //技师的
+							this.imgSrc =
+								'https://hmg.mclouds.org.cn/content-api/file/I20231109154956871JXW4XJ8LCTSXHZ-kfs_20231109154941.jpg'
+						} else { //医生的
+							this.imgSrc =
+								'https://hmg.mclouds.org.cn/content-api/file/I20230831105355758RXFRVRZAKPAHAC-zige_Z.jpg'
+						}
 						break;
-					case 5:
+					case 5://资格证正面示例图片
 						this.imgSrc =
 							'https://hmg.mclouds.org.cn/content-api/file/I202308311054214918W47T0XDA0UN8R-zige_F.jpg'
 						break;
@@ -641,7 +646,7 @@
 				uni.showLoading({
 					title: '正在加载'
 				});
-				console.log('submitDoctorAuthInfo',JSON.stringify(this.doctorAuthInfo))
+				console.log('submitDoctorAuthInfo', JSON.stringify(this.doctorAuthInfo))
 				uni.$u.http.post('/account-api/accountInfo/submitDoctorAuthInfo', this.doctorAuthInfo).then(res => {
 					if (res.code == 0) {
 						this.$u.toast("操作成功！")
