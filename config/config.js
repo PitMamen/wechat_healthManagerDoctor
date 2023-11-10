@@ -1,5 +1,5 @@
 /**测试环境**/
-export const SDKAPPID = 1400613243;
+export const SDKAPPID = 1600010951 ;//1400613243
 export const baseURL = `http://develop.mclouds.org.cn:8009`;
 export const CAURL = `https://realnameverify-test05.fadada.com`;
 export const showDataLog = true;

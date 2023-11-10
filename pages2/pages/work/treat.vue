@@ -18,10 +18,11 @@
 			<view class="filter" v-if="tab===1">
 				<view class="left">
 					<view class="btns">
-						<view class="btn active" v-if="serviceItemType===101">图文问诊</view>
-						<view class="btn active" v-if="serviceItemType===102">电话问诊</view>
-						<view class="btn active" v-if="serviceItemType===103">视频问诊</view>
-						<view class="btn active" v-if="broadClassify===4">复诊续方</view>
+						<view class="btn active" v-if="serviceItemType===101 && broadClassify===''">图文问诊</view>
+						<view class="btn active" v-if="serviceItemType===102 && broadClassify===''">电话问诊</view>
+						<view class="btn active" v-if="serviceItemType===103 && broadClassify===''">视频问诊</view>
+						<view class="btn active" v-if="broadClassify===4 && serviceItemType===101">复诊续方</view>
+						<view class="btn active" v-if="broadClassify===4 && serviceItemType===103">特需心理咨询</view>
 					</view>
 				</view>
 				<view class="right" @click="chooseOpen()">
@@ -33,10 +34,11 @@
 					<view class="up">
 						<view class="title">问诊类型</view>
 						<view class="list">
-							<view class="item" :class="{active: serviceItemType_===101}" @click="chooseItemClick(101, '')">图文问诊</view>
-							<view class="item" :class="{active: serviceItemType_===102}" @click="chooseItemClick(102, '')">电话问诊</view>
-							<view class="item" :class="{active: serviceItemType_===103}" @click="chooseItemClick(103, '')">视频问诊</view>
-							<view class="item" :class="{active: broadClassify_===4}" @click="chooseItemClick('', 4)">复诊续方</view>
+							<view class="item" :class="{active: serviceItemType_===101 && broadClassify_===''}" @click="chooseItemClick(101, '')">图文问诊</view>
+							<view class="item" :class="{active: serviceItemType_===102 && broadClassify_===''}" @click="chooseItemClick(102, '')">电话问诊</view>
+							<view class="item" :class="{active: serviceItemType_===103 && broadClassify_===''}" @click="chooseItemClick(103, '')">视频问诊</view>
+							<view class="item" :class="{active: broadClassify_===4 && serviceItemType_===101}" @click="chooseItemClick(101, 4)">复诊续方</view>
+							<view class="item long" :class="{active: broadClassify_===4 && serviceItemType_===103}" @click="chooseItemClick(103, 4)">特需心理咨询</view>
 						</view>
 					</view>
 					<view class="down">
@@ -53,7 +55,8 @@
 				<view class="item" v-for="item in list" :key="item.id" @click="itemClick(item)">
 					<view class="top">
 						<view class="left">
-							<text class="name" v-if="item.broadClassify === 4">复诊续方</text>
+							<text class="name" v-if="item.broadClassify===4 && item.serviceItemType===101">复诊续方</text>
+							<text class="name" v-else-if="item.broadClassify===4 && item.serviceItemType===103">特需心理咨询</text>
 							<text class="name" v-else>{{getTypeName(item.serviceItemType)}}</text>
 							<text class="price">￥{{item.orderTotal}}</text>
 						</view>
@@ -77,7 +80,8 @@
 						<view class="line" v-if="item.broadClassify === 4">
 							<view class="title">预约时间：</view>
 							<view class="desc">
-								<text>{{item.createdTime}}</text>
+								<text v-if="item.serviceItemType === 101">{{item.createdTime}}</text>
+								<text v-else>{{item.appointTimePeriod}}</text>
 							</view>
 						</view>
 						<view class="line" v-else-if="item.serviceItemType === 101">
@@ -95,18 +99,34 @@
 					</view>
 					<view class="bottom" v-if="item.broadClassify === 4">
 						<view class="remark-abs inner">院内结算</view>
-						<block v-if="item.status === 2">
-							<view class="btn btn2" @click.stop="onTextRefuse(item)">拒诊</view>
-							<view class="btn btn1" @click.stop="onTextGoOn(item)">接诊</view>
+						<block v-if="item.serviceItemType === 101">
+							<block v-if="item.status === 2">
+								<view class="btn btn2" @click.stop="onTextRefuse(item)">拒诊</view>
+								<view class="btn btn1" @click.stop="onTextGoOn(item)">接诊</view>
+							</block>
+							<block v-if="item.status === 3">
+								<view class="btn btn2" @click.stop="goPopEnd(item)">结束问诊</view>
+								<view class="btn btn1" @click.stop="goChufang(item)" v-if="item.diagnosisFlag.value === 1">开具处方</view>
+								<view class="btn btn1" @click.stop="goChatClick(item)">进入诊室</view>
+							</block>
+							<block v-if="item.status===4 || item.status===5">
+								<view class="btn btn2" @click.stop="showComments(item)" v-if="item.appraiseId">查看评价</view>
+								<view class="btn btn2" @click.stop="goChatHistory(item)">查看记录</view>
+							</block>
 						</block>
-						<block v-if="item.status === 3">
-							<view class="btn btn2" @click.stop="goPopEnd(item)">结束问诊</view>
-							<view class="btn btn1" @click.stop="goChufang(item)" v-if="item.diagnosisFlag.value === 1">开具处方</view>
-							<view class="btn btn1" @click.stop="goChatClick(item)">进入诊室</view>
-						</block>
-						<block v-if="item.status===4 || item.status===5">
-							<view class="btn btn2" @click.stop="showComments(item)" v-if="item.appraiseId">查看评价</view>
-							<view class="btn btn2" @click.stop="goChatHistory(item)">查看记录</view>
+						<block v-else>
+							<block v-if="item.status === 2">
+								<view class="btn btn2" @click.stop="onTextRefuse(item)">拒诊</view>
+								<view class="btn btn1" @click.stop="onTextGoOn(item)">接诊</view>
+							</block>
+							<block v-if="item.status === 3">
+								<view class="btn btn2" @click.stop="goPopEnd(item)">结束问诊</view>
+								<view class="btn btn1" @click.stop="goChufang(item)" v-if="item.diagnosisFlag.value === 1">开具处方</view>
+								<view class="btn btn1" @click.stop="goCallVideo(item)">发起视频</view>
+							</block>
+							<block v-if="item.status===4 || item.status===5">
+								<view class="btn btn2" @click.stop="showComments(item)" v-if="item.appraiseId">查看评价</view>
+							</block>
 						</block>
 					</view>
 					<view class="bottom" v-else-if="item.serviceItemType === 101">
@@ -303,8 +323,10 @@
 			},
 			itemClick(item) {
 				let pageName = '';
-				if (item.broadClassify === 4){
+				if (item.broadClassify===4 && item.serviceItemType===101){
 					pageName = 'detailFz';
+				}else if (item.broadClassify===4 && item.serviceItemType===103){
+					pageName = 'detailVideo';
 				}else if (item.serviceItemType === 101){
 					pageName = 'detailImg';
 				}else if (item.serviceItemType === 102){
@@ -628,6 +650,9 @@
 								background: #F5F5F5;
 								border-radius: 21rpx;
 								border: 1rpx solid transparent;
+								&.long {
+									width: 170rpx;
+								}
 								&.active {
 									color: #3894FF;
 									border: 1rpx solid #3894FF;
