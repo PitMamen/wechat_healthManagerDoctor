@@ -318,6 +318,15 @@
 			}
 		},
 		onLoad(option) {
+			//uniapp 主动获取摄像头，相册权限，祥见https://uniapp.dcloud.net.cn/api/other/authorize.html
+			// uni.authorize({
+			// 	scope: 'scope.camera',
+			// 	success() {
+			// 		// uni.getLocation()
+			// 		this.$u.toast("授权成功！")
+			// 	}
+			// })
+
 			this.account = uni.getStorageSync('account');
 
 			//不同身份证件名称不一样
@@ -468,7 +477,7 @@
 								'https://hmg.mclouds.org.cn/content-api/file/I20230831105355758RXFRVRZAKPAHAC-zige_Z.jpg'
 						}
 						break;
-					case 5://资格证正面示例图片
+					case 5: //资格证正面示例图片
 						this.imgSrc =
 							'https://hmg.mclouds.org.cn/content-api/file/I202308311054214918W47T0XDA0UN8R-zige_F.jpg'
 						break;

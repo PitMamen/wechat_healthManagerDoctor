@@ -270,6 +270,9 @@
 			this.chooseHospital = uni.getStorageSync('choose_hospital');
 			if (this.chooseHospital) {
 				this.hospitalItem = JSON.parse(JSON.stringify(this.chooseHospital))
+				//切换医院后，清空科室
+				this.deptName = ''
+				this.deptItem = undefined
 			}
 			console.log('onShow hospitalItem', this.hospitalItem)
 			if (this.hospitalItem) {
