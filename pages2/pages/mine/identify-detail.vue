@@ -318,7 +318,7 @@
 			}
 		},
 		onLoad(option) {
-			//uniapp 主动获取摄像头，相册权限，祥见https://uniapp.dcloud.net.cn/api/other/authorize.html
+			// uniapp 主动获取摄像头，相册权限，祥见https://uniapp.dcloud.net.cn/api/other/authorize.html
 			// uni.authorize({
 			// 	scope: 'scope.camera',
 			// 	success() {
