@@ -144,7 +144,7 @@
 
 
 				<!-- //new技师的只要一张正面 -->
-				<view v-show="account.roleName!='medTechnician'"
+				<view v-if="account.roleName!='medTechnician'"
 					style="margin-left: 40rpx;display: flex;flex-direction: column;align-items: center;justify-content: center;">
 					<u-upload :fileList="fileList6" @afterRead="afterRead" @delete="deletePic" :maxCount="1" name="6">
 						<view
@@ -346,6 +346,7 @@
 			// })
 
 			this.account = uni.getStorageSync('account');
+			console.log('iden-detail acc', this.account)
 
 			//不同身份证件名称不一样
 			if (this.account.roleName == 'nurse') {
