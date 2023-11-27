@@ -98,6 +98,21 @@
 					</u-upload>
 					<view @click="showExample(3)" style="color: #3894FF;font-size: 28rpx;margin-top: 30rpx;">查看示例</view>
 				</view>
+
+				<!-- //new医生职称证需要两张，新增反面 -->
+				<view
+					style="margin-left: 40rpx;display: flex;flex-direction: column;align-items: center;justify-content: center;">
+					<u-upload :fileList="fileList9" @afterRead="afterRead" @delete="deletePic" :maxCount="1" name="9">
+						<view
+							style="display: flex;flex-direction: column;justify-content: center;align-items: center;border: 1rpx dashed #999999;width: 180rpx;height: 180rpx;">
+							<view>
+								<u-icon name="plus" size="28"></u-icon>
+							</view>
+							<view style="color: #999999;font-size: 30rpx;margin-top: 36rpx;">上传反面</view>
+						</view>
+					</u-upload>
+					<view @click="showExample(8)" style="color: #3894FF;font-size: 28rpx;margin-top: 30rpx;">查看示例</view>
+				</view>
 			</view>
 
 			<!-- 分割线 -->
@@ -126,7 +141,8 @@
 				</view>
 
 
-				<view
+				<!-- //new技师的只要一张正面 -->
+				<view v-show="account.roleName!='medTechnician'"
 					style="margin-left: 40rpx;display: flex;flex-direction: column;align-items: center;justify-content: center;">
 					<u-upload :fileList="fileList6" @afterRead="afterRead" @delete="deletePic" :maxCount="1" name="6">
 						<view
@@ -285,6 +301,8 @@
 				fileList6: [],
 				fileList7: [],
 				fileList8: [],
+				//new
+				fileList9: [],
 				showChooseHospital: false,
 				// countExpert: 0,
 				// countBrief: 0,
@@ -385,6 +403,14 @@
 								status: 'success',
 								message: '',
 							}]
+							//new
+							if (baseInfo.titleF) {
+								this.fileList9 = [{
+									url: baseInfo.titleF,
+									status: 'success',
+									message: '',
+								}]
+							}
 							this.fileList5 = [{
 								url: baseInfo.qualificationZ,
 								status: 'success',
@@ -425,6 +451,7 @@
 
 			showExample(type) {
 				switch (type) {
+					//每个分支else内的都是医生的
 					case 1:
 						this.imgSrc =
 							'https://hmg.mclouds.org.cn/content-api/file/I20230831105045590J2K0MERVYNDDJV-shenfenzheng_Z.jpg'
@@ -433,30 +460,62 @@
 						this.imgSrc =
 							'https://hmg.mclouds.org.cn/content-api/file/I202308311051102891UK4NNOY97UTVF-shenfenzheng_F.jpg'
 						break;
-					case 3:
+					case 3: //职称证，医生独有
 						this.imgSrc =
-							'https://hmg.mclouds.org.cn/content-api/file/I20230831105306361R4SKIX2PYMFUYG-zhicheng_Z.jpg'
+							'https://hmg.mclouds.org.cn/content-api/file/I20231127141604321AVSNTAWCSGQYFR-yishizhichengzhengzhuye_20231127141519.png'
 						break;
-					case 4: //资格证示例图片，医生 护士 药剂师 技师 都不一样,这里产品先提供的技师的，先改了技师的；所有示例图片默认都是医生的
+					case 4: //资格证正面示例图片，医生 护士 药剂师 技师 都不一样,这里产品先提供的技师的，先改了技师的；所有示例图片默认都是医生的，原来就有
 						if (this.account.roleName == 'medTechnician') { //技师的
 							this.imgSrc =
-								'https://hmg.mclouds.org.cn/content-api/file/I20231109154956871JXW4XJ8LCTSXHZ-kfs_20231109154941.jpg'
+								"https://hmg.mclouds.org.cn/content-api/file/I20231127144613569LPDL5BE8MASAIO-guojiazhiyezigezneirong_20231127144545.png"
+						} else if (this.account.roleName == 'pharmacist') { //药剂师
+							this.imgSrc =
+								'https://hmg.mclouds.org.cn/content-api/file/I20231127141756273C9TWPFLQRWCVXN-yishizhiyezhengzhuye_20231127141734.png'
 						} else { //医生的
 							this.imgSrc =
 								'https://hmg.mclouds.org.cn/content-api/file/I20230831105355758RXFRVRZAKPAHAC-zige_Z.jpg'
 						}
 						break;
-					case 5://资格证正面示例图片
-						this.imgSrc =
-							'https://hmg.mclouds.org.cn/content-api/file/I202308311054214918W47T0XDA0UN8R-zige_F.jpg'
+					case 5: //资格证反面示例图片
+
+						if (this.account.roleName == 'pharmacist') { //药剂师
+							this.imgSrc =
+								'https://hmg.mclouds.org.cn/content-api/file/I20231127141906876Q98XX5RFVMRKWU-yishizhiyezhenggerenxinxi_20231127141833.png'
+						} else { //医生的
+							this.imgSrc =
+								'https://hmg.mclouds.org.cn/content-api/file/I202308311054214918W47T0XDA0UN8R-zige_F.jpg'
+						}
+
+
 						break;
-					case 6:
-						this.imgSrc =
-							'https://hmg.mclouds.org.cn/content-api/file/I20230831105218879DJJBP3PPFSZMLQ-zhiyezheng_Z.jpg'
+					case 6: //执业证
+						if (this.account.roleName == 'medTechnician') { //技师的
+							this.imgSrc =
+								'https://hmg.mclouds.org.cn/content-api/file/I20231127141756273C9TWPFLQRWCVXN-yishizhiyezhengzhuye_20231127141734.png'
+						} else if (this.account.roleName == 'nurse') { //护士的
+							this.imgSrc =
+								'https://hmg.mclouds.org.cn/content-api/file/I202311271420116825GFPDNMN6BPQHV-hushizhiyezhengzhuce_20231127141943.png'
+						} else {
+							this.imgSrc =
+								'https://hmg.mclouds.org.cn/content-api/file/I20231127141756273C9TWPFLQRWCVXN-yishizhiyezhengzhuye_20231127141734.png'
+						}
 						break;
-					case 7:
+					case 7: //执业证
+						if (this.account.roleName == 'medTechnician') { //技师的
+							this.imgSrc =
+								'https://hmg.mclouds.org.cn/content-api/file/I20231127141906876Q98XX5RFVMRKWU-yishizhiyezhenggerenxinxi_20231127141833.png'
+						} else if (this.account.roleName == 'nurse') { //护士的
+							this.imgSrc =
+								'https://hmg.mclouds.org.cn/content-api/file/I20231127142109125DMU6J4BRYHRKYY-hushizhiyezhenggerenxinxi_20231127142044.png'
+						} else {
+							this.imgSrc =
+								'https://hmg.mclouds.org.cn/content-api/file/I20231127141906876Q98XX5RFVMRKWU-yishizhiyezhenggerenxinxi_20231127141833.png'
+						}
+
+						break;
+					case 8: //new医生职称证反面 //职称证，医生独有
 						this.imgSrc =
-							'https://hmg.mclouds.org.cn/content-api/file/I20230831105235430FUBWSJGTK0FDGV-zhiyezheng_F.jpg'
+							'https://hmg.mclouds.org.cn/content-api/file/I20231127141708703MS0YWSVBIWJVXF-yishizhichengzhengfuye_20231127141646.png'
 						break;
 					default:
 						break;
@@ -608,34 +667,46 @@
 					} else {
 						this.doctorAuthInfo.titleZ = this.fileList4[0].url
 					}
+
+					//new 仅医生身份有职称证，且增加反面
+					if (!this.fileList9[0] || !this.fileList9[0].url) {
+						this.$u.toast("请上传职称证反面！")
+						return
+					} else {
+						this.doctorAuthInfo.titleF = this.fileList9[0].url
+					}
 				}
 
+				//new 资格证
 				if (!this.fileList5[0] || !this.fileList5[0].url) {
-					this.$u.toast("请上传资格证正面！")
+					this.$u.toast("请上传" + this.zigeName + "正面！")
 					return
 				} else {
 					this.doctorAuthInfo.qualificationZ = this.fileList5[0].url
 				}
 
-				if (!this.fileList6[0] || !this.fileList6[0].url) {
-					this.$u.toast("请上传资格证反面！")
-					return
-				} else {
-					this.doctorAuthInfo.qualificationF = this.fileList6[0].url
+				//new技师的只要一张正面 
+				if (this.account.roleName != 'medTechnician') {
+					if (!this.fileList6[0] || !this.fileList6[0].url) {
+						this.$u.toast("请上传" + this.zigeName + "反面！")
+						return
+					} else {
+						this.doctorAuthInfo.qualificationF = this.fileList6[0].url
+					}
 				}
 
-				//只有医生和护士需要上传执业证
+				// //new 只有医生和护士需要上传执业证
 				if (this.account.roleName == 'doctor' || this.account
 					.roleName == 'nurse') {
 					if (!this.fileList7[0] || !this.fileList7[0].url) {
-						this.$u.toast("请上传执业证正面！")
+						this.$u.toast("请上传" + this.zhiyeName + "正面！")
 						return
 					} else {
 						this.doctorAuthInfo.practiceZ = this.fileList7[0].url
 					}
 
 					if (!this.fileList8[0] || !this.fileList8[0].url) {
-						this.$u.toast("请上传执业证反面！")
+						this.$u.toast("请上传" + this.zhiyeName + "反面！")
 						return
 					} else {
 						this.doctorAuthInfo.practiceF = this.fileList8[0].url

@@ -95,6 +95,20 @@
 					</u-upload>
 
 				</view>
+
+				<view style="display: flex;flex-direction: column;align-items: center;justify-content: center;">
+					<u-upload width='130' height='180' :fileList="fileList9" @afterRead="afterRead" :deletable="false"
+						@delete="deletePic" :maxCount="1" name="9">
+						<view
+							style="display: flex;flex-direction: column;justify-content: center;align-items: center;border: 1rpx dashed #999999;width: 180rpx;height: 180rpx;">
+							<view>
+								<u-icon name="plus" size="28"></u-icon>
+							</view>
+							<view style="color: #999999;font-size: 30rpx;margin-top: 36rpx;">上传</view>
+						</view>
+					</u-upload>
+
+				</view>
 			</view>
 
 			<!-- 分割线 -->
@@ -122,8 +136,8 @@
 
 				</view>
 
-
-				<view
+				<!-- //new技师的只要一张正面 -->
+				<view v-show="account.roleName!='medTechnician'"
 					style="margin-left: 40rpx;display: flex;flex-direction: column;align-items: center;justify-content: center;">
 					<u-upload width='150' height='110' :fileList="fileList6" @afterRead="afterRead" :deletable="false"
 						@delete="deletePic" :maxCount="1" name="6">
@@ -150,11 +164,12 @@
 				<view style="color: #4D4D4D;font-size: 30rpx;">{{zhiyeName}}</view>
 			</view>
 
+			<!-- width='130' height='180' -->
 			<view v-if="account.roleName=='doctor'|| account.roleName=='nurse'"
 				style="display: flex;flex-direction: row;align-items: center;margin-left: 24rpx;margin-top: 20rpx;">
 				<view style="display: flex;flex-direction: column;align-items: center;justify-content: center;">
-					<u-upload width='150' height='110' :fileList="fileList7" @afterRead="afterRead" :deletable="false"
-						@delete="deletePic" :maxCount="1" name="7">
+					<u-upload :width='widthZhi' :height='heightZhi' :fileList="fileList7" @afterRead="afterRead"
+						:deletable="false" @delete="deletePic" :maxCount="1" name="7">
 						<view
 							style="display: flex;flex-direction: column;justify-content: center;align-items: center;border: 1rpx dashed #999999;width: 180rpx;height: 180rpx;">
 							<view>
@@ -169,8 +184,8 @@
 
 				<view
 					style="margin-left: 40rpx;display: flex;flex-direction: column;align-items: center;justify-content: center;">
-					<u-upload width='150' height='110' :fileList="fileList8" @afterRead="afterRead" :deletable="false"
-						@delete="deletePic" :maxCount="1" name="8">
+					<u-upload :width='widthZhi' :height='heightZhi' :fileList="fileList8" @afterRead="afterRead"
+						:deletable="false" @delete="deletePic" :maxCount="1" name="8">
 						<view
 							style="display: flex;flex-direction: column;justify-content: center;align-items: center;border: 1rpx dashed #999999;width: 180rpx;height: 180rpx;">
 							<view>
@@ -211,6 +226,8 @@
 			return {
 				title: '',
 				content: '',
+				widthZhi: 150,
+				heightZhi: 110,
 				zigeName: '资格证',
 				zhiyeName: '执业证',
 				auditStatus: '',
@@ -235,6 +252,7 @@
 				fileList6: [],
 				fileList7: [],
 				fileList8: [],
+				fileList9: [],
 				countExpert: 0,
 				countBrief: 0,
 				modifyData: undefined,
@@ -267,10 +285,17 @@
 			if (this.account.roleName == 'nurse') {
 				this.zigeName = '护士资格证'
 				this.zhiyeName = '护士执业证'
+
 			} else if (this.account.roleName == 'pharmacist') { //药剂师 pharmacist
 				this.zigeName = '执业药师证'
 			} else if (this.account.roleName == 'medTechnician') { //技师 medTechnician
 				this.zigeName = '执业服务资格证'
+			}
+
+			if (this.account.roleName == 'nurse') {
+				// width='130' height='180' 
+				this.widthZhi = 130
+				this.heightZhi = 180
 			}
 
 			this.auditStatus = option.auditStatus
@@ -339,6 +364,7 @@
 							this.doctorAuthInfo.idcardZ = baseInfo.idcardZ
 							this.doctorAuthInfo.idcardF = baseInfo.idcardF
 							this.doctorAuthInfo.titleZ = baseInfo.titleZ
+							this.doctorAuthInfo.titleF = baseInfo.titleF
 							this.doctorAuthInfo.qualificationZ = baseInfo.qualificationZ
 							this.doctorAuthInfo.qualificationF = baseInfo.qualificationF
 							this.doctorAuthInfo.practiceZ = baseInfo.practiceZ
@@ -366,6 +392,14 @@
 								status: 'success',
 								message: '',
 							}]
+							//new
+							if (baseInfo.titleF) {
+								this.fileList9 = [{
+									url: baseInfo.titleF,
+									status: 'success',
+									message: '',
+								}]
+							}
 							this.fileList5 = [{
 								url: baseInfo.qualificationZ,
 								status: 'success',
