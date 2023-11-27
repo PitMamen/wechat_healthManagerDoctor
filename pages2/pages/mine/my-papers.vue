@@ -143,7 +143,7 @@
 			<!-- 分割线 -->
 			<view style="width: 100vw;height: 20rpx;background-color: #F2F2F2;margin-top: 30rpx;"></view>
 
-			<!-- 资格证 -->
+			<!-- 执业证 -->
 			<view v-if="account.roleName=='doctor'|| account.roleName=='nurse'"
 				style="display: flex;flex-direction: row;margin-left: 24rpx;margin-top: 30rpx;">
 				<!-- <view style="color: #4D4D4D;font-size: 30rpx;">执业证</view> -->

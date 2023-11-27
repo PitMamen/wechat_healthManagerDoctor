@@ -10,8 +10,10 @@
 			<view class="left">
 				<image :src="account.user.avatarUrl||'/static/static/images/header.png'" mode="aspectFill"></image>
 				<view class="desc">
-					<view class="name">{{account.user.userName||'XXX'}}的诊室</view>
-					<view class="welcome">欢迎您，{{account.user.userName||'XXX'}}</view>
+					<!-- <view class="name">{{account.user.userName||'XXX'}}的诊室</view> -->
+					<view class="name">{{account.user.userName?(account.user.userName+'的诊室'):'未认证'}}</view>
+					<!-- <view class="welcome">欢迎您，{{account.user.userName||'XXX'}}</view> --> 
+					<view class="welcome">{{account.user.userName?('欢迎您，'+account.user.userName):'请您进行实名认证'}} </view>
 				</view>
 			</view>
 			<view class="right">
@@ -79,13 +81,8 @@
 			</view>
 			<view class="notes">
 				<view class="tabs">
-					<view
-						v-for="item in listTab"
-						class="tab"
-						:key="item.id"
-						:class="{active: item.id===categoryId}"
-						@click="tabClick(item)"
-					>{{item.categoryName}}</view>
+					<view v-for="item in listTab" class="tab" :key="item.id" :class="{active: item.id===categoryId}"
+						@click="tabClick(item)">{{item.categoryName}}</view>
 				</view>
 				<view class="note">
 					<u-empty mode="data" icon="/static/img/icon_nodata.png" v-if="list.length === 0"></u-empty>
@@ -103,7 +100,7 @@
 				</view>
 			</view>
 		</view>
-		
+
 		<ca-check ref="caCheck" />
 		<u-popup :show="showCode" mode="center" :round="4" @close="closeCodePop">
 			<view class="codeview">
@@ -144,7 +141,7 @@
 
 <script>
 	import caCheck from '@/components/ca/check';
-	
+
 	export default {
 		data() {
 			return {
@@ -153,7 +150,7 @@
 				showCode2: false,
 				docCodeImg: undefined,
 				docCodeImg2: undefined,
-				
+
 				list: [],
 				listTab: [],
 				total: 0,
@@ -162,7 +159,7 @@
 				flag: false,
 				categoryId: '',
 				account: uni.getStorageSync('account'),
-				
+
 				headerHeight: getApp().globalData.headerInfo.height,
 				statusHeight: getApp().globalData.headerInfo.statusBarHeight,
 				navigatorHeight: getApp().globalData.headerInfo.navigatorHeight
@@ -176,13 +173,13 @@
 		},
 		onShow() {
 			this.refreshBindStatus();
-			if (this.account && this.account.accountId && this.account.bindStatus===0){
+			if (this.account && this.account.accountId && this.account.bindStatus === 0) {
 				this.getInfo();
 				setTimeout(() => {
 					this.$refs.caCheck.check();
 				});
 			}
-			
+
 		},
 		methods: {
 			refreshBindStatus() {
@@ -199,7 +196,7 @@
 			},
 			getList() {
 				uni.showLoading({
-					title:'正在加载'
+					title: '正在加载'
 				});
 				uni.$u.http.post(`/health-api/article/getArticleList`, {
 					status: 2,
@@ -218,14 +215,14 @@
 			},
 			getListTab() {
 				uni.showLoading({
-					title:'正在加载'
+					title: '正在加载'
 				});
 				uni.$u.http.post(`/health-api/articleCategory/getArticleCategoryList`, {
 					own: 'doctor'
 				}).then(res => {
 					uni.hideLoading();
 					this.listTab = res.data.records || [];
-					if (this.listTab.length > 0){
+					if (this.listTab.length > 0) {
 						this.categoryId = this.listTab[0].id;
 						this.getList();
 					}
@@ -235,15 +232,15 @@
 				uni.$u.http.get('/account-api/accountInfo/getDoctorAuthStatus', {
 					params: {}
 				}).then(res => {
-					if (res.data.auditStatus == 1){
+					if (res.data.auditStatus == 1) {
 						uni.navigateTo({
 							url: '/pages2/pages/mine/identify-result?type=1&jumpFrom=1'
 						});
-					}else if (res.data.auditStatus == 3){
+					} else if (res.data.auditStatus == 3) {
 						uni.navigateTo({
 							url: '/pages2/pages/mine/identify-result?type=2&jumpFrom=1'
 						});
-					}else{
+					} else {
 						uni.navigateTo({
 							url: '/pages2/pages/mine/identify-base'
 						});
@@ -251,7 +248,7 @@
 				});
 			},
 			showDocCode() {
-				if (this.docCodeImg){
+				if (this.docCodeImg) {
 					this.showCode = true;
 					return;
 				}
@@ -266,7 +263,7 @@
 				});
 			},
 			showDocCode2() {
-				if (this.docCodeImg2){
+				if (this.docCodeImg2) {
 					this.showCode2 = true;
 					return;
 				}
@@ -280,18 +277,18 @@
 				});
 			},
 			scrolltolower() {
-				if (this.pageNo*this.pageSize >= this.total){
+				if (this.pageNo * this.pageSize >= this.total) {
 					return;
 				}
-				if (this.flag){
+				if (this.flag) {
 					return;
 				}
 				this.flag = true;
-				this.pageNo ++;
+				this.pageNo++;
 				this.getList();
 			},
 			tabClick(item) {
-				if (item.id === this.categoryId){
+				if (item.id === this.categoryId) {
 					return;
 				}
 				this.categoryId = item.id;
@@ -312,28 +309,28 @@
 				});
 			},
 			goCard2() {
-				
-				if(this.account.roleName=='pharmacist'){
-									uni.showToast({
-										title: '对不起，您的身份是药剂师，无权进行该操作',
-										icon: 'none'
-									});
-									return
-								}
+
+				if (this.account.roleName == 'pharmacist') {
+					uni.showToast({
+						title: '对不起，您的身份是药剂师，无权进行该操作',
+						icon: 'none'
+					});
+					return
+				}
 				uni.navigateTo({
 					url: '/pages2/pages/work/treat?tab=2'
 				});
 			},
 			goCard3() {
-				if(this.account.roleName=='pharmacist'){
-									uni.showToast({
-										title: '对不起，您的身份是药剂师，无权进行该操作',
-										icon: 'none'
-									});
-									return
-								}
-				
-				
+				if (this.account.roleName == 'pharmacist') {
+					uni.showToast({
+						title: '对不起，您的身份是药剂师，无权进行该操作',
+						icon: 'none'
+					});
+					return
+				}
+
+
 				uni.navigateTo({
 					url: '/pages2/pages/work/treat?tab=3'
 				});
@@ -349,43 +346,43 @@
 				});
 			},
 			goApps1() {
-				
-				if(this.account.roleName=='nurse'){
-									uni.showToast({
-										title: '对不起，您的身份是护士，无权进行该操作',
-										icon: 'none'
-									});
-									return
-								}else if(this.account.roleName=='pharmacist'){
-									uni.showToast({
-										title: '对不起，您的身份是药剂师，无权进行该操作',
-										icon: 'none'
-									});
-									return
-								}else if(this.account.roleName=='medTechnician'){
-									uni.showToast({
-										title: '对不起，您的身份是技师，无权进行该操作',
-										icon: 'none'
-									});
-									return
-								}
-				
-				
+
+				if (this.account.roleName == 'nurse') {
+					uni.showToast({
+						title: '对不起，您的身份是护士，无权进行该操作',
+						icon: 'none'
+					});
+					return
+				} else if (this.account.roleName == 'pharmacist') {
+					uni.showToast({
+						title: '对不起，您的身份是药剂师，无权进行该操作',
+						icon: 'none'
+					});
+					return
+				} else if (this.account.roleName == 'medTechnician') {
+					uni.showToast({
+						title: '对不起，您的身份是技师，无权进行该操作',
+						icon: 'none'
+					});
+					return
+				}
+
+
 				uni.navigateTo({
 					url: '/pages2/pages/chufang2/mode-list'
 				});
 			},
 			goApps2() {
-				
-				if(this.account.roleName=='medTechnician'){
-									uni.showToast({
-										title: '对不起，您的身份是技师，无权进行该操作',
-										icon: 'none'
-									});
-									return
-								}
-				
-				
+
+				if (this.account.roleName == 'medTechnician') {
+					uni.showToast({
+						title: '对不起，您的身份是技师，无权进行该操作',
+						icon: 'none'
+					});
+					return
+				}
+
+
 				uni.navigateTo({
 					url: '/pages/follow/current-follow-list'
 				});
@@ -421,13 +418,16 @@
 	.wrap {
 		min-height: 100vh;
 		background: #F5F5F5;
+
 		.headers {
 			background: #3894FF;
+
 			.navigator {
 				position: relative;
 				display: flex;
 				align-items: center;
 				justify-content: center;
+
 				.title {
 					font-size: 36rpx;
 					font-weight: 500;
@@ -436,23 +436,27 @@
 				}
 			}
 		}
+
 		.infos {
 			display: flex;
 			align-items: flex-start;
 			justify-content: space-between;
 			padding: 20rpx 30rpx 120rpx 30rpx;
 			background: #3894FF;
+
 			.left {
 				display: flex;
 				align-items: center;
 				justify-content: flex-start;
 				flex: 1;
+
 				image {
 					width: 128rpx;
 					height: 128rpx;
 					margin-right: 30rpx;
 					border-radius: 50%;
 				}
+
 				.desc {
 					.name {
 						font-size: 32rpx;
@@ -460,6 +464,7 @@
 						color: #FFFFFF;
 						line-height: 62rpx;
 					}
+
 					.welcome {
 						font-size: 24rpx;
 						font-weight: 400;
@@ -468,14 +473,17 @@
 					}
 				}
 			}
+
 			.right {
 				display: flex;
 				align-items: center;
 				justify-content: flex-end;
+
 				.btn {
 					&:last-child {
 						margin-right: 0rpx;
 					}
+
 					margin-right: 20rpx;
 					width: 104rpx;
 					font-size: 28rpx;
@@ -488,28 +496,33 @@
 				}
 			}
 		}
+
 		.contents {
 			padding: 0 30rpx;
+
 			.auth {
 				position: relative;
 				top: -90rpx;
 				padding: 20rpx 30rpx 30rpx 40rpx;
 				overflow: hidden;
 				background: #FFFFFF;
-				box-shadow: 0rpx 2rpx 4rpx 0rpx rgba(230,230,230,0.35);
+				box-shadow: 0rpx 2rpx 4rpx 0rpx rgba(230, 230, 230, 0.35);
 				border-radius: 4rpx;
+
 				.title {
 					font-size: 32rpx;
 					font-weight: 500;
 					color: #4D4D4D;
 					line-height: 72rpx;
 				}
+
 				.desc {
 					font-size: 28rpx;
 					font-weight: 400;
 					color: #999999;
 					line-height: 54rpx;
 				}
+
 				.btn {
 					float: right;
 					margin-top: 20rpx;
@@ -523,18 +536,21 @@
 					border-radius: 34rpx;
 				}
 			}
+
 			.card {
 				position: relative;
 				top: -90rpx;
 				padding: 45rpx 0 35rpx 0;
 				background: #FFFFFF;
-				box-shadow: 0rpx 2rpx 4rpx 0rpx rgba(230,230,230,0.35);
+				box-shadow: 0rpx 2rpx 4rpx 0rpx rgba(230, 230, 230, 0.35);
 				border-radius: 4rpx;
+
 				.up {
 					display: flex;
 					align-items: center;
 					justify-content: space-around;
 					padding: 0 0 40rpx 0;
+
 					.item {
 						.num {
 							font-size: 48rpx;
@@ -542,16 +558,19 @@
 							color: #1A1A1A;
 							line-height: 74rpx;
 						}
+
 						.action {
 							display: flex;
 							align-items: center;
 							justify-content: flex-start;
+
 							.name {
 								font-size: 24rpx;
 								font-weight: 400;
 								color: #4D4D4D;
 								line-height: 38rpx;
 							}
+
 							.u-icon {
 								position: relative;
 								top: 2rpx;
@@ -560,10 +579,12 @@
 						}
 					}
 				}
+
 				.down {
 					display: flex;
 					align-items: center;
 					justify-content: space-between;
+
 					.btn {
 						flex: 1;
 						font-size: 28rpx;
@@ -571,12 +592,14 @@
 						color: #1A1A1A;
 						line-height: 40rpx;
 						text-align: center;
+
 						&:first-child {
 							border-right: 3rpx solid #CCCCCC;
 						}
 					}
 				}
 			}
+
 			.apps {
 				position: relative;
 				top: -70rpx;
@@ -585,14 +608,17 @@
 				justify-content: space-around;
 				padding: 45rpx 0 30rpx 0;
 				background: #FFFFFF;
-				box-shadow: 0rpx 2rpx 4rpx 0rpx rgba(230,230,230,0.35);
+				box-shadow: 0rpx 2rpx 4rpx 0rpx rgba(230, 230, 230, 0.35);
 				border-radius: 4rpx;
+
 				&.gray {
 					filter: grayscale(100%);
+
 					.mask {
 						display: block;
 					}
 				}
+
 				.mask {
 					display: none;
 					position: absolute;
@@ -602,15 +628,18 @@
 					bottom: 0;
 					z-index: 10;
 				}
+
 				.item {
 					display: flex;
 					flex-direction: column;
 					align-items: center;
 					justify-content: flex-start;
+
 					image {
 						width: 60rpx;
 						height: 60rpx;
 					}
+
 					.name {
 						font-size: 24rpx;
 						font-weight: 400;
@@ -619,14 +648,17 @@
 					}
 				}
 			}
+
 			.notes {
 				position: relative;
 				top: -40rpx;
+
 				.tabs {
 					display: flex;
 					align-items: center;
 					justify-content: flex-start;
 					overflow-x: auto;
+
 					.tab {
 						margin-right: 40rpx;
 						font-size: 30rpx;
@@ -635,39 +667,48 @@
 						line-height: 50rpx;
 						white-space: nowrap;
 						border-bottom: 4rpx solid transparent;
+
 						&.active {
 							color: #3894FF;
 							border-bottom: 4rpx solid #3894FF;
 						}
+
 						&:last-child {
 							margin-right: 0;
 						}
 					}
 				}
+
 				.note {
 					padding-top: 20rpx;
+
 					.u-empty {
 						padding-top: 80rpx;
 						padding-bottom: 120rpx;
 						background: #FFFFFF;
 					}
+
 					.list {
 						max-height: calc(100vh - 942rpx);
 						overflow-y: auto;
 						background: #FFFFFF;
-						box-shadow: 0rpx 2rpx 4rpx 0rpx rgba(230,230,230,0.35);
+						box-shadow: 0rpx 2rpx 4rpx 0rpx rgba(230, 230, 230, 0.35);
 						border-radius: 4rpx;
+
 						.item {
 							display: flex;
 							align-items: center;
 							justify-content: space-between;
 							padding: 30rpx 20rpx;
 							border-bottom: 2rpx solid #F5F5F5;
+
 							&:last-child {
 								border-bottom: none;
 							}
+
 							.left {
 								width: 405rpx;
+
 								.title {
 									max-width: 100%;
 									white-space: nowrap;
@@ -678,6 +719,7 @@
 									color: #1A1A1A;
 									line-height: 52rpx;
 								}
+
 								.date {
 									margin-top: 55rpx;
 									font-size: 24rpx;
@@ -686,6 +728,7 @@
 									line-height: 64rpx;
 								}
 							}
+
 							.right {
 								image {
 									width: 226rpx;
@@ -698,6 +741,7 @@
 				}
 			}
 		}
+
 		.codeview {
 			display: flex;
 			flex-direction: column;
@@ -705,15 +749,18 @@
 			width: 620rpx;
 			padding-top: 100rpx;
 			padding-bottom: 32rpx;
+
 			.code {
 				width: 316rpx;
 				height: 316rpx;
 				margin-bottom: 32rpx;
 			}
+
 			text {
 				font-size: 30rpx;
 				color: #1A1A1A;
 			}
+
 			.codeitem {
 				display: flex;
 				flex-direction: row;

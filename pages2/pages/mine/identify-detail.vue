@@ -147,7 +147,7 @@
 			<!-- 分割线 -->
 			<view style="height: 1rpx;background-color: #E6E6E6;margin: 30rpx 24rpx 24rpx 24rpx;"></view>
 
-			<!-- 职业证 -->
+			<!-- 执业证 -->
 			<view v-if="account.roleName=='doctor'|| account.roleName=='nurse'"
 				style="display: flex;flex-direction: row;margin-left: 24rpx;">
 				<!-- <view style="color: #4D4D4D;font-size: 30rpx;">执业证正反面</view> -->
