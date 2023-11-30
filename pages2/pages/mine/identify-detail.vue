@@ -680,6 +680,16 @@
 								titleZ: ""
 							},
 			 */
+
+			// checkPic(name) {
+			// 	if (this[`fileList${name}`].length > 0 && this[`fileList${name}`][0].url) {
+			// 		if (this[`fileList${name}`][0].url.indexOf('wxfile://tmp') > -1) {
+			// 			this.$u.toast("图片上传中，请等待上传完成！")
+			// 			return
+			// 		}
+			// 	}
+			// },
+
 			goNext() {
 				console.log('this.fileList1', this.fileList1)
 				//8个必填项
@@ -757,6 +767,61 @@
 					}
 				}
 
+				//判断是否上传完成  重要bug  图片没上传完成也可以点击提交，导致图片出错，因为图片没上传完成组件内部赋值给url的是手机本地的图片地址
+				if (this.fileList1.length > 0 && this.fileList1[0].url) {
+					if (this.fileList1[0].url.indexOf('wxfile://tmp') > -1) {
+						this.$u.toast("图片上传中，请等待上传完成！")
+						return
+					}
+				}
+				if (this.fileList2.length > 0 && this.fileList2[0].url) {
+					if (this.fileList2[0].url.indexOf('wxfile://tmp') > -1) {
+						this.$u.toast("图片上传中，请等待上传完成！")
+						return
+					}
+				}
+				if (this.fileList3.length > 0 && this.fileList3[0].url) {
+					if (this.fileList3[0].url.indexOf('wxfile://tmp') > -1) {
+						this.$u.toast("图片上传中，请等待上传完成！")
+						return
+					}
+				}
+				if (this.fileList4.length > 0 && this.fileList4[0].url) {
+					if (this.fileList4[0].url.indexOf('wxfile://tmp') > -1) {
+						this.$u.toast("图片上传中，请等待上传完成！")
+						return
+					}
+				}
+				if (this.fileList5.length > 0 && this.fileList5[0].url) {
+					if (this.fileList5[0].url.indexOf('wxfile://tmp') > -1) {
+						this.$u.toast("图片上传中，请等待上传完成！")
+						return
+					}
+				}
+				if (this.fileList6.length > 0 && this.fileList6[0].url) {
+					if (this.fileList6[0].url.indexOf('wxfile://tmp') > -1) {
+						this.$u.toast("图片上传中，请等待上传完成！")
+						return
+					}
+				}
+				if (this.fileList7.length > 0 && this.fileList7[0].url) {
+					if (this.fileList7[0].url.indexOf('wxfile://tmp') > -1) {
+						this.$u.toast("图片上传中，请等待上传完成！")
+						return
+					}
+				}
+				if (this.fileList8.length > 0 && this.fileList8[0].url) {
+					if (this.fileList8[0].url.indexOf('wxfile://tmp') > -1) {
+						this.$u.toast("图片上传中，请等待上传完成！")
+						return
+					}
+				}
+				if (this.fileList9.length > 0 && this.fileList9[0].url) {
+					if (this.fileList9[0].url.indexOf('wxfile://tmp') > -1) {
+						this.$u.toast("图片上传中，请等待上传完成！")
+						return
+					}
+				}
 
 				uni.showLoading({
 					title: '正在加载'
