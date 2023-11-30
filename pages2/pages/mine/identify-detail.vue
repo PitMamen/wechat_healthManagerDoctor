@@ -631,7 +631,12 @@
 								console.log('dataNew----------------', dataNew.data)
 								resolve(dataNew.data.fileLinkUrl)
 							}, 200)
-						}
+						},
+						fail: (err) => {
+							this.$u.toast('上传图片失败，' + err.errMsg)
+							// console.error(err)
+							// reject('上传附件失败，' + err.errMsg)
+						},
 					});
 				})
 			},
