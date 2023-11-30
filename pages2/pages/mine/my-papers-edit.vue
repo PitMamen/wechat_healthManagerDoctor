@@ -543,6 +543,9 @@
 					})
 				})
 				for (let i = 0; i < lists.length; i++) {
+					uni.showLoading({
+						title: '正在加载'
+					});
 					const result = await this.uploadFilePromise(lists[i].url)
 					console.log('result----------------', result)
 					let item = this[`fileList${event.name}`][fileListLen]
@@ -552,6 +555,7 @@
 						url: result
 					}))
 					fileListLen++
+					uni.hideLoading()
 				}
 				/**
 				 * 上传后数据格式 fileList1

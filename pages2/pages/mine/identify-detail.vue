@@ -147,6 +147,7 @@
 				<view v-if="account.roleName!='medTechnician'"
 					style="margin-left: 40rpx;display: flex;flex-direction: column;align-items: center;justify-content: center;">
 					<u-upload :fileList="fileList6" @afterRead="afterRead" @delete="deletePic" :maxCount="1" name="6">
+
 						<view
 							style="display: flex;flex-direction: column;justify-content: center;align-items: center;border: 1rpx dashed #999999;width: 180rpx;height: 180rpx;">
 							<view>
@@ -575,7 +576,11 @@
 						message: '上传中'
 					})
 				})
+
 				for (let i = 0; i < lists.length; i++) {
+					uni.showLoading({
+						title: '正在加载'
+					});
 					const result = await this.uploadFilePromise(lists[i].url)
 					console.log('result----------------', result)
 					let item = this[`fileList${event.name}`][fileListLen]
@@ -585,6 +590,7 @@
 						url: result
 					}))
 					fileListLen++
+					uni.hideLoading()
 				}
 				/**
 				 * 上传后数据格式 fileList1
