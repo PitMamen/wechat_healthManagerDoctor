@@ -21,6 +21,15 @@
 					<view style="margin-top: 10rpx;">{{item.message_original_name}}</view>
 				</view>
 			</view>
+			
+			<!-- add -->
+			<view v-else-if="item.message_type === 4" class="midview">
+				<u-icon name="/pages3/static/static/images/wenjuan.png" color="#2979ff" size="20"></u-icon>
+				<view class="midview-right">
+					<view>随访计划</view>
+					<view style="margin-top: 10rpx;">{{item.message_original_name}}</view>
+				</view>
+			</view>
 
 			<view class="line"></view>
 			<view v-if="item.succCount === item.sumCount" class="tags-item">

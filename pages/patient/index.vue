@@ -2,7 +2,8 @@
 	<view v-if="account.roleName!='pharmacist'" class="wrap">
 		<u-sticky v-if="account && account.accountId && account.bindStatus == 0">
 			<view class="wrap-search">
-				<image @click="showMenuBtn()" src="/static/static/images/icon_dot.png" style="width: 36rpx;height: 36rpx;padding-left: 30rpx;">
+				<image @click="showMenuBtn()" src="/static/static/images/icon_dot.png"
+					style="width: 36rpx;height: 36rpx;padding-left: 30rpx;">
 				</image>
 				<view style="margin-left: 20rpx;flex: 1;">
 					<u-search v-model="searchName" placeholder="请输入患者姓名、电话查找" :show-action="false" @change="onSearch">
@@ -11,7 +12,9 @@
 				<image :src="hasTagChecked?'/static/static/images/icon_coned.png':'/static/static/images/icon_con.png'"
 					style="width: 32rpx;height: 32rpx;margin-left: 20rpx;margin-right: 10rpx;" @click="seeCondition">
 				</image>
-				<view :style="hasTagChecked?'font-size: 28rpx;color: #3894FF;padding-right:30rpx':'font-size: 28rpx;color: #999999;padding-right:30rpx'" @click="seeCondition">筛选</view>
+				<view
+					:style="hasTagChecked?'font-size: 28rpx;color: #3894FF;padding-right:30rpx':'font-size: 28rpx;color: #999999;padding-right:30rpx'"
+					@click="seeCondition">筛选</view>
 			</view>
 		</u-sticky>
 
@@ -31,42 +34,49 @@
 			<u-empty mode="data" icon="/static/img/icon_nodata.png" text=" "></u-empty>
 			<view
 				style="display: flex;flex-direction: row;align-items: center;justify-content: center;margin-top: 20rpx;">
-				
+
 				<view class="btn-nodata" @click="tagReset()">清除筛查条件</view>
 			</view>
 		</view>
 
 		<!-- 待选患者列表 -->
 		<view class="wrap-patient" v-else>
-			<view class="patient-item" v-for="(item, index) in patientList" :key="index" @click="onPatientItemClick(item)">
-				
+			<view class="patient-item" v-for="(item, index) in patientList" :key="index"
+				@click="onPatientItemClick(item)">
+
 
 				<view class="patient-item-right">
 					<view class="right-row">
 						<view style="color: #1A1A1A;font-size: 32rpx;font-weight: bold;">{{item.user_name}}</view>
 						<view style="width: 1rpx;height: 32rpx;background-color: #1A1A1A;margin-left: 15rpx;"></view>
-						<view style="color: #1A1A1A;font-size: 32rpx;margin-left: 15rpx;font-weight: bold;">{{item.user_sex}}</view>
+						<view style="color: #1A1A1A;font-size: 32rpx;margin-left: 15rpx;font-weight: bold;">
+							{{item.user_sex}}
+						</view>
 						<view style="width: 1rpx;height: 32rpx;background-color: #1A1A1A;margin-left: 15rpx;"></view>
-						<view style="color: #1A1A1A;font-size: 32rpx;margin-left: 15rpx;font-weight: bold;">{{item.birthday}}岁</view>
+						<view style="color: #1A1A1A;font-size: 32rpx;margin-left: 15rpx;font-weight: bold;">
+							{{item.birthday}}岁
+						</view>
 					</view>
 					<view class="tag-row" style="margin-top: 20rpx;">
 						<view class="patient-tag" v-for="(tagitem, tagindex) in item.tags">{{tagitem}}</view>
-						
+
 					</view>
 					<view class="right-row" style="margin-top: 20rpx;">
 						<view style="color: #999999;font-size: 28rpx;">病情描述：</view>
 						<view class="des">{{item.remark || ''}}</view>
 					</view>
-					<view class="right-row" style="margin-top: 20rpx;font-size: 28rpx;color: #4D4D4D;">{{item.create_time}}</view>
+					<view class="right-row" style="margin-top: 20rpx;font-size: 28rpx;color: #4D4D4D;">
+						{{item.create_time}}
+					</view>
 				</view>
 			</view>
 			<u-loadmore v-if="patientList.length>0" :status="status" color="#999999" />
 		</view>
 
-		
+
 
 		<!-- 筛选弹窗，做了页面顶部一样搜索顶部结构 -->
-		<u-overlay :show="showCondition"   mask-click-able="false">
+		<u-overlay :show="showCondition" mask-click-able="false">
 			<view style="height: 100vh;">
 				<view class="wrap-search" style="background-color: white;">
 					<image src="/static/static/images/icon_dot.png"
@@ -78,28 +88,31 @@
 					</view>
 					<image
 						:src="hasTagChecked?'/static/static/images/icon_coned.png':'/static/static/images/icon_con.png'"
-						style="width: 32rpx;height: 32rpx;margin-left: 20rpx;margin-right: 10rpx;" @click="seeCondition">
+						style="width: 32rpx;height: 32rpx;margin-left: 20rpx;margin-right: 10rpx;"
+						@click="seeCondition">
 					</image>
-					<view :style="hasTagChecked?'font-size: 28rpx;color: #3894FF;padding-right:30rpx':'font-size: 28rpx;color: #999999;padding-right:30rpx'" @click="seeCondition">筛选</view>
+					<view
+						:style="hasTagChecked?'font-size: 28rpx;color: #3894FF;padding-right:30rpx':'font-size: 28rpx;color: #999999;padding-right:30rpx'"
+						@click="seeCondition">筛选</view>
 				</view>
 
 				<view style="height: 20rpx;background: #F5F5F5;"></view>
 
 				<!-- 患者标签 -->
 				<scroll-view scroll-y="true" style="max-height: 70vh;">
-				<view class="wrap-tags" style="background-color: white;">
-					<view class="tags-top">
-						<view style="height: 30rpx;width: 6rpx;background-color: #3894FF;"></view>
-						<view style="font-size: 30rpx;color: #4D4D4D;margin-left: 18rpx;">患者标签</view>
+					<view class="wrap-tags" style="background-color: white;">
+						<view class="tags-top">
+							<view style="height: 30rpx;width: 6rpx;background-color: #3894FF;"></view>
+							<view style="font-size: 30rpx;color: #4D4D4D;margin-left: 18rpx;">患者标签</view>
+						</view>
+						<view class="view-tags">
+							<view :class="item.isChecked?'tag-item':'tag-item-not'" v-for="(item, index) in tagsData"
+								:key="index" @click="onTagChange(index)">{{item.name}}</view>
+						</view>
 					</view>
-					<view class="view-tags">
-						<view :class="item.isChecked?'tag-item':'tag-item-not'" v-for="(item, index) in tagsData"
-							:key="index" @click="onTagChange(index)">{{item.name}}</view>
-					</view>
-				</view>
 				</scroll-view>
-				
-				
+
+
 
 				<view class="con-btn" style="background-color: white;">
 					<view class="btn-reset" @click="tagReset()"> 重置</view>
@@ -111,8 +124,8 @@
 		</u-overlay>
 
 		<!-- 筛选弹窗，做了页面顶部一样搜索顶部结构 -->
-		<u-overlay :show="showMenu"    :opacity="0"  @click="showMenu = false">
-			<view style="height: 100vh;" >
+		<u-overlay :show="showMenu" :opacity="0" @click="showMenu = false">
+			<view style="height: 100vh;">
 				<view class="wrap-search" style="background-color: white;">
 					<image @click="showMenuBtn()" src="/static/static/images/icon_dot.png"
 						style="width: 36rpx;height: 36rpx;padding-left: 30rpx;">
@@ -123,41 +136,47 @@
 					</view>
 					<image
 						:src="hasTagChecked?'/static/static/images/icon_coned.png':'/static/static/images/icon_con.png'"
-						style="width: 32rpx;height: 32rpx;margin-left: 20rpx;margin-right: 10rpx;" >
+						style="width: 32rpx;height: 32rpx;margin-left: 20rpx;margin-right: 10rpx;">
 					</image>
-					<view :style="hasTagChecked?'font-size: 28rpx;color: #3894FF;padding-right:30rpx':'font-size: 28rpx;color: #999999;padding-right:30rpx'" >筛选</view>
+					<view
+						:style="hasTagChecked?'font-size: 28rpx;color: #3894FF;padding-right:30rpx':'font-size: 28rpx;color: #999999;padding-right:30rpx'">
+						筛选</view>
 				</view>
-		
-				
-				
+
+
+
 				<view class="menuview">
 					<view class="menuitem" @click="onHZPQclick">
-						<image class="menuicon"
-							src="/static/img/biaoqian.png">
+						<image class="menuicon" src="/static/img/biaoqian.png">
 						</image>
 						<view>患者标签</view>
 					</view>
 					<view class="menuitem" @click="onQFXXclick">
-						<image class="menuicon"
-							src="/static/img/qfxx.png">
+						<image class="menuicon" src="/static/img/qfxx.png">
 						</image>
 						<view>群发消息</view>
 					</view>
 					<view class="menuitem" @click="onJKXJclick">
-						<image class="menuicon"
-							src="/static/img/jiankangxuanjiao.png">
+						<image class="menuicon" src="/static/img/jiankangxuanjiao.png">
 						</image>
 						<view>健康宣教</view>
 					</view>
 					<view class="menuitem" @click="onWJPGclick">
-						<image class="menuicon"
-							src="/static/img/wenjuan.png">
+						<image class="menuicon" src="/static/img/wenjuan.png">
 						</image>
 						<view>问卷评估</view>
 					</view>
+
+					<view class="menuitem" @click="onSFJHclick">
+						<image class="menuicon" src="/static/img/suifangjihua.png">
+						</image>
+						<view>随访计划</view>
+					</view>
+
+
 				</view>
-		
-		
+
+
 			</view>
 		</u-overlay>
 	</view>
@@ -170,14 +189,14 @@
 				account: {
 					user: {}
 				},
-				overlay:false,
+				overlay: false,
 				info: {},
 				patientList: [],
 				status: 'loadmore',
 				isCompleted: false,
 				requestData: {
-					tagsIds: '', 
-					queryStr:'',
+					tagsIds: '',
+					queryStr: '',
 					pageNo: 1,
 					pageSize: 20,
 				},
@@ -187,9 +206,9 @@
 				isAll: false,
 				showChose: false,
 				showCondition: false,
-				hasTagChecked:false,
+				hasTagChecked: false,
 				tagsData: [],
-				showMenu:false,
+				showMenu: false,
 			}
 		},
 		onLoad() {
@@ -198,62 +217,63 @@
 			this.getData(true)
 		},
 		onReady() {},
-		
-		 //监听 TabBar 切换点击	 
+
+		//监听 TabBar 切换点击	 
 		onTabItemTap(item) {
-			console.log("VVVV:",item)
+			console.log("VVVV:", item)
 			// medTechnician
-			if(this.account.roleName=='pharmacist'){
-				uni.showToast({										title: '对不起，您的身份是药技师，无权进行该操作',										icon: 'none'									});
+			if (this.account.roleName == 'pharmacist') {
+				uni.showToast({
+					title: '对不起，您的身份是药技师，无权进行该操作',
+					icon: 'none'
+				});
 				return
 			}
-			
+
 			this.getTagList()
 			this.getData(true)
 		},
 		onShow() {},
-	
+
 		//加载更多
 		onReachBottom() {
 			if (this.isCompleted) return;
 			this.status = 'loading';
 			this.getData(false)
-			
+
 		},
 		methods: {
 			//标签列表
 			getTagList() {
-				
+
 				if (!this.checkAuth()) {
 					return
 				}
-				
-				uni.$u.http.post('/account-api/tdUserTags/getUserTagsDoctor', 
-				{
+
+				uni.$u.http.post('/account-api/tdUserTags/getUserTagsDoctor', {
 					"pageNo": 1,
 					"pageSize": 99999,
-				}
-				).then(res => {
-					var list= res.data.records || [];
-					this.tagsData=(res.data.records || []).map((item)=>{
+				}).then(res => {
+					var list = res.data.records || [];
+					this.tagsData = (res.data.records || []).map((item) => {
 						return {
 							name: item.tags_name,
 							isChecked: false,
 							id: item.id
 						}
 					})
-					
+
 				});
-			
+
 			},
-			
+
 			//患者列表
 			getData(isRefresh) {
-				
+
 				if (!this.checkAuth()) {
 					return
 				}
-				
+
 				if (isRefresh) {
 					this.isCompleted = false
 					this.requestData.pageNo = 1
@@ -268,60 +288,60 @@
 				).then(res => {
 					if (res.code === 0) {
 						var list = res.data.records || []
-						
-						list.forEach(item=>{
-							if(item.order){
-                                item.order.docName = item.order.doctorName;
-								item.order.rightsId=item.order.id;
-								item.order.id=item.order.chartId;
-								item.order.userInfo={
-                                    userId:item.userId,
-									userName:item.user_name,
-									userSex:item.user_sex,
-									userAge:item.birthday,
+
+						list.forEach(item => {
+							if (item.order) {
+								item.order.docName = item.order.doctorName;
+								item.order.rightsId = item.order.id;
+								item.order.id = item.order.chartId;
+								item.order.userInfo = {
+									userId: item.userId,
+									userName: item.user_name,
+									userSex: item.user_sex,
+									userAge: item.birthday,
 								};
 							}
-							
+
 						})
-			
+
 						if (isRefresh) {
 							this.patientList = list
 						} else {
 							this.patientList = [...this.patientList, ...list];
 						}
-			
-			
+
+
 						if (res.data.current >= res.data.pages) {
 							this.isCompleted = true
 							this.status = 'nomore';
-			
+
 						} else {
 							this.status = 'loadmore';
 						}
-			
-			
-			
+
+
+
 					}
 					uni.stopPullDownRefresh();
 					uni.hideLoading()
 				})
 			},
 			//搜索
-			onSearch(value){
-				
-				this.requestData.queryStr=value || ''
-				this.showCondition =false
-				this.hasTagChecked=false
-				this.tagsData.forEach(item=>{
-					item.isChecked=false
+			onSearch(value) {
+
+				this.requestData.queryStr = value || ''
+				this.showCondition = false
+				this.hasTagChecked = false
+				this.tagsData.forEach(item => {
+					item.isChecked = false
 				})
-				this.requestData.tagsIds=''
-				
-				
+				this.requestData.tagsIds = ''
+
+
 				this.getData(true)
 			},
-			showMenuBtn(){
-				this.showMenu=!this.showMenu
+			showMenuBtn() {
+				this.showMenu = !this.showMenu
 			},
 			//筛选按钮
 			seeCondition() {
@@ -329,87 +349,111 @@
 			},
 			//标签选择
 			onTagChange(index) {
-				
+
 				this.tagsData[index].isChecked = !this.tagsData[index].isChecked
-				
+
 			},
 			//筛选重置
-			tagReset(){
-				this.showCondition =false
-				this.hasTagChecked=false
-				this.tagsData.forEach(item=>{
-					item.isChecked=false
+			tagReset() {
+				this.showCondition = false
+				this.hasTagChecked = false
+				this.tagsData.forEach(item => {
+					item.isChecked = false
 				})
-				this.requestData.tagsIds=''
-				this.requestData.queryStr=''
-				this.searchName=''
+				this.requestData.tagsIds = ''
+				this.requestData.queryStr = ''
+				this.searchName = ''
 				this.getData(true)
 			},
 			//筛选确认
-			tagConfrim(){
-				this.showCondition =false
-				this.requestData.tagsIds=this.tagsData.filter(item=>{
+			tagConfrim() {
+				this.showCondition = false
+				this.requestData.tagsIds = this.tagsData.filter(item => {
 					return item.isChecked
-				}).map(item=>{
+				}).map(item => {
 					return item.id
 				}).join(',')
-				
-				this.hasTagChecked=this.requestData.tagsIds && this.requestData.tagsIds.length>0
-				this.requestData.queryStr=''
-				this.searchName=''
+
+				this.hasTagChecked = this.requestData.tagsIds && this.requestData.tagsIds.length > 0
+				this.requestData.queryStr = ''
+				this.searchName = ''
 				this.getData(true)
 			},
-			
+
 			//点击患者
-			onPatientItemClick(item){
-				if(!item.order){
+			onPatientItemClick(item) {
+				if (!item.order) {
 					return
 				}
-				var taskItem=item.order
-				
+				var taskItem = item.order
+
 				uni.setStorageSync('taskItem', taskItem);
 				console.log(uni.getStorageSync('taskItem'))
-				if(taskItem.status.value === 3 ){					
+				if (taskItem.status.value === 3) {
 					uni.navigateTo({
 						url: `/pages2/pages/TUI-Chat-Group2/chat?conversationID=GROUP${taskItem.imGroupId}&tab=tab1`
 					});
-				}else {
+				} else {
 					uni.navigateTo({
 						url: `/pages2/pages/TUI-Group-History/chat?conversationID=GROUP${taskItem.imGroupId}&tab=tab1`
 					});
 				}
-				
+
 			},
-			
+
 			//点击患者标签
-			onHZPQclick(){
-				this.showMenu=false
-				
+			onHZPQclick() {
+				this.showMenu = false
+
 				uni.navigateTo({
 					url: '/pages3/pages/group/list'
 				})
 			},
 			//点击群发消息
-			onQFXXclick(){
-				this.showMenu=false
+			onQFXXclick() {
+				this.showMenu = false
 				uni.navigateTo({
 					url: '/pages3/pages/record/mass'
 				})
 			},
 			//点击健康宣教
-			onJKXJclick(){
-				this.showMenu=false;
+			onJKXJclick() {
+				this.showMenu = false;
 				uni.navigateTo({
 					url: '/pages3/pages/group/note'
 				});
 			},
 			//点击问卷评估
-			onWJPGclick(){
-				this.showMenu=false;
+			onWJPGclick() {
+				this.showMenu = false;
 				uni.navigateTo({
 					url: '/pages3/pages/group/paper'
 				});
 			},
+
+			// 点击随访计划
+			onSFJHclick() {
+				console.log("NNNN:",this.account.roleName)
+				if (this.account.roleName != 'doctor') {
+					uni.showToast({
+						title: '对不起，您无权进行该操作',
+						icon: 'none'
+					});
+					return
+				}
+
+
+
+
+
+				this.showMenu = false;
+				uni.navigateTo({
+					url: '/pages2/pages/follow/myfollowlist'
+				});
+			},
+
+
+
 
 			goIdentify() {
 				uni.$u.http.get('/account-api/accountInfo/getDoctorAuthStatus', {
@@ -429,36 +473,37 @@
 								url: '/pages2/pages/mine/identify-base'
 							})
 						}
-			
+
 					} else {
 						this.$u.toast(res.message)
 					}
-			
+
 				}).finally(() => {
 					uni.hideLoading();
 				});
 			},
-			
+
 			//检验是否认证
 			checkAuth() {
 				if (!this.account || !this.account.accountId || this.account.bindStatus !== 0) {
 					//如果没有账号 或者 没有认证
-					
+
 					return false
 				} else {
 					return true
 				}
 			},
-			
+
 		}
 	}
 </script>
 
 <style lang="scss">
-	page{
+	page {
 		background: #fff;
 	}
-	.identyView{
+
+	.identyView {
 		width: 690rpx;
 		margin-left: 30rpx;
 		margin-top: 20rpx;
@@ -468,15 +513,16 @@
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		
-		.identyitem{
+
+		.identyitem {
 			display: flex;
-			flex-direction: column;		
+			flex-direction: column;
 			font-size: 32rpx;
 			margin-left: 30rpx;
 			color: #FFFFFF;
 		}
-		.identyright{
+
+		.identyright {
 			width: 150rpx;
 			height: 68rpx;
 			background: #FFFFFF;
@@ -484,25 +530,26 @@
 			font-size: 28rpx;
 			color: #3894FF;
 			display: flex;
-			flex-direction: row;	
+			flex-direction: row;
 			align-items: center;
 			justify-content: center;
 			margin-left: auto;
 			margin-right: 30rpx;
 		}
 	}
+
 	.wrap {
-		
+
 		display: flex;
 		flex-direction: column;
-		
-		
+
+
 
 		.wrap-search {
 			display: flex;
 			flex-direction: row;
 			align-items: center;
-			
+
 			height: 120rpx;
 			background: white;
 		}
@@ -513,7 +560,7 @@
 			display: flex;
 			overflow-y: auto;
 			flex-direction: column;
-			
+
 
 			.patient-item {
 				display: flex;
@@ -524,28 +571,29 @@
 				.patient-item-right {
 					display: flex;
 					flex-direction: column;
-					
+
 					padding-bottom: 20rpx;
 
 					.right-row {
 						display: flex;
 						flex-direction: row;
 						align-items: center;
-						
-						
+
+
 					}
-					.des{
+
+					.des {
 						font-size: 28rpx;
 						color: #1A1A1A;
 						line-height: 37rpx;
 						width: 545rpx;
-						overflow: hidden; 
-						text-overflow: ellipsis; 
+						overflow: hidden;
+						text-overflow: ellipsis;
 						display: -webkit-box;
-						-webkit-line-clamp: 1; 
+						-webkit-line-clamp: 1;
 						-webkit-box-orient: vertical;
 					}
-					
+
 					.patient-tag {
 						color: white;
 						background-color: #65BEFE;
@@ -554,13 +602,14 @@
 						border-radius: 5rpx;
 						margin-right: 20rpx;
 					}
-					.tag-row{
+
+					.tag-row {
 						display: flex;
 						flex-direction: row;
 						align-items: center;
 						flex-wrap: wrap;
 					}
-					
+
 				}
 			}
 		}
@@ -702,24 +751,25 @@
 		}
 
 
-		.menutip{
+		.menutip {
 			width: 30rpx;
 			height: 15rpx;
 			margin-left: 39rpx;
-			
+
 		}
-		.menuview{
+
+		.menuview {
 			margin-left: 20rpx;
 			width: 280rpx;
-			
+
 			background: #FFFFFF;
 			box-shadow: 2rpx 6rpx 12rpx 0px #CCCCCC;
 			border-radius: 4rpx;
 			display: flex;
 			flex-direction: column;
 			align-items: center;
-			
-			.menuitem{
+
+			.menuitem {
 				display: flex;
 				flex-direction: row;
 				align-items: center;
@@ -729,8 +779,13 @@
 				height: 90rpx;
 				color: #4D4D4D;
 				background-color: white;
-			}:active { background-color: #F5F5F5; }
-			.menuicon{
+			}
+
+			:active {
+				background-color: #F5F5F5;
+			}
+
+			.menuicon {
 				width: 40rpx;
 				height: 40rpx;
 				margin-right: 26rpx;

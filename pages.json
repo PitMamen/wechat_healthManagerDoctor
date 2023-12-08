@@ -9,7 +9,7 @@
 				"navigationBarTitleText": "登录"
 			}
 		},
-		
+
 		{
 			"path": "pages/work/workshop",
 			"style": {
@@ -35,8 +35,9 @@
 				"navigationBarTitleText": "患者管理"
 			}
 		}
-
-	],
+	    
+       
+    ],
 	"subpackages": [{
 			"root": "pagesFace",
 			"name": "pagesFace",
@@ -51,6 +52,7 @@
 			"root": "pages2",
 			"name": "pages2",
 			"pages": [{
+				
 					"path": "pages/TUI-Chat-Group/chat",
 					"style": {
 						"navigationBarTitleText": "线上咨询"
@@ -62,6 +64,50 @@
 						"navigationBarTitleText": "线上咨询"
 					}
 				},
+				{
+					"path": "pages/follow/followplan",
+					"style": {
+						"navigationBarTitleText": "随访计划"
+					}
+				},
+				{
+					"path": "pages/follow/sendplan",
+					"style": {
+						"navigationBarTitleText": "随访计划"
+					}
+
+				}, {
+					"path": "pages/follow/detailplan",
+					"style": {
+						"navigationBarTitleText": "随访计划"
+					}
+
+				},
+				{
+					"path": "pages/follow/followsummary",
+					"style": {
+						"navigationBarTitleText": "随访小结"
+					}
+				
+				},
+				{
+				    "path" : "pages/follow/myfollowlist",
+				    "style" :                                                                                    
+				    {
+				        "navigationBarTitleText": "我的随访"
+				    }
+				    
+				},
+				
+				{
+				    "path" : "pages/follow/myfollowdetail",
+				    "style" :                                                                                    
+				    {
+				        "navigationBarTitleText": "随访详情"
+				    }
+				    
+				},
+				
 				{
 					"path": "pages/TUI-Chat-History/chat",
 					"style": {}
@@ -493,7 +539,7 @@
 					"path": "pages/cash/trade-info",
 					"style": {
 						"navigationBarTitleText": "详情"
-				
+
 					}
 				},
 				{
@@ -527,18 +573,18 @@
 					}
 				},
 				{
-					"path" : "pages/group/add",
-					"style" : {
+					"path": "pages/group/add",
+					"style": {
 						"navigationBarTitleText": "患者标签"
 					}
-            
+
 				},
 				{
-					"path" : "pages/group/edit",
-					"style" : {
+					"path": "pages/group/edit",
+					"style": {
 						"navigationBarTitleText": "患者标签"
 					}
-            
+
 				},
 				{
 					"path": "pages/group/note",
@@ -565,19 +611,19 @@
 					}
 				},
 				{
-					"path" : "pages/record/mass",
-					"style" : {
-						"enablePullDownRefresh":true,
+					"path": "pages/record/mass",
+					"style": {
+						"enablePullDownRefresh": true,
 						"navigationBarTitleText": "群发消息"
 					}
-            
+
 				},
 				{
-					"path" : "pages/record/message-text",
-					"style" : {
+					"path": "pages/record/message-text",
+					"style": {
 						"navigationBarTitleText": "编辑消息"
 					}
-            
+
 				}
 			]
 		}
@@ -598,14 +644,14 @@
 				"text": "工作室"
 			},
 			{
-				"costom":true,
+				"costom": true,
 				"pagePath": "pages/patient/index",
 				"iconPath": "static/img/tab_hzgl_n.png",
 				"selectedIconPath": "static/img/tab_hzgl_s.png",
 				"text": "患者管理"
 			},
 			{
-				
+
 				"pagePath": "pages/mine/index",
 				"text": "我的",
 				"iconPath": "/static/img/tab_me_n.png",
@@ -631,4 +677,3 @@
 		}]
 	}
 }
-

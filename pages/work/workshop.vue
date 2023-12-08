@@ -68,7 +68,7 @@
 				</view>
 				<view class="item" @click="goApps3()">
 					<image src="/static/static/images/index/app3.png"></image>
-					<view class="name">我的团队</view>
+					<view class="name">随访计划</view>
 				</view>
 				<view class="item" @click="goApps4()">
 					<image src="/static/static/images/index/app4.png"></image>
@@ -388,9 +388,17 @@
 				});
 			},
 			goApps3() {
-				uni.showToast({
-					title: '当前功能正在开发中，敬请期待',
-					icon: 'none'
+				
+				if (this.account.roleName != 'doctor') {
+					uni.showToast({
+						title: '对不起，您无权进行该操作',
+						icon: 'none'
+					});
+					return
+				}
+				
+				uni.navigateTo({
+					url: '/pages2/pages/follow/followplan'
 				});
 			},
 			goApps4() {

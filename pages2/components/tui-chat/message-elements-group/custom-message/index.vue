@@ -114,6 +114,25 @@
 				</view>
 			</view>
 		</view>
+		
+		<view v-if="renderDom[0].type === 'CustomfollowMessage'"
+			:class="'custom-message custom-message-wrap ' + (isMine ? 'my-custom' : '')">
+			<view class="wrap">
+				<view class="title">
+					<image src="/pages2/static/static/images/group/suifangjh.png"></image>{{ renderDom[0].title }}
+				</view>
+				<view class="content" style="height: 140rpx;">
+					<view style="color: #999999;margin-top: 30rpx;" class="row nowrap">为您推荐康复随访计划</view>
+					<view style="margin-bottom: 20rpx;margin-top: 15rpx;" class="row nowrap">{{ renderDom[0].name }}
+					</view>
+				</view>
+				<view class="action" @tap="goPlanDetail(renderDom[0].id)">
+					<view class="btn">点击查看</view>
+				</view>
+			</view>
+		</view>
+		
+		
 		<view v-if="renderDom[0].type === 'CustomAnalyseMessage'" :class="'custom-message ' + (isMine ? 'my-custom' : '')">
 			<view class="custom-content">
 				<view class="custom-content-title">{{ renderDom[0].title }}</view>
@@ -486,6 +505,18 @@ export default {
 			}
 			
 			
+			if (customData.type === 'CustomfollowMessage') {
+				const renderDom = [{
+					type: 'CustomfollowMessage',
+					title: message.payload.description,
+					id: customData.id,
+					name: customData.name,
+					url: customData.url
+				}];
+				return renderDom;
+			}
+			
+			
 			
 			// 音视频通话消息解析
 			const callingmessage = JSON.parse(message.payload.data);
@@ -577,6 +608,16 @@ export default {
 				url: `/pages2/pages/TUI-User-Center/webview/webview?url=${encodeURIComponent(url)}&nav=${title}`
 			});
 		},
+		
+		
+		goPlanDetail(id) {
+			uni.navigateTo({
+				url: '/pages2/pages/follow/myfollowdetail?planId=' + id
+			});
+		},
+		
+		
+		
 		previewArticle(id) {
 			uni.navigateTo({
 				url: `/pages2/pages/article/index?id=${id}`

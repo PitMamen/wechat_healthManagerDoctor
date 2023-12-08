@@ -66,6 +66,50 @@
 				<view class="custom-content-action" @tap="preview(renderDom[0].url, renderDom[0].name)">查看问卷>></view>
 			</view>
 		</view>
+		
+		<view v-if="renderDom[0].type === 'CustomfollowMessage'"
+			:class="'custom-message custom-message-wrap ' + (isMine ? 'my-custom' : '')">
+			<view class="wrap">
+				<view class="title">
+					<image src="/pages2/static/static/images/group/suifangjh.png"></image>{{ renderDom[0].title }}
+				</view>
+				<view class="content" style="height: 140rpx;">
+					<view style="color: #999999;margin-top: 30rpx;" class="row nowrap">为您推荐康复随访计划</view>
+					<view style="margin-bottom: 20rpx;margin-top: 15rpx;" class="row nowrap">{{ renderDom[0].name }}
+					</view>
+				</view>
+				<view class="action" @tap="goPlanDetail(renderDom[0].id)">
+					<view class="btn">点击查看</view>
+				</view>
+			</view>
+		</view>
+		
+		
+		
+		<view v-if="renderDom[0].type === 'CustomsummaryMessage'"
+			:class="'custom-message custom-message-wrap ' + (isMine ? 'my-custom' : '')">
+			<view class="wrap">
+				<view class="title">
+					<image src="/pages2/static/static/images/group/xiaojie.png"></image>{{ renderDom[0].title }}
+				</view>
+				<view class="content" style="height: 140rpx;">
+					
+					<view style="color: #1A1A1A;margin-top: 30rpx;" class="row nowrap"><text
+							style="color: #999999;">随访计划:</text>{{ renderDom[0].planName }}</view>
+					<view style="margin-bottom: 20rpx;margin-top: 15rpx;color: #1A1A1A" class="row nowrap"><text
+							style="color: #999999;">小结:</text>{{ renderDom[0].name }}
+					</view>
+				</view>
+				<view class="action" @tap="gosummary(renderDom[0].name)">
+					<view class="btn">点击查看</view>
+				</view>
+			</view>
+		</view>
+		
+		
+		
+		
+		
 		<view v-if="renderDom[0].type === 'CustomAnalyseMessage'" :class="'custom-message ' + (isMine ? 'my-custom' : '')">
 			<view class="custom-content">
 				<view class="custom-content-title">{{ renderDom[0].title }}</view>
@@ -180,6 +224,7 @@ export default {
 	watch: {
 		message: {
 			handler: function(newVal) {
+				console.log("DDDD:",newVal)
 				this.setData({
 					message: newVal,
 					renderDom: this.parseCustom(newVal)
@@ -293,6 +338,11 @@ export default {
 			
 			
 			const customData = JSON.parse(message.payload.data);
+			
+			console.log("GGG:",customData)
+			
+			
+			
 			if (customData.type === 'CustomIllnessMessage') {
 				const renderDom = [
 					{
@@ -423,6 +473,30 @@ export default {
 				return renderDom;
 			}
 			
+			// 随访计划卡片
+			if (customData.type === 'CustomfollowMessage') {
+				const renderDom = [{
+					type: 'CustomfollowMessage',
+					title: message.payload.description,
+					id: customData.id,
+					name: customData.name,
+					url: customData.url
+				}];
+				return renderDom;
+			}
+			// 随访小结卡片
+			if (customData.type === 'CustomsummaryMessage') {
+				const renderDom = [{
+					type: 'CustomsummaryMessage',
+					title: message.payload.description,
+					// id: customData.id,
+					// name: customData.content,
+					// planName:customData.name,
+					// url: customData.url
+				}];
+				return renderDom;
+			}
+			
 			
 			
 			// 音视频通话消息解析
@@ -506,6 +580,22 @@ export default {
 			this.showWenzhen = true;
 		},
 		
+		
+		gosummary(content) {
+			uni.showModal({
+				title: '随访小结',
+				content: content,
+				success: function (res) {
+					if (res.confirm) {
+						// this.finish()
+						// console.log('用户点击确定');
+					} else if (res.cancel) {
+						// console.log('用户点击取消');
+					}
+				}
+			});
+		},
+		
 		preview(url, title) {
 			uni.navigateTo({
 				url: `/pages2/pages/TUI-User-Center/webview/webview?url=${url}&nav=${title}`
@@ -516,6 +606,19 @@ export default {
 				url: `/pages2/pages/article/index?id=${id}`
 			});
 		},
+		
+		
+		
+		goPlanDetail(id) {
+			uni.navigateTo({
+				url: '/pages2/pages/follow/myfollowdetail?planId=' + id
+			});
+		},
+		
+		
+		
+		
+		
 		previewChufang(item) {
 			if (this.$route.query.fromHistory === 'true'){
 				return;

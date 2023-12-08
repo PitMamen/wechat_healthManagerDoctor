@@ -6,23 +6,26 @@
 		</view>
 		<view class="textcontent">
 			<text class="texttitle">随访结果:</text>
-			<u-radio-group v-model="resultValue" placement="row" >
+			<u-radio-group v-model="resultValue" placement="row">
 				<view>
-					<u-radio name='2' activeColor="#409EFF" label="成功" style="margin-right: 88rpx;" :disabled="resultValue!='2'"></u-radio>
+					<u-radio name='2' activeColor="#409EFF" label="成功" style="margin-right: 88rpx;"
+						:disabled="resultValue!='2'"></u-radio>
 				</view>
-				
+
 				<view style="margin-left: 20rpx;">
-					<u-radio name='3' activeColor="#409EFF" label="失败" style="margin-left: 20rpx;" :disabled="resultValue!='3'"></u-radio>
+					<u-radio name='3' activeColor="#409EFF" label="失败" style="margin-left: 20rpx;"
+						:disabled="resultValue!='3'"></u-radio>
 				</view>
-				
-				
+
+
 			</u-radio-group>
 		</view>
 		<view v-if="resultValue=='3'" class="textcontent">
 			<text class="texttitle">失败原因:</text>
-			<u-radio-group v-model="failueValue" placement="column" >
-				<u-radio activeColor="#409EFF" :customStyle="{marginBottom: '16rpx'}" 
-					v-for="(item, index) in failureList" :key="index" :label="item" :name="index" :disabled="failueValue!=index">
+			<u-radio-group v-model="failueValue" placement="column">
+				<u-radio activeColor="#409EFF" :customStyle="{marginBottom: '16rpx'}"
+					v-for="(item, index) in failureList" :key="index" :label="item" :name="index"
+					:disabled="failueValue!=index">
 				</u-radio>
 			</u-radio-group>
 		</view>
@@ -32,23 +35,22 @@
 		</view>
 		<view class="textcontent" @click="goQues()">
 			<text style="flex: 1;"> 问卷名称</text>
-		
+
 			<view class="" style="display: flex;flex-direction: row;align-items: center;">
 				<view>{{questionnaireName}} </view>
-				<u-icon name="arrow-right" color="#999"
-					style="width: 22rpx;height: 12rpx;margin-top: 25rpx;"></u-icon>
+				<u-icon name="arrow-right" color="#999" style="width: 22rpx;height: 12rpx;margin-top: 25rpx;"></u-icon>
 			</view>
-		
+
 		</view>
-		
-		
-		
-		
-		
+
+
+
+
+
 
 		<!-- <web-view v-if="resultValue=='2'" style="margin-top: 200rpx;" :webview-styles="webviewStyles"
 			:src="questionUrl"></web-view> -->
-		
+
 	</view>
 </template>
 
@@ -56,7 +58,7 @@
 	export default {
 		data() {
 			return {
-				questionnaireName:'',
+				questionnaireName: '',
 				recordId: '',
 				resultValue: '', //随访结果
 				failueValue: -1, //失败原因
@@ -86,7 +88,7 @@
 
 			this.account = uni.getStorageSync('account')
 			this.recordId = options.recordId
-            this.questionnaireName = options.questionnaireName
+			this.questionnaireName = options.questionnaireName
 			console.log("GGG:", this.questionnaireName)
 			uni.setNavigationBarTitle({
 				title: options.patientUserName + '随访详情'
@@ -107,18 +109,15 @@
 					this.questionUrl = res.data.contentUrl
 				}
 			})
-			
+
 		},
 
 		onReady() {
 
 		},
-		onShow() {
-
-		},
+		onShow() {},
 		methods: {
-			
-			
+
 			//跳转问卷详情
 			goQues() {
 				// let url = this.questionUrl.replace('hide', 'show')
@@ -129,16 +128,16 @@
 				// 		url: url
 				// 	}))
 				// })
-			
+
 				let url = this.questionUrl.replace('hide', 'show')
 				uni.setStorageSync('suifang_ques', url);
 				uni.navigateTo({
 					// url: './ques-detail?questionUrl=' + url
 					url: './ques-detail'
 				})
-			
+
 			},
-			
+
 
 
 			//获取问卷

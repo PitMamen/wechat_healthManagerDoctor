@@ -56,6 +56,11 @@
 					<image class="TUI-Extension-icon" src="/pages2/static/static/images/group/note.png"></image>
 					<view class="TUI-Extension-slot-name">推送文章</view>
 				</view>
+				
+				<view class="TUI-Extension-slot" @tap="handlefollow">
+					<image class="TUI-Extension-icon" src="/pages2/static/static/images/group/icon_sfjh.png"></image>
+					<view class="TUI-Extension-slot-name">随访计划</view>
+				</view>
 				<view v-if="taskItem.diagnosisFlag.value==1" class="TUI-Extension-slot" @tap="handleChuFang">
 					<image class="TUI-Extension-icon" src="/pages2/static/static/images/group/chufang.png"></image>
 					<view class="TUI-Extension-slot-name">开具处方</view>
@@ -408,6 +413,23 @@ export default {
 				url: `/pages2/pages/group/note`
 			});
 		},
+		
+		handlefollow() {
+			var account = uni.getStorageSync('account');
+			if (account) {
+				if (account.roleName != 'doctor') {
+					uni.showToast({
+						title: '对不起，您无权进行该操作',
+						icon: 'none'
+					});
+					return
+				}
+			}
+			uni.navigateTo({
+				url: '/pages2/pages/follow/myfollowlist'
+			});
+		},
+		
 		handlePaper() {
 			uni.navigateTo({
 				url: `/pages2/pages/group/paper`

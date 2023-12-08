@@ -40,7 +40,7 @@
 			</view>
 			<view style="margin-left: 30rpx;margin-top: 30rpx;margin-right: 30rpx;">
 				<u-line-progress style="color: #D77311;"
-					activeColor="#409EFF" :percentage="account.infoScore" :showText="false"></u-line-progress>
+					activeColor="#409EFF"  :percentage="account.infoScore" :showText="false"></u-line-progress>
 			</view>
 			
 			<view style="margin-left: 30rpx;margin-top: 30rpx;margin-right: 30rpx;color: #999999;margin-bottom: 30rpx;">

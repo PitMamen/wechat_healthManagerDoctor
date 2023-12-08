@@ -56,6 +56,11 @@
 					<image class="TUI-Extension-icon" src="/pages2/static/static/images/group/note.png"></image>
 					<view class="TUI-Extension-slot-name">推送文章</view>
 				</view>
+				<view class="TUI-Extension-slot" @tap="handlefollow">
+					<image class="TUI-Extension-icon" src="/pages2/static/static/images/group/note.png"></image>
+					<view class="TUI-Extension-slot-name">随访计划</view>
+				</view>
+				
 				<view class="TUI-Extension-slot" @tap="handleFinish">
 					<image class="TUI-Extension-icon" src="/pages2/static/static/images/group/finish.png"></image>
 					<view class="TUI-Extension-slot-name">结束问诊</view>
@@ -373,6 +378,11 @@ export default {
 		handleNote() {
 			uni.navigateTo({
 				url: `/pages2/pages/group/note`
+			});
+		},
+		handlefollow(){
+			uni.navigateTo({
+				url: '/pages2/pages/follow/myfollowlist'
 			});
 		},
 		handlePaper() {

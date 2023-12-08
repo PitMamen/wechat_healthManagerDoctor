@@ -559,6 +559,35 @@
 					}).catch(err => {
 						this.flag = false;
 					});
+					// 随访计划
+				}else if (this.options.type == 'followMessage') {
+					if (this.flag) {
+						return;
+					}
+					this.flag = true;
+					uni.showLoading({
+						title: '发送中'
+					});
+					uni.$u.http.post('/medical-api/tlSendImMessageLog/addImMessageLog', {
+						...uni.getStorageSync('followMsgReq'),
+						messageType: 4,
+						sendUserIds: this.patientListChose.map(item => {
+							return item.patient_user_id
+						})
+					}).then(res => {
+						uni.hideLoading();
+						uni.showToast({
+							title: '发送成功',
+							icon: 'success'
+						});
+						setTimeout(() => {
+							uni.navigateBack({
+								delta: 1
+							});
+						}, 1500);
+					}).catch(err => {
+						this.flag = false;
+					});
 				}
 			}
 		}
