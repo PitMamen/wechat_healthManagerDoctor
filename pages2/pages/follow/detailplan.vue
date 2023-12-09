@@ -2,11 +2,11 @@
 	<view class="wrap">
 		<u-sticky>
 			<view class="content">
-				<view style="font-size: 32rpx;color: #1A1A1A;font-weight: bold;margin-left: 25rpx;margin-top: 30rpx;">
+				<view style="font-size: 32rpx;color: #1A1A1A;font-weight: bold;margin-left: 48rpx;margin-top: 30rpx;">
 					{{basePlanData.planName}}
 				</view>
 				<view class="process-kuang">
-					<view style="margin-top: 44rpx;margin-left:30rpx;margin-right:30rpx;">
+					<view style="margin-top: 44rpx;margin-left:48rpx;margin-right:30rpx;">
 
 						<u-line-progress style="color:#D77311;" activeColor="#409EFF" :percentage="percentage"
 							:showText="false" :height="7">
@@ -18,16 +18,16 @@
 				</view>
 
 
-				<view style="margin-left: 28rpx;margin-top: 30rpx;color: #999999;font-size: 24rpx;">
+				<view style="margin-left: 48rpx;margin-top: 30rpx;color: #999999;font-size: 24rpx;">
 					随访周期:&nbsp;{{basePlanData.beginDate}}-{{basePlanData.endDate}}</view>
 				<view class="row-line"></view>
-				<view style="margin-left: 28rpx;margin-top: 30rpx;color: #4D4D4D;font-size: 28rpx;">
+				<view style="margin-left: 48rpx;margin-top: 30rpx;color: #4D4D4D;font-size: 28rpx;">
 					{{basePlanData.userInfo.userName}}&nbsp;|&nbsp;{{basePlanData.userInfo.userSex}}&nbsp;|&nbsp;{{basePlanData.userInfo.userAge}}岁
 				</view>
 
 				<view class="row-line"></view>
 				<view
-					style="margin-left: 28rpx;margin-top: 30rpx;margin-bottom: 25rpx;color: #4D4D4D;font-size: 28rpx;">
+					style="margin-left: 48rpx;margin-top: 30rpx;margin-bottom: 25rpx;color: #4D4D4D;font-size: 28rpx;">
 					{{day}}天内自动随访{{basePlanData.totalTask}}次，指导疾病康复情况
 				</view>
 			</view>
@@ -38,9 +38,10 @@
 
 		<view class="center-content">
 
-			<view style="margin-left: 30rpx;margin-top: 15rpx;"> 计划详情</view>
-
-			<scroll-view scroll-y="true" style="height: 100vh;">
+			<view style="margin-left: 48rpx;margin-top: 15rpx;"> 计划详情</view>
+			<u-empty v-if="!detailInfoList||detailInfoList.length==0" icon="/static/img/icon_nodata.png" text="暂无数据">
+			</u-empty>
+			<scroll-view style="height: 100vh" scroll-y="true" scroll-anchoring="true"  v-else>
 				<view class="listinfo" v-for="(item, index) in detailInfoList" :key="index">
 					<view class="left-content">
 						<view class="roadis">
@@ -69,7 +70,7 @@
 								</view>
 
 								<view class="column-con">
-									<view class="name" @click="goSeek(item2)"
+									<view class="text-name" @click="goSeek(item2)"
 										:style="item2.taskType.value==1||item2.taskType.value==2?'color:#409EFF':'color:#1A1A1A'">
 										{{item2.jumpTitle||''}}
 									</view>
@@ -268,7 +269,7 @@
 			//点击患者
 			onPatientItemClick(taskItem) {
 				uni.setStorageSync('taskItem', taskItem);
-				if (taskItem.status === 3) {
+				if (taskItem.status === 3) { //只在=3时 才跳转至聊天室 其他全部跳 历史记录
 					uni.navigateTo({
 						url: `/pages2/pages/TUI-Chat-Group2/chat?conversationID=GROUP${taskItem.imGroupId}`
 					});
@@ -315,7 +316,6 @@
 		display: flex;
 		flex-direction: column;
 		overflow: hidden;
-		margin-top: 10rpx;
 		flex-wrap: wrap;
 
 		.bottom-row {
@@ -328,7 +328,7 @@
 		}
 
 		.row-line {
-			margin-left: 26rpx;
+			margin-left: 48rpx;
 			margin-top: 20rpx;
 			margin-right: 40rpx;
 
@@ -353,6 +353,7 @@
 
 
 		.listinfo {
+			max-height: calc(100vh - 174rpx);
 			width: 100%;
 			display: flex;
 			flex-direction: row;
@@ -420,17 +421,25 @@
 						.column-con {
 							display: flex;
 							flex-direction: column;
-
-							.name {
-								color: #1A1A1A;
-								font-size: 28rpx;
+							
+							.text-name {
+								margin-bottom: 30rpx;
+								margin-top: 15rpx;
 								display: flex;
 								flex-wrap: wrap;
-								margin-top: 27rpx;
-								margin-bottom: 29rpx;
-								margin-right: 10rpx;
-								text-align: justify
+								overflow-wrap: anywhere;
 							}
+
+							// .name {
+							// 	color: #1A1A1A;
+							// 	font-size: 28rpx;
+							// 	display: flex;
+							// 	flex-wrap: wrap;
+							// 	margin-top: 27rpx;
+							// 	margin-bottom: 29rpx;
+							// 	margin-right: 10rpx;
+							// 	text-align: justify
+							// }
 
 							.rowline {
 								height: 1px;

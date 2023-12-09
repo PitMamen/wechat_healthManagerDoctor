@@ -138,27 +138,16 @@
 
 				})
 			},
-			
-			
-			// const followMsgReq = {
-			// 	messageOriginalId: this.planId,
-			// 	sendMessage: this.taskList.planName,
-			// 	payLoad: JSON.stringify({
-			// 		data: JSON.stringify({
-			// 			description: '随访计划',
-			// 			id: this.planId,
-			// 			name: this.taskList.planName,
-			// 			type: 'CustomfollowMessage',
-			// 			// bindId:this.bindId,
-			// 			// userId: this.userId
-			// 		}),
-			// 		extension: '',
-			// 		description: '随访计划'
-			// 	})
-			// };
-			// uni.setStorageSync('followMsgReq', followMsgReq);
 
 			sendTopatient() {
+				
+				// 小结非空
+				if(!this.summary){
+						this.$u.toast("请输入小结内容!")
+					return
+				}
+				
+				
 				uni.showLoading({
 					title: '发送中'
 				});

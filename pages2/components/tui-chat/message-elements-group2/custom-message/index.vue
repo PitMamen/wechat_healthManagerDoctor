@@ -659,7 +659,6 @@
 			},
 
 			gosummary(content) {
-				console.log("333333333111111111111111")
 				uni.showModal({
 					title: '随访小结',
 					content: content,

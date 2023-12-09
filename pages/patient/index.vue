@@ -433,7 +433,6 @@
 
 			// 点击随访计划
 			onSFJHclick() {
-				console.log("NNNN:",this.account.roleName)
 				if (this.account.roleName != 'doctor') {
 					uni.showToast({
 						title: '对不起，您无权进行该操作',
@@ -441,10 +440,6 @@
 					});
 					return
 				}
-
-
-
-
 
 				this.showMenu = false;
 				uni.navigateTo({

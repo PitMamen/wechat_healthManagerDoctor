@@ -6,10 +6,10 @@
 				<view>
 					<view class="content-row">
 						<view
-							style="color: #1A1A1A;font-size: 32rpx;margin-top: 30rpx;font-weight: bold;margin-left: 25rpx;">
+							style="color: #1A1A1A;font-size: 32rpx;margin-top: 30rpx;font-weight: bold;margin-left: 48rpx;">
 							{{taskList.planName}}
 						</view>
-						<view style="margin-left: 25rpx;margin-top: 30rpx;color: #999999;font-size: 24rpx;">基准时间就诊后
+						<view style="margin-left: 48rpx;margin-top: 30rpx;color: #999999;font-size: 24rpx;">基准时间就诊后
 						</view>
 					</view>
 
@@ -17,7 +17,7 @@
 
 					<view class="bottom-line"></view>
 
-					<view style="color: #4D4D4D;margin-left: 24rpx;margin-top: 30rpx;padding-bottom: 30rpx;">
+					<view style="color: #4D4D4D;margin-left: 48rpx;margin-top: 30rpx;padding-bottom: 30rpx;">
 						{{taskList.taskDays}}天内自动随访{{taskList.taskCnt}}次
 					</view>
 				</view>
@@ -30,8 +30,9 @@
 		<view class="center-content">
 
 			<!-- <view style="margin-left: 30rpx;margin-top: 15rpx;"> 计划详情</view> -->
-
-			<scroll-view scroll-y="true" style="height: 100vh;">
+			<u-empty v-if="!taskList.nodes||taskList.nodes.length==0" icon="/static/img/icon_nodata.png" text="暂无数据">
+			</u-empty>
+			<scroll-view style="height: 100vh" scroll-y="true" scroll-anchoring="true" v-else>
 				<view class="listinfo" v-for="(item, index) in taskList.nodes" :key="index">
 					<view class="left-content">
 						<view class="roadis">
@@ -58,7 +59,7 @@
 									<view>{{item2.typeDesc||''}}</view>
 								</view>
 
-								<view class="text" @click="goSeek(item2)"
+								<view class="text-name" @click="goSeek(item2)"
 									:style="item2.jumpType==1||item2.jumpType==2?'color:#409EFF':'color:#1A1A1A'">
 									{{item2.text||''}}
 								</view>
@@ -85,11 +86,11 @@
 		<view class="bottom-content">
 
 			<view class="left-button" @click="favoriteClick()">
-				<image v-if="!isCollect" style="width: 56rpx;height: 56rpx;" src="/static/static/images/jiahao.png">
+				<image v-if="!isCollect" style="width: 48rpx;height: 48rpx;" src="/static/static/images/jiahao.png">
 				</image>
 				<view v-if="!isCollect" style="color: #409EFF;font-size: 30rpx;">添加常用</view>
 
-				<image v-if="isCollect" style="width: 56rpx;height: 56rpx;" src="/static/static/images/jianhao.png">
+				<image v-if="isCollect" style="width: 48rpx;height: 48rpx;" src="/static/static/images/jianhao.png">
 				</image>
 				<view v-if="isCollect" style="color: #409EFF;font-size: 30rpx;">取消常用</view>
 			</view>
@@ -151,6 +152,30 @@
 						{
 							id: 7,
 							label: '4'
+						},
+						{
+							id: 6,
+							label: '5'
+						},
+						{
+							id: 7,
+							label: '6'
+						},
+						{
+							id: 8,
+							label: '7'
+						},
+						{
+							id: 9,
+							label: '8'
+						},
+						{
+							id: 10,
+							label: '9'
+						},
+						{
+							id: 11,
+							label: '10'
 						},
 					],
 					[{
@@ -419,7 +444,7 @@
 			border: 1px solid #3894FF;
 			margin-top: 30rpx;
 			border-radius: 2rpx;
-			margin-left: 30rpx;
+			margin-left: 48rpx;
 			margin-top: 15rpx;
 			font-size: 22rpx;
 			padding-left: 10rpx;
@@ -439,10 +464,12 @@
 
 
 		.listinfo {
+			max-height: calc(100vh - 174rpx);
 			width: 100%;
 			display: flex;
 			flex-direction: row;
 			flex-wrap: wrap;
+			margin-top: 15rpx;
 
 			.left-content {
 				width: 10%;
@@ -469,7 +496,6 @@
 
 			.right-content {
 				width: 85%;
-				margin-top: 20rpx;
 				margin-right: 24rpx;
 
 
@@ -499,6 +525,7 @@
 					flex-direction: row;
 					flex-wrap: wrap;
 					align-items: center;
+					margin-top: 10rpx;
 				}
 
 
@@ -521,6 +548,14 @@
 						margin-left: 30rpx;
 						margin-top: 30rpx;
 						color: #999999;
+
+						.text-name {
+							margin-bottom: 30rpx;
+							margin-top: 15rpx;
+							display: flex;
+							flex-wrap: wrap;
+							overflow-wrap: anywhere;
+						}
 
 
 

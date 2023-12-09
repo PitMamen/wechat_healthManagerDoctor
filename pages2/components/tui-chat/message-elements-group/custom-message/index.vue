@@ -133,6 +133,32 @@
 		</view>
 		
 		
+		<view v-if="renderDom[0].type === 'CustomsummaryMessage'"
+			:class="'custom-message custom-message-wrap ' + (isMine ? 'my-custom' : '')">
+			<view class="wrap">
+				<view class="title">
+					<image src="/pages2/static/static/images/group/xiaojie.png"></image>{{ renderDom[0].title }}
+				</view>
+				<view class="content" style="height: 140rpx;">
+				<view style="color: #1A1A1A;margin-top: 30rpx;" class="row nowrap"><text
+						style="color: #999999;">随访计划:</text>{{ renderDom[0].planName }}</view>
+				<view style="margin-bottom: 20rpx;margin-top: 15rpx;color: #1A1A1A" class="row nowrap"><text
+						style="color: #999999;">小结:</text>{{ renderDom[0].name }}
+				</view>
+				</view>
+				<view class="action" @tap="gosummary(renderDom[0].name)">
+					<view class="btn">点击查看</view>
+				</view>
+			</view>
+		</view>
+		
+		
+		
+		
+		
+		
+		
+		
 		<view v-if="renderDom[0].type === 'CustomAnalyseMessage'" :class="'custom-message ' + (isMine ? 'my-custom' : '')">
 			<view class="custom-content">
 				<view class="custom-content-title">{{ renderDom[0].title }}</view>
@@ -517,6 +543,22 @@ export default {
 			}
 			
 			
+			// 随访小结卡片
+			if (customData.type === 'CustomsummaryMessage') {
+				const renderDom = [{
+					type: 'CustomsummaryMessage',
+					title: message.payload.description,
+					id: customData.id,
+					name: customData.content,
+					planName:customData.name,
+					url: customData.url
+				}];
+				return renderDom;
+			}
+			
+			
+			
+			
 			
 			// 音视频通话消息解析
 			const callingmessage = JSON.parse(message.payload.data);
@@ -609,6 +651,20 @@ export default {
 			});
 		},
 		
+		gosummary(content) {
+			uni.showModal({
+				title: '随访小结',
+				content: content,
+				success: function (res) {
+					if (res.confirm) {
+						// this.finish()
+						// console.log('用户点击确定');
+					} else if (res.cancel) {
+						// console.log('用户点击取消');
+					}
+				}
+			});
+		},
 		
 		goPlanDetail(id) {
 			uni.navigateTo({
