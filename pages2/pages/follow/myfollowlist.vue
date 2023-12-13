@@ -75,6 +75,8 @@
 				],
 				planName: '',
 				planList: [],
+				type: '',
+				userId:'',
 
 				choseOne: null,
 				showEnd: false,
@@ -87,9 +89,19 @@
 			TUIViewRate
 		},
 		computed: {},
-		onLoad() {
+		onLoad(options) {
 			this.getDepList();
 			this.getPlanList()
+				console.log("VVVVVV:", options)
+			if (options.type) {
+				this.type = options.type
+				console.log("VVVVVV:", this.type)
+			}
+			if(options.userId){
+				this.userId = options.userId
+			}
+
+
 		},
 		onReady() {},
 		onShow() {},
@@ -167,16 +179,18 @@
 				}
 				this.changeTab(tab);
 			},
-			
-			
+
+
 			itemClick(item) {
 				uni.navigateTo({
-					url: '/pages2/pages/follow/myfollowdetail?planId=' +item.planId
-						
+					url: '/pages2/pages/follow/myfollowdetail?planId=' + item.planId+'&type='+this.type+'&userId='+this.userId
+
 				})
-				
-				
+
+
 			},
+			
+			
 			formatDateFull(date) {
 				date = new Date(date);
 				let myyear = date.getFullYear();

@@ -23,8 +23,9 @@
 
 
 		<view class="bottom-content">
+			<u-empty class="empty" v-if="!followDataList||followDataList.length==0" mode="history" icon="/static/img/icon_nodata.png" text="暂无数据" />
 
-			<view v-if="followDataList.length>0" class="kuang" v-for="(item, index) in followDataList" :key="index">
+			<view v-else class="kuang" v-for="(item, index) in followDataList" :key="index">
 				<view class="content-row">
 					<view style="color: #1A1A1A;font-size: 32rpx;margin-top: 30rpx;font-weight: bold;">{{item.planName}}
 					</view>
@@ -50,18 +51,7 @@
 					<view style="margin-left: 5rpx;color: #999999;">></view>
 
 				</view>
-
-				<u-empty class="empty" v-if="noData" mode="history" icon="/static/img/icon_nodata.png" text="暂无数据" />
-
-
-
 			</view>
-
-
-
-
-
-
 		</view>
 	</view>
 
@@ -98,7 +88,7 @@
 		onLoad(options) {
 
 			this.qryMyExecFollowPlan('')
-			this.qryCount()
+			this.qryCount('')
 		},
 
 
@@ -109,6 +99,7 @@
 		methods: {
 			onSearch(name) {
 				this.qryMyExecFollowPlan(name)
+				this.qryCount(name)
 			},
 
 			tabClick(tab) {
@@ -116,7 +107,6 @@
 					return;
 				}
 				this.status = tab;
-				console.log("ddd:", this.status)
 				this.pageNo = 1;
 				this.total = 0;
 				this.qryMyExecFollowPlan('')
@@ -133,10 +123,11 @@
 				})
 			},
 
+
 			// 查询随访数量
-			qryCount() {
+			qryCount(textName) {
 				uni.$u.http.post('/follow-api/docFollow/qryMyExecFollowPlanCount', {
-					// userType: "execDoctor"
+					userName: textName,
 				}).then(res => {
 					if (res.code === 0) {
 						this.totalNum = res.data.totalNum
@@ -176,16 +167,25 @@
 
 <style lang="scss">
 	.wrap {
-		width: 100%;
 		height: 100%;
 		background: #F5F5F5;
+		overflow-x: hidden;
+		
 	}
+	
+	// .webkit-scrollbar {
+	//     display: none;
+	//     width: 0;
+	//     height: 0;
+	//     color: transparent;
+	//   }
+	
 
 
 
 	.content {
 		height: 280rpx;
-		width: 100%;
+		// width: 100%;
 		background-color: #FFFFFF;
 		display: flex;
 		flex-direction: column;
@@ -196,7 +196,7 @@
 
 	.bottom-content {
 		height: 100%;
-		width: 100%;
+		// width: 100%;
 		display: flex;
 		flex-direction: column;
 		background-color: #F5F5F5;

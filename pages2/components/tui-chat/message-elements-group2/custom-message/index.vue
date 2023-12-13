@@ -159,7 +159,7 @@
 					<view style="margin-bottom: 20rpx;margin-top: 15rpx;" class="row nowrap">{{ renderDom[0].name }}
 					</view>
 				</view>
-				<view class="action" @tap="goPlanDetail(renderDom[0].id)">
+				<view class="action" @tap="goPlanDetail(renderDom[0].id,renderDom[0].regNo)">
 					<view class="btn">点击查看</view>
 				</view>
 			</view>
@@ -280,7 +280,7 @@
 		data() {
 			return {
 				showWenzhen: false,
-				showsummary:false,
+				showsummary: false,
 				wenzhen: {
 					chiefComplaint: '',
 					treatment: '',
@@ -303,7 +303,6 @@
 		watch: {
 			message: {
 				handler: function(newVal) {
-					console.log("MMMM:", this.parseCustom(newVal))
 					this.setData({
 						message: newVal,
 						renderDom: this.parseCustom(newVal)
@@ -548,7 +547,9 @@
 						title: message.payload.description,
 						id: customData.id,
 						name: customData.name,
-						url: customData.url
+						url: customData.url,
+						regNo: customData.regNo,
+						
 					}];
 					return renderDom;
 				}
@@ -662,7 +663,7 @@
 				uni.showModal({
 					title: '随访小结',
 					content: content,
-					success: function (res) {
+					success: function(res) {
 						if (res.confirm) {
 							// this.finish()
 							// console.log('用户点击确定');
@@ -673,9 +674,10 @@
 				});
 			},
 
-			goPlanDetail(id) {
+			goPlanDetail(id, regNo) {
+				const taskItem = uni.getStorageSync('taskItem');
 				uni.navigateTo({
-					url: '/pages2/pages/follow/myfollowdetail?planId=' + id
+					url: '/pages2/pages/follow/detailplan?planId=' + id + '&regNo=' + regNo + '&userId=' + taskItem.userId
 				});
 			},
 

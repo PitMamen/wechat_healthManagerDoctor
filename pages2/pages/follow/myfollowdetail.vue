@@ -32,7 +32,7 @@
 			<!-- <view style="margin-left: 30rpx;margin-top: 15rpx;"> 计划详情</view> -->
 			<u-empty v-if="!taskList.nodes||taskList.nodes.length==0" icon="/static/img/icon_nodata.png" text="暂无数据">
 			</u-empty>
-			<scroll-view style="height: 100vh" scroll-y="true" scroll-anchoring="true" v-else>
+			<scroll-view style="height: 1000vh" scroll-y="true" scroll-anchoring="true" v-else>
 				<view class="listinfo" v-for="(item, index) in taskList.nodes" :key="index">
 					<view class="left-content">
 						<view class="roadis">
@@ -46,7 +46,7 @@
 							<view style="margin-left: 15rpx;">就诊后</view>
 							<view class="choose-days" @click="showPicker(item)">
 								<view style="color: #409EFF;font-size: 30rpx;padding-top: 10rpx;">
-									{{item.days||days}}{{unit||'天'}}
+									{{item.days||days}}{{item.unit||'天'}}
 								</view>
 								<u-icon class="icon" style="margin-top: -35rpx;justify-content: flex-end;"
 									name="arrow-down" color="#1A1A1A" size="18"></u-icon>
@@ -55,18 +55,23 @@
 						</view>
 						<view class="kuang">
 							<view class="item-content" v-for="(item2, index2) in item.tasks" :key="index2">
-								<view style="display: flex;flex-direction: row;flex-wrap: wrap;height: 50rpx;">
+								<view
+									style="display: flex;flex-direction: row;flex-wrap: wrap;height: 50rpx;margin-top: 25rpx;">
 									<view>{{item2.typeDesc||''}}</view>
 								</view>
 
-								<view class="text-name" @click="goSeek(item2)"
-									:style="item2.jumpType==1||item2.jumpType==2?'color:#409EFF':'color:#1A1A1A'">
+								<view v-if="item2.jumpType==1||item2.jumpType==2" class="text-name" style="color:#409EFF;" @click="goSeek(item2)">
 									{{item2.text||''}}
 								</view>
+								
+								<view v-else  style="color: #1A1A1A;" class="text-name">
+									{{item2.text||''}}
+								</view>
+								
+								
 
 
 								<view class="column-con">
-									<!-- <view class="name"  :style="item2.taskType.value==1||item2.taskType.value==2?'color:#409EFF':'color:#1A1A1A'" >{{item2.jumpTitle||''}}</view> -->
 									<view class="rowline"></view>
 								</view>
 							</view>
@@ -96,7 +101,9 @@
 			</view>
 
 			<view class="right-button">
-				<view style="text-align: center; padding-top: 12rpx;" @click="goChoosePatient()">选择患者</view>
+				<view style="text-align: center; padding-top: 12rpx;" @click="goChoosePatient()">
+					{{type=='chat'?'发送给患者':'选择患者'}}
+				</view>
 			</view>
 		</view>
 
@@ -136,8 +143,13 @@
 				isCollect: true, //是否收藏
 				show2: false,
 				currentItem: {},
+				type: '',
 				columns2: [
 					[{
+							id: 62,
+							label: '0'
+						},
+						{
 							id: 4,
 							label: '1'
 						},
@@ -154,7 +166,7 @@
 							label: '4'
 						},
 						{
-							id: 6,
+							id: 31,
 							label: '5'
 						},
 						{
@@ -177,6 +189,208 @@
 							id: 11,
 							label: '10'
 						},
+						{
+							id: 12,
+							label: '11'
+						},
+						{
+							id: 13,
+							label: '12'
+						},
+						{
+							id: 14,
+							label: '13'
+						},
+						{
+							id: 15,
+							label: '14'
+						},
+						{
+							id: 16,
+							label: '15'
+						},
+						{
+							id: 17,
+							label: '16'
+						},
+						{
+							id: 18,
+							label: '17'
+						},
+						{
+							id: 19,
+							label: '18'
+						},
+
+						{
+							id: 20,
+							label: '19'
+						},
+						{
+							id: 21,
+							label: '20'
+						},
+						{
+							id: 22,
+							label: '21'
+						},
+						{
+							id: 23,
+							label: '22'
+						},
+						{
+							id: 24,
+							label: '23'
+						},
+						{
+							id: 25,
+							label: '24'
+						},
+						{
+							id: 26,
+							label: '25'
+						},
+						{
+							id: 27,
+							label: '26'
+						},
+						{
+							id: 28,
+							label: '27'
+						},
+						{
+							id: 29,
+							label: '28'
+						},
+						{
+							id: 30,
+							label: '29'
+						},
+						{
+							id: 31,
+							label: '30'
+						},
+						{
+							id: 32,
+							label: '31'
+						},
+						{
+							id: 33,
+							label: '32'
+						},
+						{
+							id: 34,
+							label: '33'
+						},
+						{
+							id: 35,
+							label: '34'
+						},
+						{
+							id: 36,
+							label: '35'
+						},
+						{
+							id: 37,
+							label: '36'
+						},
+						{
+							id: 38,
+							label: '37'
+						},
+						{
+							id: 39,
+							label: '38'
+						},
+						{
+							id: 40,
+							label: '39'
+						},
+						{
+							id: 41,
+							label: '40'
+						},
+						{
+							id: 42,
+							label: '41'
+						},
+						{
+							id: 43,
+							label: '42'
+						},
+						{
+							id: 44,
+							label: '43'
+						},
+						{
+							id: 45,
+							label: '44'
+						},
+						{
+							id: 46,
+							label: '45'
+						},
+						{
+							id: 47,
+							label: '46'
+						},
+						{
+							id: 48,
+							label: '47'
+						},
+						{
+							id: 49,
+							label: '48'
+						},
+						{
+							id: 50,
+							label: '49'
+						},
+						{
+							id: 51,
+							label: '50'
+						},
+						{
+							id: 52,
+							label: '51'
+						},
+						{
+							id: 53,
+							label: '52'
+						},
+						{
+							id: 54,
+							label: '53'
+						},
+						{
+							id: 55,
+							label: '54'
+						},
+						{
+							id: 56,
+							label: '55'
+						},
+						{
+							id: 57,
+							label: '56'
+						},
+						{
+							id: 58,
+							label: '57'
+						},
+						{
+							id: 59,
+							label: '58'
+						},
+						{
+							id: 60,
+							label: '59'
+						},
+						{
+							id: 61,
+							label: '60'
+						},
+
 					],
 					[{
 						id: 0,
@@ -206,10 +420,10 @@
 
 			this.account = uni.getStorageSync('account')
 			this.planId = options.planId
-			console.log("11111:", this.planId)
+			this.type = options.type
+			this.userId = options.userId
+			console.log("11111:", this.type, this.userId)
 			this.qrytasks()
-
-
 		},
 
 		onReady() {
@@ -256,16 +470,40 @@
 							this.taskList = res.data
 
 							this.isCollect = this.taskList.favoriteStatus == 1
+							if (this.taskList && this.taskList.nodes) {
+								this.taskList.nodes.forEach(item => {
 
-							console.log("8888:", this.isCollect)
+									this.$set(item, 'unit', this.getType1(item.unit));
+									
+									console.log("555:",item.unit)
+
+									// if (item.unit == 1) {
+									// 	this.unit = '天'
+									// } else if (item.unit == 2) {
+									// 	this.unit = '周'
+									// } else {
+									// 	this.unit = '月'
+									// }
+
+									// console.log("8888:", this.unit)
+								})
+							}
 						}
-
-
 					}
 
 				})
 			},
 
+
+			getType1(value) {
+				if (value == 1) {
+					return '天'
+				} else if (value == 2) {
+					return '周'
+				} else {
+					return '月'
+				}
+			},
 
 
 			operFavoriteOut(type) {
@@ -288,27 +526,62 @@
 
 
 			goChoosePatient() {
-				console.log("CCC:", this.taskList.planName)
-				const followMsgReq = {
-					messageOriginalId: this.planId,
-					sendMessage: this.taskList.planName,
-					payLoad: JSON.stringify({
-						data: JSON.stringify({
-							description: '随访计划',
-							id: this.planId,
-							name: this.taskList.planName,
-							type: 'CustomfollowMessage',
-							// bindId:this.bindId,
-							// userId: this.userId
-						}),
-						extension: '',
-						description: '随访计划'
-					})
-				};
-				uni.setStorageSync('followMsgReq', followMsgReq);
-				uni.navigateTo({
-					url: '/pages3/pages/record/choose-patient?type=followMessage'
-				});
+				if (this.type == 'chat') {
+					const followMsgReq = {
+						messageOriginalId: this.planId,
+						sendMessage: this.taskList.planName,
+						payLoad: JSON.stringify({
+							data: JSON.stringify({
+								description: '随访计划',
+								id: this.planId,
+								name: this.taskList.planName,
+								type: 'CustomfollowMessage',
+								// bindId:this.bindId,
+								// userId: this.userId
+							}),
+							extension: '',
+							description: '随访计划'
+						})
+					};
+					uni.setStorageSync('followMsgReq', followMsgReq);
+
+					uni.$u.http.post('/medical-api/tlSendImMessageLog/addImMessageLog', {
+						...uni.getStorageSync('followMsgReq'),
+						messageType: 4,
+						sendUserIds: [this.userId]
+					}).then(res => {
+						uni.hideLoading();
+						uni.showToast({
+							title: '发送成功',
+							icon: 'success'
+						});
+						setTimeout(() => {
+							uni.navigateBack({
+								delta: 2
+							});
+						}, 1500);
+					}).catch(err => {});
+				} else {
+					const followMsgReq = {
+						messageOriginalId: this.planId,
+						sendMessage: this.taskList.planName,
+						payLoad: JSON.stringify({
+							data: JSON.stringify({
+								description: '随访计划',
+								id: this.planId,
+								name: this.taskList.planName,
+								type: 'CustomfollowMessage',
+							}),
+							extension: '',
+							description: '随访计划'
+						})
+					};
+					uni.setStorageSync('followMsgReq', followMsgReq);
+					uni.navigateTo({
+						url: '/pages3/pages/record/choose-patient?type=followMessage'
+					});
+				}
+
 			},
 
 
@@ -355,6 +628,10 @@
 				}).then(res => {
 					uni.hideLoading()
 					if (res.code === 0) {
+
+						// 刷新列表
+						this.qrytasks()
+
 						// if (res.data) {
 						// 	this.operFavoriteData = res.data
 						// }
@@ -464,7 +741,6 @@
 
 
 		.listinfo {
-			max-height: calc(100vh - 174rpx);
 			width: 100%;
 			display: flex;
 			flex-direction: row;
@@ -536,7 +812,7 @@
 					width: 100%;
 					background: #F5F5F5;
 					border-radius: 8px;
-					margin-top: 36rpx;
+					margin-top: 15rpx;
 					display: flex;
 					flex-direction: column;
 
@@ -546,7 +822,7 @@
 						flex-direction: column;
 						flex-wrap: wrap;
 						margin-left: 30rpx;
-						margin-top: 30rpx;
+						// margin-top: 30rpx;
 						color: #999999;
 
 						.text-name {

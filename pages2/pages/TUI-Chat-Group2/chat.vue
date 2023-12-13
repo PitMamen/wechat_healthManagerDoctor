@@ -212,6 +212,16 @@
 						content: `${taskItem.docName}医生在图文咨询中邀请您填写问卷《${payloadData.name}》，请您及时填写。`
 					};
 				}
+				
+				if (payloadData.type === 'CustomfollowMessage') {
+					reqParams = {
+						originalId: payloadData.id,
+						originalType: 4,
+						url: '',
+						title: '随访计划',
+						// content: `${taskItem.docName}医生在图文咨询中邀请您填写问卷《${payloadData.name}》，请您及时填写。`
+					};
+				}
 				//TODO 推送套餐需求   推送套餐不不调用inquiriesAgency/add接口，患者就不会有套餐通知
 				// if (payloadData.type === 'CustomTaoCanMessage') {
 				// 	reqParams = {

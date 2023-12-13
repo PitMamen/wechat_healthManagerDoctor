@@ -41,7 +41,7 @@
 			<view style="margin-left: 48rpx;margin-top: 15rpx;"> 计划详情</view>
 			<u-empty v-if="!detailInfoList||detailInfoList.length==0" icon="/static/img/icon_nodata.png" text="暂无数据">
 			</u-empty>
-			<scroll-view style="height: 100vh" scroll-y="true" scroll-anchoring="true"  v-else>
+			<scroll-view style="height: 100vh" scroll-y="true" scroll-anchoring="true" v-else>
 				<view class="listinfo" v-for="(item, index) in detailInfoList" :key="index">
 					<view class="left-content">
 						<view class="roadis">
@@ -52,28 +52,45 @@
 
 					<view class="right-content">
 						<view class="row-top">
-							<view style="margin-left: 15rpx;">就诊后0天向患者发送</view>
+							<view style="margin-left: 15rpx;">就诊后{{item.offDay}}天向患者发送</view>
 							<view style="margin-left: auto;color: #999999;font-size: 26rpx;">
 								{{item.day}}{{item.statusName}}
 							</view>
 						</view>
 						<view class="kuang">
 							<view class="item-content" v-for="(item2, index2) in item.details" :key="index2">
-								<view style="display: flex;flex-direction: row;flex-wrap: wrap;height: 50rpx;">
+								<view class="top-row">
 									<view>{{item2.taskTypeshow||''}}</view>
-									<view v-if="item2.taskBizStatus.value==2" style="color: #999999;margin-left: 56%;">
-										√</view>
-									<view style="color: #999999;margin-right: 30rpx;margin-left: auto;">
-										{{item2.taskBizStatus.description||''}}
+
+									<view v-if="item2.taskType.value==1&&item2.taskBizStatus.value==2" class="icon">
+										<u-icon style="margin-left: 50%;" name="checkmark"></u-icon>
+									</view>
+
+									<view v-if="item2.taskType.value!=1&&item2.readStatus.value==2" class="icon">
+										<u-icon style="margin-left: 50%;" name="checkmark"></u-icon>
+									</view>
+									<view v-if="item2.taskType.value==1"
+										style="color: #999999;margin-right: 30rpx;margin-left: auto;">
+										{{item2.taskBizStatus.value==2?'已完成':'未执行'}}
+									</view>
+									<view v-if="item2.taskType.value!=1"
+										style="color: #999999;margin-right: 30rpx;margin-left: auto;">
+										{{item2.readStatusshow||''}}
 									</view>
 
 								</view>
 
 								<view class="column-con">
-									<view class="text-name" @click="goSeek(item2)"
-										:style="item2.taskType.value==1||item2.taskType.value==2?'color:#409EFF':'color:#1A1A1A'">
+									<view v-if="item2.taskType.value==1||item2.taskType.value==2" class="text-name" style="color:#409EFF;" @click="goSeek(item2)">
 										{{item2.jumpTitle||''}}
 									</view>
+									
+									<view v-else  style="color: #1A1A1A;" class="text-name">
+										{{item2.message||''}}
+									</view>
+									
+									
+									
 									<view class="rowline"></view>
 								</view>
 							</view>
@@ -85,36 +102,15 @@
 		</view>
 
 		<view class="bottom-content">
-
 			<view class="left-button" @click="goCall()">
 				<view style="text-align: center;padding-top: 12rpx;">和患者沟通</view>
 			</view>
-
 			<view class="right-button">
 				<view style="text-align: center; padding-top: 12rpx;" @click="goSummary()">随访小结</view>
-
 			</view>
-
-
-
 		</view>
-
-
-
-
-
 	</view>
 	</view>
-
-
-
-
-
-
-
-
-
-
 	</view>
 </template>
 
@@ -137,10 +133,11 @@
 		onLoad(options) {
 
 			this.account = uni.getStorageSync('account')
-			console.log("VVV:", this.account)
+			console.log("XXX:", options)
 			this.bindId = options.bindId
 			this.planId = options.planId
 			this.userId = options.userId
+			this.regNo = options.regNo
 			this.qryExecFollowPlanBaseInfo()
 			this.qryMyExecFollowPlanDetailInfo()
 
@@ -163,20 +160,29 @@
 					});
 					// 问卷
 				} else if (item.taskType.value == 1) {
-					uni.navigateTo({
-						url: `/pages2/pages/TUI-User-Center/webview/webview?url=${item.jumpValue}&nav=${item.jumpTitle}`
-					});
+					// 未执行的问卷  直接调转
+					if (item.taskBizStatus.value == 1) {
+						uni.navigateTo({
+							url: `/pages2/pages/TUI-User-Center/webview/webview?url=${item.jumpValue}&nav=${item.jumpTitle}`
+						});
+						// 执行了的 需要处理URL
+					} else {
+						let url = item.jumpValue + '?showsubmitbtn=hide'+'&userId=' + item.userId 
+							url = url.replace("/s/", "/r/")
+						uni.navigateTo({
+							url: `/pages2/pages/TUI-User-Center/webview/webview?url=${encodeURIComponent(url)}&nav=${item.jumpTitle}`
+						});
+					}
 				}
-
 			},
-
 
 			// 查询随访基本信息
 			qryExecFollowPlanBaseInfo() {
 				uni.$u.http.post('/follow-api/docFollow/qryExecFollowPlanBaseInfo', {
 					bindId: this.bindId,
 					planId: this.planId,
-					userId: this.userId
+					userId: this.userId,
+					regNo: this.regNo
 				}).then(res => {
 					if (res.code === 0) {
 						this.basePlanData = res.data
@@ -194,8 +200,8 @@
 							var time1 = new Date(this.basePlanData.beginDate).getTime()
 							var diffTIme = (time2 - time1) / 1000
 
-							this.day = diffTIme == 0 ? 1 : diffTIme / 86400
-							console.log("333:", this.day)
+							this.day = diffTIme <= 0 ? 1 : diffTIme / 86400
+							// console.log("333:", this.day)
 						}
 
 
@@ -213,7 +219,8 @@
 				uni.$u.http.post('/follow-api/docFollow/qryMyExecFollowPlanDetailInfo', {
 					bindId: this.bindId,
 					planId: this.planId,
-					userId: this.userId
+					userId: this.userId,
+					regNo: this.regNo
 				}).then(res => {
 					if (res.code === 0) {
 						this.detailInfoList = res.data
@@ -223,6 +230,10 @@
 									itemOut.details.forEach((itemIn) => {
 										this.$set(itemIn, 'taskTypeshow', this.getType(itemIn
 											.taskType
+											.value))
+
+										this.$set(itemIn, 'readStatusshow', this.getType1(itemIn
+											.readStatus
 											.value))
 										console.log("111:", itemIn.taskType)
 
@@ -252,7 +263,7 @@
 				uni.$u.http.post(`/medical-api/rightsUse/qryRightsUseRecordPageByDoc`, {
 					docId: this.account.user.userId,
 					flag: 1,
-					orderId: "M_1733045904073502722"
+					orderId: this.imGroupId
 
 				}).then(res => {
 
@@ -282,6 +293,14 @@
 			},
 
 
+			getType1(value) {
+				if (value == 1) {
+					return '未执行'
+				} else {
+					return '已完成'
+				}
+			},
+
 
 
 
@@ -295,16 +314,12 @@
 				}
 
 			},
-
-
-
 		}
 	}
 </script>
 
 <style lang="scss">
 	.wrap {
-		width: 100%;
 		height: 100%;
 		background: #F5F5F5;
 	}
@@ -353,7 +368,6 @@
 
 
 		.listinfo {
-			max-height: calc(100vh - 174rpx);
 			width: 100%;
 			display: flex;
 			flex-direction: row;
@@ -408,6 +422,8 @@
 					flex-direction: column;
 
 
+
+
 					.item-content {
 						display: flex;
 						flex-direction: column;
@@ -417,17 +433,34 @@
 						color: #999999;
 
 
+						.top-row {
+							display: flex;
+							flex-direction: row;
+							flex-wrap: wrap;
+							height: 50rpx;
+							align-items: center;
+
+							.icon {
+								color: #999999;
+								margin-left: 50%;
+							}
+						}
+
+
+
+
 
 						.column-con {
 							display: flex;
 							flex-direction: column;
-							
+
 							.text-name {
 								margin-bottom: 30rpx;
 								margin-top: 15rpx;
 								display: flex;
 								flex-wrap: wrap;
 								overflow-wrap: anywhere;
+								overflow: hidden;
 							}
 
 							// .name {

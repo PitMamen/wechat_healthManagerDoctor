@@ -425,8 +425,9 @@ export default {
 					return
 				}
 			}
+			console.log("2222:",this.taskItem.userId)
 			uni.navigateTo({
-				url: '/pages2/pages/follow/myfollowlist'
+			url: '/pages2/pages/follow/myfollowlist?type=chat&userId='+this.taskItem.userId
 			});
 		},
 		

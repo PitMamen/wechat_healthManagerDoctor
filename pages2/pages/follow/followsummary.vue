@@ -130,7 +130,7 @@
 							var time1 = new Date(this.basePlanData.beginDate).getTime()
 							var diffTIme = (time2 - time1) / 1000
 
-							this.day = diffTIme == 0 ? 1 : diffTIme / 86400
+							this.day = diffTIme <= 0 ? 1 : diffTIme / 86400
 							console.log("333:", this.day)
 						}
 
@@ -146,21 +146,20 @@
 						this.$u.toast("请输入小结内容!")
 					return
 				}
-				
-				
 				uni.showLoading({
 					title: '发送中'
 				});
+				var summaryData = this.summary.length>=200?this.summary.substring(0,200):this.summary
 				const summaryMsgReq = {
 					messageOriginalId: this.planId,
-					sendMessage: this.summary,
+					sendMessage:summaryData,
 					payLoad: JSON.stringify({
 						data: JSON.stringify({
 							description: '随访小结',
 							id: this.planId,
 							name: this.planName,
 							type: 'CustomsummaryMessage',
-							content: this.summary
+							content: summaryData
 							// bindId:this.bindId,
 							// userId: this.userId
 						}),

@@ -349,8 +349,10 @@
 						return
 					}
 				}
+				console.log("1111:",this.taskItem.userId)
 				uni.navigateTo({
-					url: '/pages2/pages/follow/myfollowlist'
+					
+				url: '/pages2/pages/follow/myfollowlist?type=chat&userId='+this.taskItem.userId
 				});
 			},
 			handlePaper() {
