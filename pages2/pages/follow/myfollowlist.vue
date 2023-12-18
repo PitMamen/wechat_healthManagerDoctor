@@ -6,7 +6,7 @@
 					<view>我的随访</view>
 				</view>
 				<view class="item" :class="{active: tab===2}" @click="tabClick(2)">
-					<view>科室随访室</view>
+					<view>科室随访库</view>
 				</view>
 			</view>
 
@@ -14,8 +14,6 @@
 				<u-search v-model="planName" placeholder="搜索随访计划" :show-action="false" @change="onSearch">
 				</u-search>
 			</view>
-
-
 
 			<view class="filter">
 				<view class="item" @click="show2 = true; hideKeyboard();">
@@ -92,10 +90,8 @@
 		onLoad(options) {
 			this.getDepList();
 			this.getPlanList()
-				console.log("VVVVVV:", options)
 			if (options.type) {
 				this.type = options.type
-				console.log("VVVVVV:", this.type)
 			}
 			if(options.userId){
 				this.userId = options.userId

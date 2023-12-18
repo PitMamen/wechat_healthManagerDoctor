@@ -11,8 +11,6 @@
 						<u-line-progress style="color:#D77311;" activeColor="#409EFF" :percentage="percentage"
 							:showText="false" :height="7">
 						</u-line-progress>
-
-
 					</view>
 					<view class="bottom-row">进行中{{basePlanData.finishedTask}}/{{basePlanData.totalTask}}</view>
 				</view>
@@ -46,31 +44,14 @@
 		</view>
 
 		<view class="bottom-content">
-
 			<view class="left-button" @click="cancel()">
 				<view style="text-align: center;padding-top: 12rpx;">取消</view>
 			</view>
-
 			<view class="right-button" @click="sendTopatient()">
 				<view style="text-align: center; padding-top: 12rpx;">发送给患者</view>
-
 			</view>
-
-
-
 		</view>
-
-
-
-
-
-
-
-
 	</view>
-
-
-
 </template>
 
 <script>
@@ -388,23 +369,14 @@
 			margin-left: 40rpx;
 			color: #FFFFFF;
 		}
-
-
 	}
 
-
-
-
-
-
-
-
 	.process-kuang {
-		height: 60px;
+		height: 120rpx;
 		background: #F0F7FF;
 		border-radius: 4px;
 		margin-left: 30rpx;
-		margin-right: 30rpx;
+		margin-right: 25rpx;
 		margin-top: 30rpx;
 	}
 </style>

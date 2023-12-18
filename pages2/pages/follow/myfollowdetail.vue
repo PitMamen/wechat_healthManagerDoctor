@@ -2,14 +2,13 @@
 	<view class="wrap">
 		<u-sticky>
 			<view class="center-content">
-
 				<view>
 					<view class="content-row">
 						<view
-							style="color: #1A1A1A;font-size: 32rpx;margin-top: 30rpx;font-weight: bold;margin-left: 48rpx;">
+							style="color: #1A1A1A;font-size: 32rpx;margin-top: 30rpx;font-weight: bold;margin-left: 24rpx;">
 							{{taskList.planName}}
 						</view>
-						<view style="margin-left: 48rpx;margin-top: 30rpx;color: #999999;font-size: 24rpx;">基准时间就诊后
+						<view style="margin-left:24rpx;margin-top:30rpx;color: #999999;font-size: 24rpx;">基准时间就诊后
 						</view>
 					</view>
 
@@ -17,7 +16,8 @@
 
 					<view class="bottom-line"></view>
 
-					<view style="color: #4D4D4D;margin-left: 48rpx;margin-top: 30rpx;padding-bottom: 30rpx;">
+					<view
+						style="color: #4D4D4D;margin-left: 24rpx;margin-top: 30rpx;padding-bottom: 30rpx;font-size: 28rpx;">
 						{{taskList.taskDays}}天内自动随访{{taskList.taskCnt}}次
 					</view>
 				</view>
@@ -28,18 +28,15 @@
 		<!-- 列表 -->
 
 		<view class="center-content">
-
 			<!-- <view style="margin-left: 30rpx;margin-top: 15rpx;"> 计划详情</view> -->
 			<u-empty v-if="!taskList.nodes||taskList.nodes.length==0" icon="/static/img/icon_nodata.png" text="暂无数据">
 			</u-empty>
 			<scroll-view style="height: 1000vh" scroll-y="true" scroll-anchoring="true" v-else>
 				<view class="listinfo" v-for="(item, index) in taskList.nodes" :key="index">
 					<view class="left-content">
-						<view class="roadis">
-						</view>
-						<view class="colun-line"></view>
+						<view class="roadis"></view>
+						<view v-if="index!=taskList.nodes.length-1" class="colun-line"></view>
 					</view>
-
 
 					<view class="right-content">
 						<view class="row-top">
@@ -56,22 +53,19 @@
 						<view class="kuang">
 							<view class="item-content" v-for="(item2, index2) in item.tasks" :key="index2">
 								<view
-									style="display: flex;flex-direction: row;flex-wrap: wrap;height: 50rpx;margin-top: 25rpx;">
+									style="display: flex;flex-direction: row;flex-wrap: wrap;height: 50rpx;margin-top: 25rpx;font-size: 30rpx;">
 									<view>{{item2.typeDesc||''}}</view>
 								</view>
 
-								<view v-if="item2.jumpType==1||item2.jumpType==2" class="text-name" style="color:#409EFF;" @click="goSeek(item2)">
+								<view v-if="item2.jumpType==1||item2.jumpType==2" class="text-name"
+									style="color:#409EFF;" @click="goSeek(item2)">
 									{{item2.text||''}}
 								</view>
-								
-								<view v-else  style="color: #1A1A1A;" class="text-name">
+
+								<view v-else style="color: #1A1A1A;" class="text-name">
 									{{item2.text||''}}
 								</view>
-								
-								
-
-
-								<view class="column-con">
+								<view v-if="index2!=item.tasks.length-1" class="column-con">
 									<view class="rowline"></view>
 								</view>
 							</view>
@@ -106,22 +100,8 @@
 				</view>
 			</view>
 		</view>
-
-
-
-
-
 	</view>
 	</view>
-
-
-
-
-
-
-
-
-
 	</view>
 </template>
 
@@ -422,7 +402,7 @@
 			this.planId = options.planId
 			this.type = options.type
 			this.userId = options.userId
-			console.log("11111:", this.type, this.userId)
+			// console.log("11111:", this.type, this.userId)
 			this.qrytasks()
 		},
 
@@ -452,12 +432,6 @@
 
 			},
 
-
-
-
-
-
-
 			// 查询随访基本信息
 			qrytasks() {
 				uni.$u.http.get('/follow-api/follow/plan/tasks', {
@@ -474,8 +448,8 @@
 								this.taskList.nodes.forEach(item => {
 
 									this.$set(item, 'unit', this.getType1(item.unit));
-									
-									console.log("555:",item.unit)
+
+									console.log("555:", item.unit)
 
 									// if (item.unit == 1) {
 									// 	this.unit = '天'
@@ -608,6 +582,7 @@
 			},
 
 			showPicker(item) {
+				return
 				this.currentItem = item;
 				this.show2 = true;
 			},
@@ -721,7 +696,7 @@
 			border: 1px solid #3894FF;
 			margin-top: 30rpx;
 			border-radius: 2rpx;
-			margin-left: 48rpx;
+			margin-left: 24rpx;
 			margin-top: 15rpx;
 			font-size: 22rpx;
 			padding-left: 10rpx;
@@ -796,12 +771,15 @@
 				}
 
 
+
+
 				.row-top {
 					display: flex;
 					flex-direction: row;
 					flex-wrap: wrap;
 					align-items: center;
 					margin-top: 10rpx;
+					font-size: 30rpx;
 				}
 
 
@@ -812,7 +790,7 @@
 					width: 100%;
 					background: #F5F5F5;
 					border-radius: 8px;
-					margin-top: 15rpx;
+					margin-top: 20rpx;
 					display: flex;
 					flex-direction: column;
 
@@ -828,6 +806,7 @@
 						.text-name {
 							margin-bottom: 30rpx;
 							margin-top: 15rpx;
+							font-size: 28rpx;
 							display: flex;
 							flex-wrap: wrap;
 							overflow-wrap: anywhere;

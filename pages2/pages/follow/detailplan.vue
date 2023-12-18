@@ -2,11 +2,11 @@
 	<view class="wrap">
 		<u-sticky>
 			<view class="content">
-				<view style="font-size: 32rpx;color: #1A1A1A;font-weight: bold;margin-left: 48rpx;margin-top: 30rpx;">
+				<view style="font-size: 32rpx;color: #1A1A1A;font-weight: bold;margin-left: 25rpx;margin-top: 30rpx;">
 					{{basePlanData.planName}}
 				</view>
 				<view class="process-kuang">
-					<view style="margin-top: 44rpx;margin-left:48rpx;margin-right:30rpx;">
+					<view style="margin-top: 44rpx;margin-left:25rpx;margin-right:30rpx;">
 
 						<u-line-progress style="color:#D77311;" activeColor="#409EFF" :percentage="percentage"
 							:showText="false" :height="7">
@@ -18,16 +18,16 @@
 				</view>
 
 
-				<view style="margin-left: 48rpx;margin-top: 30rpx;color: #999999;font-size: 24rpx;">
+				<view style="margin-left: 25rpx;margin-top: 30rpx;color: #999999;font-size: 24rpx;">
 					随访周期:&nbsp;{{basePlanData.beginDate}}-{{basePlanData.endDate}}</view>
 				<view class="row-line"></view>
-				<view style="margin-left: 48rpx;margin-top: 30rpx;color: #4D4D4D;font-size: 28rpx;">
+				<view style="margin-left: 25rpx;margin-top: 30rpx;color: #4D4D4D;font-size: 28rpx;">
 					{{basePlanData.userInfo.userName}}&nbsp;|&nbsp;{{basePlanData.userInfo.userSex}}&nbsp;|&nbsp;{{basePlanData.userInfo.userAge}}岁
 				</view>
 
 				<view class="row-line"></view>
 				<view
-					style="margin-left: 48rpx;margin-top: 30rpx;margin-bottom: 25rpx;color: #4D4D4D;font-size: 28rpx;">
+					style="margin-left: 25rpx;margin-top: 30rpx;margin-bottom: 25rpx;color: #4D4D4D;font-size: 28rpx;">
 					{{day}}天内自动随访{{basePlanData.totalTask}}次，指导疾病康复情况
 				</view>
 			</view>
@@ -38,21 +38,21 @@
 
 		<view class="center-content">
 
-			<view style="margin-left: 48rpx;margin-top: 15rpx;"> 计划详情</view>
+			<view style="margin-top: 30rpx;font-size: 30rpx;margin-left: 25rpx"> 计划详情</view>
 			<u-empty v-if="!detailInfoList||detailInfoList.length==0" icon="/static/img/icon_nodata.png" text="暂无数据">
 			</u-empty>
 			<scroll-view style="height: 100vh" scroll-y="true" scroll-anchoring="true" v-else>
 				<view class="listinfo" v-for="(item, index) in detailInfoList" :key="index">
 					<view class="left-content">
-						<view class="roadis">
-						</view>
-						<view class="colun-line"></view>
+						<view class="roadis"></view>
+						
+						<view v-if="index!=detailInfoList.length-1" class="colun-line"></view>
 					</view>
 
 
 					<view class="right-content">
 						<view class="row-top">
-							<view style="margin-left: 15rpx;">就诊后{{item.offDay}}天向患者发送</view>
+							<view style="margin-left: 15rpx;font-size: 30rpx;">就诊后{{item.offDay}}天向患者发送</view>
 							<view style="margin-left: auto;color: #999999;font-size: 26rpx;">
 								{{item.day}}{{item.statusName}}
 							</view>
@@ -70,11 +70,11 @@
 										<u-icon style="margin-left: 50%;" name="checkmark"></u-icon>
 									</view>
 									<view v-if="item2.taskType.value==1"
-										style="color: #999999;margin-right: 30rpx;margin-left: auto;">
+										style="color: #999999;margin-right: 30rpx;margin-left: auto;font-size: 28rpx;">
 										{{item2.taskBizStatus.value==2?'已完成':'未执行'}}
 									</view>
 									<view v-if="item2.taskType.value!=1"
-										style="color: #999999;margin-right: 30rpx;margin-left: auto;">
+										style="color: #999999;margin-right: 30rpx;margin-left: auto;font-size: 28rpx;">
 										{{item2.readStatusshow||''}}
 									</view>
 
@@ -89,9 +89,7 @@
 										{{item2.message||''}}
 									</view>
 									
-									
-									
-									<view class="rowline"></view>
+									<view v-if="index2!=item.details.length-1" class="rowline"></view>
 								</view>
 							</view>
 						</view>
@@ -188,6 +186,7 @@
 						this.basePlanData = res.data
 						this.imGroupId = res.data.imGroupId
 						this.planName = res.data.planName
+						this.bindId = res.data.bindId
 						if (this.basePlanData.finishedTask == this.basePlanData.totalTask) {
 							this.percentage = 100
 						} else {
@@ -461,6 +460,7 @@
 								flex-wrap: wrap;
 								overflow-wrap: anywhere;
 								overflow: hidden;
+								font-size: 28rpx;
 							}
 
 							// .name {
@@ -542,7 +542,7 @@
 		height: 60px;
 		background: #F0F7FF;
 		border-radius: 4px;
-		margin-left: 30rpx;
+		margin-left: 25rpx;
 		margin-right: 30rpx;
 		margin-top: 30rpx;
 	}
