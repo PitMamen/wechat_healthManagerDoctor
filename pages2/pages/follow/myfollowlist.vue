@@ -26,7 +26,7 @@
 			<u-empty mode="data" style="padding-top: 500rpx;" icon="/pages2/static/img/icon_nodata.png"
 				v-if="planList.length === 0"></u-empty>
 			<scroll-view class="list" :scroll-y="true" @scrolltolower="scrolltolower" v-if="planList.length > 0">
-				<view class="item" v-for="item in planList" :key="item.planId" @click="itemClick(item)">
+				<view class="item"   v-for="(item, index) in planList"   :key="item.planId" @click="itemClick(item)">
 					<view class="top">
 						<view class="left">
 							<view>{{item.planName}}</view>
@@ -40,6 +40,12 @@
 							<view class="small">查看详情</view>
 						</view>
 					</view>
+					
+					<!-- bottom line -->
+					<view v-if="index!=planList.length-1" style="height: 1rpx;background-color: #E6E6E6"></view>
+					
+					
+					
 				</view>
 			</scroll-view>
 		</view>
@@ -296,7 +302,7 @@
 						align-items: center;
 						justify-content: space-between;
 						padding-bottom: 20rpx;
-						border-bottom: 1rpx solid #E6E6E6;
+						// border-bottom: 1rpx solid #E6E6E6;
 
 						.smll-kuang {
 							// width: 140rpx;

@@ -41,7 +41,8 @@
 			<view style="margin-top: 30rpx;font-size: 30rpx;margin-left: 25rpx"> 计划详情</view>
 			<u-empty v-if="!detailInfoList||detailInfoList.length==0" icon="/static/img/icon_nodata.png" text="暂无数据">
 			</u-empty>
-			<scroll-view style="height: 100vh" scroll-y="true" scroll-anchoring="true" v-else>
+			<!-- style="height: 100vh" -->
+			<scroll-view  scroll-y="true" scroll-anchoring="true" v-else>
 				<view class="listinfo" v-for="(item, index) in detailInfoList" :key="index">
 					<view class="left-content">
 						<view class="roadis"></view>
@@ -95,7 +96,9 @@
 						</view>
 					</view>
 				</view>
+				<view style="height: 100rpx;"></view>
 			</scroll-view>
+				
 
 		</view>
 
@@ -539,7 +542,7 @@
 
 
 	.process-kuang {
-		height: 60px;
+		height: 120rpx;
 		background: #F0F7FF;
 		border-radius: 4px;
 		margin-left: 25rpx;

@@ -26,18 +26,17 @@
 
 
 		<!-- 列表 -->
-
 		<view class="center-content">
 			<!-- <view style="margin-left: 30rpx;margin-top: 15rpx;"> 计划详情</view> -->
 			<u-empty v-if="!taskList.nodes||taskList.nodes.length==0" icon="/static/img/icon_nodata.png" text="暂无数据">
 			</u-empty>
-			<scroll-view style="height: 1000vh" scroll-y="true" scroll-anchoring="true" v-else>
+			<!-- style="height: 1000vh" -->
+			<scroll-view  scroll-y="true" scroll-anchoring="true" v-else>
 				<view class="listinfo" v-for="(item, index) in taskList.nodes" :key="index">
 					<view class="left-content">
 						<view class="roadis"></view>
 						<view v-if="index!=taskList.nodes.length-1" class="colun-line"></view>
 					</view>
-
 					<view class="right-content">
 						<view class="row-top">
 							<view style="margin-left: 15rpx;">就诊后</view>
@@ -70,9 +69,12 @@
 								</view>
 							</view>
 						</view>
+						
 					</view>
 				</view>
+				<view style="height: 150rpx;"></view>
 			</scroll-view>
+			
 
 		</view>
 
@@ -760,6 +762,8 @@
 					flex-direction: row;
 					flex-wrap: wrap;
 					justify-content: center;
+					margin-left: 10rpx;
+					margin-right: 10rpx;
 
 
 					.icon {
